@@ -34,6 +34,7 @@ public class LobbyItems extends LobbyItemHandler {
         if (!Utility.getManager().privateArenas.contains(arena)) return false;
         if (partyPlayer.isInParty()) {
             final Player p = Utility.getPlayerByUuid(Utility.getManager().partyMembersMangingMap.get(arena).getLeader());
+            if (p == null) return false;
             return p == player;
         }else return false;
     }
