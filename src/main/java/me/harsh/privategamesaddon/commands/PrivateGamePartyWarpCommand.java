@@ -41,6 +41,7 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
             party.getMembers().forEach(uuid -> {
                 final Player p = Utility.getPlayerByUuid(uuid);
                 if (p == null) Common.log("Player is Null!");
+                if (p == p2) return;
                 assert p != null;
                 Common.tell(p2, Settings.PREFIX + "&aWarping " + p.getName());
                 assert arena != null;

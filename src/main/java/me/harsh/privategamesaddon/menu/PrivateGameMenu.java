@@ -45,6 +45,7 @@ public class PrivateGameMenu extends Menu {
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
                 final ArenaBuff buff = Utility.getBuffSafe(player);
                 buff.setBlocksProtection(false);
+                restartMenu("Disabled Block Protection!");
             }
 
             @Override

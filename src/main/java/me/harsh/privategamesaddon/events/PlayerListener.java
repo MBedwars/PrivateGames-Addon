@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.Valid;
 
 public class PlayerListener implements Listener {
     private PrivateGameManager manager;
@@ -38,15 +39,29 @@ public class PlayerListener implements Listener {
                     return;
                 }
             }
+            final Party p  = manager.partyMembersMangingMap.get(arena);
+            Valid.checkNotNull(p);
+            if (p.getMembers().contains(player.getUniqueId())){
+                return;
+            }
             Common.tell(player, Settings.PREFIX + "&cArena is private!");
             event.addIssue(AddPlayerIssue.PLUGIN);
         }
 
         if (manager.checkPlayer(player) && manager.getMode(player)){
-            if (arena.getPlayers().size() > 1){
-                arena.kickPlayer(player, KickReason.PLUGIN);
-                Common.tell(player, Settings.PREFIX + " &cSorry, the arena already have players in it you cannot create a private room with players already inside it!");
-            }
+            arena.getPlayers().forEach(player1 -> {
+                final PartyPlayer partyPlayer = Utility.getPlayer(player1);
+                if (partyPlayer.isInParty()){
+                    final Party party = Utility.getParty(player);
+                    if (party.getMembers().contains(player.getUniqueId())){
+                        Common.tell(player, Settings.PREFIX + " &aPlayer Named " + player1.getName() + " is already in arena from your party!");
+                        return;
+                    }
+                }else {
+                    arena.kickPlayer(player, KickReason.PLUGIN);
+                    Common.tell(player, Settings.PREFIX + " &cSorry, the arena already have players in it you cannot create a private room with players already inside it!");
+                }
+            });
             manager.getPrivateArenas().add(arena);
             final PartyPlayer partyPlayer = Utility.getPlayer(player);
             if (partyPlayer.isInParty()){
