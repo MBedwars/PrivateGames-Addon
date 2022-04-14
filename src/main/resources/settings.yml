@@ -1,0 +1,33 @@
+# Private Games Addon
+Prefix: '&cPrivate Games &7>>'
+Menu:
+  Title: '&cPrivate &aGames Control Menu'
+  Sub_Menu:
+    Speed: 'Speed Buff Menu'
+    Respawn: 'Respawn Buff Menu'
+    Health: 'Custom Health Buff'
+  Buffs:
+    One_Hit_Buff: '&aOne Hit Buff'
+    Health_Buff: '&aHealth Buff'
+    Low_Gravity_Buff: '&aLow Gravity'
+    Speed_Buff: '&aSpeed Buff'
+    Bed_Insta_Break_Buff: '&aBed InstaBreak'
+    Disable_Block_Protection_Buff: '&aDisable Block Protection'
+    Respawn_Time_Buff: '&aRespawn Time Buff'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Log_Lag_Over_Milis: 100
+Version: 1
+Debug: []

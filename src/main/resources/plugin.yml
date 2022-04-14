@@ -1,0 +1,6 @@
+name: PrivateGamesAddon
+version: '${project.version}'
+main: me.harsh.privategamesaddon.PrivateGamesAddon
+api-version: 1.13
+depend:
+  - MBedwars
