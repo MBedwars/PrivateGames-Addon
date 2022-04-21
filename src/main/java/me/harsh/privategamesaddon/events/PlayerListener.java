@@ -48,11 +48,6 @@ public class PlayerListener implements Listener {
         }
 
         if (manager.checkPlayer(player) && manager.getMode(player)){
-            if (arena.getPlayers().size() <= 1){
-
-                event.addIssue(AddPlayerIssue.PLUGIN);
-                Common.tell(player, "Sorry, You cannot join arena with players on it when you're in private game creation room!");
-            }
             manager.getPrivateArenas().add(arena);
             final PartyPlayer partyPlayer = Utility.getPlayer(player);
             if (partyPlayer.isInParty()){

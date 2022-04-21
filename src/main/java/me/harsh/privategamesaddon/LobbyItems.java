@@ -23,8 +23,9 @@ public class LobbyItems extends LobbyItemHandler {
             if (Utility.getManager().arenaArenaBuffMap.contains(arena)){
                 menu.displayTo(player);
             }
-            Utility.getManager().arenaArenaBuffMap.put(arena, new ArenaBuff());
-            menu.displayTo(player);
+            if (!Utility.getManager().arenaArenaBuffMap.contains(arena)){
+                Utility.getManager().arenaArenaBuffMap.put(arena, new ArenaBuff());
+            }
         }
     }
 
