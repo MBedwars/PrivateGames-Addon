@@ -7,7 +7,6 @@ import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerIngameDeathEvent;
 import de.marcely.bedwars.api.event.player.PlayerIngameRespawnEvent;
 import de.marcely.bedwars.api.event.player.PlayerModifyBlockPermissionEvent;
-import me.harsh.privategamesaddon.PrivateGamesAddon;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,7 +20,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.Valid;
-
+import org.mineacademy.fo.plugin.SimplePlugin;
 
 
 public class PlayerBuffListener implements Listener {
@@ -79,9 +78,13 @@ public class PlayerBuffListener implements Listener {
         new BukkitRunnable(){
             @Override
             public void run() {
-                event.getArena().getPlayers().forEach(player -> player.setHealth(buff.getHealth()));
+                event.getArena().getPlayers().forEach(player -> {
+                    player.setMaxHealth(buff.getHealth());
+                    player.setHealth(buff.getHealth());
+
+                });
             }
-        }.runTaskTimer(PrivateGamesAddon.getInstance(), 0, 10);
+        }.runTaskLater(SimplePlugin.getInstance(), 10);
     }
 
     @EventHandler
