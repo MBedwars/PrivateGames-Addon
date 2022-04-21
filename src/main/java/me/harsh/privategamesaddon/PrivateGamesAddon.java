@@ -5,6 +5,7 @@ import de.marcely.bedwars.api.GameAPI;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.buffs.PlayerBuffListener;
 import me.harsh.privategamesaddon.commands.PrivateCommandGroup;
+import me.harsh.privategamesaddon.commands.TestCommand;
 import me.harsh.privategamesaddon.events.PlayerListener;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
@@ -23,6 +24,7 @@ public final class PrivateGamesAddon extends SimplePlugin {
         registerEvents(new PlayerListener(Utility.getManager()));
         registerEvents(new PlayerBuffListener());
         registerCommands("bwp", new PrivateCommandGroup());
+        registerCommand(new TestCommand());
         BedwarsAPI.onReady(() -> {
             GameAPI.get().registerLobbyItemHandler(new LobbyItems());
         });

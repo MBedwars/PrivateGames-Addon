@@ -4,7 +4,6 @@ import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import de.marcely.bedwars.api.arena.AddPlayerIssue;
 import de.marcely.bedwars.api.arena.Arena;
-import de.marcely.bedwars.api.arena.KickReason;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
 import de.marcely.bedwars.api.event.player.PlayerJoinArenaEvent;
 import de.marcely.bedwars.api.event.player.PlayerQuitArenaEvent;
@@ -49,19 +48,11 @@ public class PlayerListener implements Listener {
         }
 
         if (manager.checkPlayer(player) && manager.getMode(player)){
-            arena.getPlayers().forEach(player1 -> {
-                final PartyPlayer partyPlayer = Utility.getPlayer(player1);
-                if (partyPlayer.isInParty()){
-                    final Party party = Utility.getParty(player);
-                    if (party.getMembers().contains(player.getUniqueId())){
-                        Common.tell(player, Settings.PREFIX + " &aPlayer Named " + player1.getName() + " is already in arena from your party!");
-                        return;
-                    }
-                }else {
-                    arena.kickPlayer(player, KickReason.PLUGIN);
-                    Common.tell(player, Settings.PREFIX + " &cSorry, the arena already have players in it you cannot create a private room with players already inside it!");
-                }
-            });
+            if (arena.getPlayers().size() <= 1){
+
+                event.addIssue(AddPlayerIssue.PLUGIN);
+                Common.tell(player, "Sorry, You cannot join arena with players on it when you're in private game creation room!");
+            }
             manager.getPrivateArenas().add(arena);
             final PartyPlayer partyPlayer = Utility.getPlayer(player);
             if (partyPlayer.isInParty()){
