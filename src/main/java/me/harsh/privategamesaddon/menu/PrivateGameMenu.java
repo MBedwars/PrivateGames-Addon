@@ -18,7 +18,7 @@ public class PrivateGameMenu extends Menu {
     private final Button oneHitBuff;
     private final Button gravityBuff;
     private final Button speedBuff;
-    private final Button instaBedBreakBuff;
+    private final Button spawnerBuff;
     private final Button blockProtBuff;
     private final Button respawnTimeBuff;
 
@@ -64,27 +64,28 @@ public class PrivateGameMenu extends Menu {
                         .build().make();
             }
         };
-        this.instaBedBreakBuff = new Button() {
+        this.spawnerBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
                 final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (buff.isBedInstaBreakEnabled()){
-                    buff.setBedInstaBreakEnabled(false);
-                    restartMenu("&aDisabled Bed Instant Break!");
+                if (buff.isNoSpawner()){
+                    buff.setNoSpawner(false);
+                    restartMenu("&aDisabled No Spawner Mode!");
+                    return;
                 }
-                buff.setBedInstaBreakEnabled(true);
-                restartMenu("&aEnabled Bed Instant Break!");
+                buff.setNoSpawner(true);
+                restartMenu("&aEnabled No Spawner Mode!");
             }
 
             @Override
             public ItemStack getItem() {
                 final ArenaBuff buff = Utility.getBuffSafe(getViewer());
                 return ItemCreator.of(CompMaterial.RED_BED,
-                        Settings.BED_INSTA_BREAK_BUFF,
+                        Settings.SPAWNER_BUFF,
                         "",
-                        "Enables people to one",
-                        "click bed to destroy it!")
-                        .glow(buff.isBedInstaBreakEnabled())
+                        "Enables people play",
+                        "without any spawners!")
+                        .glow(buff.isNoSpawner())
                         .build().make();
             }
         };
@@ -182,7 +183,7 @@ public class PrivateGameMenu extends Menu {
         }else if (slot == 16){
             return speedBuff.getItem();
         }else if (slot == 29){
-            return instaBedBreakBuff.getItem();
+            return spawnerBuff.getItem();
         }else if (slot == 33){
             return blockProtBuff.getItem();
         }else if (slot == 31){

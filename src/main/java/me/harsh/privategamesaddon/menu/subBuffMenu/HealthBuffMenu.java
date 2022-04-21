@@ -28,11 +28,11 @@ public class HealthBuffMenu extends Menu {
                 final ArenaBuff buff = Utility.getBuffSafe(player);
                 if (getHealthBolean(20, buff)){
                     buff.setHealth(20);
-                    restartMenu("Set the Health back to normal");
+                    restartMenu("&aSet the Health back to normal");
                     return;
                 }
                 buff.setHealth(20*2);
-                restartMenu("Custom hearts are now 20!");
+                restartMenu("&aCustom hearts are now 20!");
             }
 
             @Override
@@ -52,11 +52,11 @@ public class HealthBuffMenu extends Menu {
                 final ArenaBuff buff = Utility.getBuffSafe(player);
                 if (getHealthBolean(30, buff)){
                     buff.setHealth(20);
-                    restartMenu("Set the Health back to normal");
+                    restartMenu("&aSet the Health back to normal");
                     return;
                 }
                 buff.setHealth(30*2);
-                restartMenu("Custom hearts are not 30!");
+                restartMenu("&aCustom hearts are now 30!");
             }
 
             @Override
@@ -76,11 +76,11 @@ public class HealthBuffMenu extends Menu {
                 final ArenaBuff buff = Utility.getBuffSafe(player);
                 if (getHealthBolean(40, buff)){
                     buff.setHealth(20);
-                    restartMenu("Set the Health back to normal");
+                    restartMenu("&aSet the Health back to normal");
                     return;
                 }
                 buff.setHealth(40*2);
-                restartMenu("Custom hearts are not 40!");
+                restartMenu("&aCustom hearts are now 40!");
             }
 
             @Override

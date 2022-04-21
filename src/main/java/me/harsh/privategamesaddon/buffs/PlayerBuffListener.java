@@ -7,8 +7,10 @@ import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerIngameDeathEvent;
 import de.marcely.bedwars.api.event.player.PlayerIngameRespawnEvent;
 import de.marcely.bedwars.api.event.player.PlayerModifyBlockPermissionEvent;
+import de.marcely.bedwars.api.game.spawner.Spawner;
+import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier;
+import de.marcely.bedwars.tools.location.XYZD;
 import me.harsh.privategamesaddon.utils.Utility;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -67,7 +69,12 @@ public class PlayerBuffListener implements Listener {
         }
         final ArenaBuff buff = Utility.getBuff(arena);
         Valid.checkNotNull(buff);
-        event.getArena().getPlayers().forEach(player -> {
+        if (buff.isNoSpawner()){
+            for (Spawner spawner : arena.getSpawners()) {
+                spawner.addDropDurationModifier("private", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, Double.MAX_VALUE);
+            }
+        }
+        arena.getPlayers().forEach(player -> {
             if (buff.isLowGravity()){
                 player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 1000000, 3));
             }
@@ -108,8 +115,10 @@ public class PlayerBuffListener implements Listener {
         if (buff == null) return;
         if (!(buff.isBedInstaBreakEnabled())) return;
         if (Utility.getManager().privateArenas.contains(arena)){
-            if (block.getType() == Material.BED){
+            if (block.getType().name().contains("BED")){
                 if (event.getAction() == Action.LEFT_CLICK_BLOCK ){
+                    XYZD bedLoc = arena.getBedLocation(arena.getPlayerTeam(player));
+                    if (bedLoc.toLocation(arena.getGameWorld()) == block.getLocation())
                     arena.destroyBed(arena.getPlayerTeam(player));
                 }
             }

@@ -16,7 +16,7 @@ public class Settings extends SimpleSettings {
     public static String HEALTH_BUFF;
     public static String LOW_GRAVITY_BUFF;
     public static String SPEED_BUFF;
-    public static String BED_INSTA_BREAK_BUFF;
+    public static String SPAWNER_BUFF;
     public static String DISABLE_BLOCK_PROTECTION_BUFF;
     public static String RESPAWN_TIME_BUFF;
 
@@ -38,7 +38,7 @@ public class Settings extends SimpleSettings {
         HEALTH_BUFF = getString("Health_Buff");
         LOW_GRAVITY_BUFF = getString("Low_Gravity_Buff");
         SPEED_BUFF = getString("Speed_Buff");
-        BED_INSTA_BREAK_BUFF = getString("Bed_Insta_Break_Buff");
+        SPAWNER_BUFF = getString("Spawner_Buff");
         DISABLE_BLOCK_PROTECTION_BUFF = getString("Disable_Block_Protection_Buff");
         RESPAWN_TIME_BUFF = getString("Respawn_Time_Buff");
 

@@ -2,6 +2,7 @@ package me.harsh.privategamesaddon.events;
 
 import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
+import de.marcely.bedwars.api.arena.AddPlayerCause;
 import de.marcely.bedwars.api.arena.AddPlayerIssue;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
@@ -18,7 +19,7 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Valid;
 
 public class PlayerListener implements Listener {
-    private PrivateGameManager manager;
+    private final PrivateGameManager manager;
     public PlayerListener(PrivateGameManager manager){
         this.manager = manager;
     }
@@ -28,6 +29,9 @@ public class PlayerListener implements Listener {
         final Arena arena = event.getArena();
         final Player player = event.getPlayer();
         if (manager.getPrivateArenas().contains(arena)){
+            if (event.getCause() == AddPlayerCause.PARTY_SWITCH_ARENA) {
+                event.addIssue(AddPlayerIssue.PLUGIN);
+            }
             final PartyPlayer partyPlayer = Utility.getPlayer(player);
             if (partyPlayer.isInParty()){
                 final Party party = Utility.getParty(player);
