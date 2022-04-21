@@ -7,6 +7,7 @@ import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerIngameDeathEvent;
 import de.marcely.bedwars.api.event.player.PlayerIngameRespawnEvent;
 import de.marcely.bedwars.api.event.player.PlayerModifyBlockPermissionEvent;
+import me.harsh.privategamesaddon.PrivateGamesAddon;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,6 +19,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.Valid;
 
 
@@ -74,6 +76,12 @@ public class PlayerBuffListener implements Listener {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000000, buff.getSpeedModifier()));
             }
         });
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                event.getArena().getPlayers().forEach(player -> player.setHealth(buff.getHealth()));
+            }
+        }.runTaskTimer(PrivateGamesAddon.getInstance(), 0, 10);
     }
 
     @EventHandler
@@ -98,7 +106,7 @@ public class PlayerBuffListener implements Listener {
         if (!(buff.isBedInstaBreakEnabled())) return;
         if (Utility.getManager().privateArenas.contains(arena)){
             if (block.getType() == Material.BED){
-                if (event.getAction() == Action.LEFT_CLICK_BLOCK){
+                if (event.getAction() == Action.LEFT_CLICK_BLOCK ){
                     arena.destroyBed(arena.getPlayerTeam(player));
                 }
             }

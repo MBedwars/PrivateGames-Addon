@@ -44,8 +44,12 @@ public class PrivateGameMenu extends Menu {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
                 final ArenaBuff buff = Utility.getBuffSafe(player);
+                if (!buff.isBlocksProtected()){
+                    buff.setBlocksProtection(true);
+                    restartMenu("&aEnabled Block Protection!");
+                }
                 buff.setBlocksProtection(false);
-                restartMenu("Disabled Block Protection!");
+                restartMenu("&aDisabled Block Protection!");
             }
 
             @Override
@@ -64,6 +68,10 @@ public class PrivateGameMenu extends Menu {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
                 final ArenaBuff buff = Utility.getBuffSafe(player);
+                if (buff.isBedInstaBreakEnabled()){
+                    buff.setBedInstaBreakEnabled(false);
+                    restartMenu("&aDisabled Bed Instant Break!");
+                }
                 buff.setBedInstaBreakEnabled(true);
                 restartMenu("&aEnabled Bed Instant Break!");
             }
@@ -100,6 +108,10 @@ public class PrivateGameMenu extends Menu {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
                 final ArenaBuff buff = Utility.getBuffSafe(player);
+                if (!buff.isLowGravity()){
+                    buff.setLowGravity(false);
+                    restartMenu("&aLow Gravity Disabled");
+                }
                 buff.setLowGravity(true);
                 restartMenu("&aLow Gravity Enabled");
             }
@@ -120,6 +132,10 @@ public class PrivateGameMenu extends Menu {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
                 final ArenaBuff buff = Utility.getBuffSafe(player);
+                if (!buff.isOneHitKill()){
+                    buff.setOneHitKill(false);
+                    restartMenu("&aOne Hit Buff Disabled!");
+                }
                 buff.setOneHitKill(true);
                 restartMenu("&aOne Hit Buff Enabled!");
             }
@@ -169,17 +185,9 @@ public class PrivateGameMenu extends Menu {
             return instaBedBreakBuff.getItem();
         }else if (slot == 33){
             return blockProtBuff.getItem();
-        }else if (slot == 37){
+        }else if (slot == 31){
             return respawnTimeBuff.getItem();
         }
         return ItemCreator.of(CompMaterial.CYAN_STAINED_GLASS_PANE).build().make();
-    }
-
-    @Override
-    protected String[] getInfo() {
-        return new String[]{
-                "Allows to set private games",
-                "Settings."
-        };
     }
 }
