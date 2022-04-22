@@ -25,25 +25,27 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
         final Arena arena = GameAPI.get().getArenaByPlayer(p2);
         if (arena == null) {
             Common.tell(p2, Settings.PREFIX + " &cYou're not in an arena!");
+            return;
 
         }
         if (!Utility.getManager().getMode(p2)){
             Common.tell(p2, Settings.PREFIX + " &cYou're not in private game creation mode!");
+            return;
         }
         if (!Utility.getManager().privateArenas.contains(arena)){
             Common.tell(p2, Settings.PREFIX + "&cYou cannot warp players in a non-private game room!");
+            return;
         }
         final PartyPlayer partyPlayer = Utility.getPlayer(p2);
         if (partyPlayer.isInParty()){
             final Party party = Utility.getParty(p2);
             if (party == null) Common.log("Party is null");
-            assert party != null;
             party.getMembers().forEach(uuid -> {
                 final Player p = Utility.getPlayerByUuid(uuid);
                 if (p == null) Common.log("Player is Null!");
                 if (p == p2) return;
                 Common.tell(p2, Settings.PREFIX + "&aWarping " + p.getName());
-                arena.addPlayer(p2);
+                arena.addPlayer(p);
             });
         }else {
             Common.tell(p2,Settings.PREFIX + "&cSorry you're not in a party to warp players");

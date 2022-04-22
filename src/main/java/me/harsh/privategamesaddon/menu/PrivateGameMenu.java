@@ -47,9 +47,10 @@ public class PrivateGameMenu extends Menu {
                 if (!buff.isBlocksProtected()){
                     buff.setBlocksProtection(true);
                     restartMenu("&aEnabled Block Protection!");
+                    return;
                 }
                 buff.setBlocksProtection(false);
-                restartMenu("&aDisabled Block Protection!");
+                restartMenu("&cDisabled Block Protection!");
             }
 
             @Override
@@ -70,7 +71,7 @@ public class PrivateGameMenu extends Menu {
                 final ArenaBuff buff = Utility.getBuffSafe(player);
                 if (buff.isNoSpawner()){
                     buff.setNoSpawner(false);
-                    restartMenu("&aDisabled No Spawner Mode!");
+                    restartMenu("&cDisabled No Spawner Mode!");
                     return;
                 }
                 buff.setNoSpawner(true);
@@ -109,9 +110,10 @@ public class PrivateGameMenu extends Menu {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
                 final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (!buff.isLowGravity()){
+                if (buff.isLowGravity()){
                     buff.setLowGravity(false);
-                    restartMenu("&aLow Gravity Disabled");
+                    restartMenu("&cLow Gravity Disabled");
+                    return;
                 }
                 buff.setLowGravity(true);
                 restartMenu("&aLow Gravity Enabled");
@@ -133,9 +135,10 @@ public class PrivateGameMenu extends Menu {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
                 final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (!buff.isOneHitKill()){
+                if (buff.isOneHitKill()){
                     buff.setOneHitKill(false);
-                    restartMenu("&aOne Hit Buff Disabled!");
+                    restartMenu("&cOne Hit Buff Disabled!");
+                    return;
                 }
                 buff.setOneHitKill(true);
                 restartMenu("&aOne Hit Buff Enabled!");

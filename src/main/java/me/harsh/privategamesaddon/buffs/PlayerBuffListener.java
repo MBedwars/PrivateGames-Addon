@@ -2,6 +2,7 @@ package me.harsh.privategamesaddon.buffs;
 
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.api.arena.Team;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerIngameDeathEvent;
@@ -53,6 +54,9 @@ public class PlayerBuffListener implements Listener {
         }
         final ArenaBuff buff = Utility.getBuff(arena);
 
+        player.setMaxHealth(buff.getHealth());
+        player.setHealth(buff.getHealth());
+
         if (buff.isLowGravity()){
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 1000000, 3));
         }
@@ -71,7 +75,11 @@ public class PlayerBuffListener implements Listener {
         Valid.checkNotNull(buff);
         if (buff.isNoSpawner()){
             for (Spawner spawner : arena.getSpawners()) {
-                spawner.addDropDurationModifier("private", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, Double.MAX_VALUE);
+                for (Team team: arena.getEnabledTeams()){
+                    if (spawner.getLocation().distance(arena.getTeamSpawn(team)) >= 15){
+                        spawner.addDropDurationModifier("private", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, 99999999.9);
+                    }
+                }
             }
         }
         arena.getPlayers().forEach(player -> {

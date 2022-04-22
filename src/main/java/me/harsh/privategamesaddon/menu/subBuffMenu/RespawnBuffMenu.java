@@ -31,16 +31,15 @@ public class RespawnBuffMenu extends Menu {
                 if (arena == null || !(Utility.getManager().privateArenas.contains(arena))) {
                     Common.tell(player, Settings.PREFIX + " Sorry, Something went wrong!");
                 }
-                assert arena != null;
                 final ArenaBuff buff = Utility.getBuff(arena);
                 if (buff == null) return;
                 if (buff.getRespawnTime() == 10){
                     buff.setRespawnTime(5);
-                    restartMenu("Set Respawn Time to 5 seconds again!");
+                    restartMenu("&cSet Respawn Time to 5 seconds again!");
                     return;
                 }
                 buff.setRespawnTime(10);
-                restartMenu("Set Respawn Time to 10 seconds!");
+                restartMenu("&aSet Respawn Time to 10 seconds!");
             }
 
             @Override
@@ -50,7 +49,6 @@ public class RespawnBuffMenu extends Menu {
                 if (arena == null){
                     player.sendMessage("Something went wrong!");
                 }
-                assert arena != null;
                 final ArenaBuff buff = Utility.getBuff(arena);
                 return ItemCreator.of(CompMaterial.PAPER,
                         "&a10 Second",
@@ -67,11 +65,10 @@ public class RespawnBuffMenu extends Menu {
                 if (arena == null || !(Utility.getManager().privateArenas.contains(arena))) {
                     Common.tell(player, Settings.PREFIX + " Sorry, Something went wrong!");
                 }
-                assert arena != null;
                 final ArenaBuff buff = Utility.getBuff(arena);
                 if (buff == null) return;
                 buff.setRespawnTime(5);
-                restartMenu("Set Respawn Time to 5 seconds!");
+                restartMenu("&aSet Respawn Time to 5 seconds!");
             }
 
             @Override
@@ -98,16 +95,15 @@ public class RespawnBuffMenu extends Menu {
                 if (arena == null || !(Utility.getManager().privateArenas.contains(arena))) {
                     Common.tell(player, Settings.PREFIX + " Sorry, Something went wrong!");
                 }
-                assert arena != null;
                 final ArenaBuff buff = Utility.getBuff(arena);
                 if (buff == null) return;
                 if (buff.getRespawnTime() == 1){
                     buff.setRespawnTime(5);
-                    restartMenu("Set Respawn Time to 5 seconds again!");
+                    restartMenu("&cSet Respawn Time to 5 seconds again!");
                     return;
                 }
                 buff.setRespawnTime(1);
-                restartMenu("Set Respawn Time to 1 seconds!");
+                restartMenu("&aSet Respawn Time to 1 seconds!");
             }
 
             @Override
