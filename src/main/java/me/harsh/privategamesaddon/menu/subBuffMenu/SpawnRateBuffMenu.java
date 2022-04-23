@@ -33,12 +33,12 @@ public class SpawnRateBuffMenu extends Menu {
                 }
                 final ArenaBuff buff = Utility.getBuff(arena);
                 if (buff == null) return;
-                if (buff.getSpawnRateMultiplier() == 3){
+                if (buff.getSpawnRateMultiplier() == 10){
                     buff.setSpawnRateMultiplier(1);
                     restartMenu("&cSet Spawn rate multiplier to 1 time again!");
                     return;
                 }
-                buff.setRespawnTime(3);
+                buff.setRespawnTime(10);
                 restartMenu("&aSet Spawn rate multiplier to 3 times!");
             }
 
@@ -52,7 +52,7 @@ public class SpawnRateBuffMenu extends Menu {
                         "",
                         "Set Spawner multiplier rate ",
                         "to three times")
-                        .glow(buff.getRespawnTime() == 3).build().make();
+                        .glow(buff.getRespawnTime() == 10).build().make();
             }
         };
         this.two = new Button() {
@@ -64,12 +64,12 @@ public class SpawnRateBuffMenu extends Menu {
                 }
                 final ArenaBuff buff = Utility.getBuff(arena);
                 if (buff == null) return;
-                if (buff.getSpawnRateMultiplier() == 2){
+                if (buff.getSpawnRateMultiplier() == 5){
                     buff.setSpawnRateMultiplier(1);
                     restartMenu("&cSet Spawn rate multiplier to 1 time again!");
                     return;
                 }
-                buff.setRespawnTime(2);
+                buff.setRespawnTime(5);
                 restartMenu("&aSet Spawn rate multiplier to 2 times!");
             }
 
@@ -83,7 +83,7 @@ public class SpawnRateBuffMenu extends Menu {
                                 "",
                                 "Set Spawner multiplier rate ",
                                 "to two times")
-                        .glow(buff.getRespawnTime() == 2).build().make();
+                        .glow(buff.getRespawnTime() == 5).build().make();
             }
         };
         this.one = new Button() {

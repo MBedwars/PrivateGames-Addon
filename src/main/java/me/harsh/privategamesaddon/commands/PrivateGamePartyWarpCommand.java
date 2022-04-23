@@ -4,8 +4,10 @@ import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
+import me.harsh.privategamesaddon.api.events.PrivateGameWarpEvent;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleCommandGroup;
@@ -51,6 +53,7 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
                 Common.tell(p2, Settings.PREFIX + "&aWarping " + p.getName());
                 arena.addPlayer(p);
             });
+            Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent(party.getMembers(), arena));
         }else {
             Common.tell(p2,Settings.PREFIX + "&cSorry you're not in a party to warp players");
         }

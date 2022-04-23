@@ -6,8 +6,12 @@ import de.marcely.bedwars.api.arena.AddPlayerCause;
 import de.marcely.bedwars.api.arena.AddPlayerIssue;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
+import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerJoinArenaEvent;
 import de.marcely.bedwars.api.event.player.PlayerQuitArenaEvent;
+import me.harsh.privategamesaddon.api.events.PrivateGameCreateEvent;
+import me.harsh.privategamesaddon.api.events.PrivateGameEndEvent;
+import me.harsh.privategamesaddon.api.events.PrivateGameStartEvent;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
@@ -57,6 +61,7 @@ public class PlayerListener implements Listener {
             if (partyPlayer.isInParty()){
                 final Party party = Utility.getParty(player);
                 manager.partyMembersMangingMap.put(arena,party);
+                Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
                 if (party.getMembers().size() == 1) {
                     Common.tell(player, Settings.PREFIX + "&c Couldn't Find Anyone in your party please invite some friend and warp them using /bwp warp :-)");
                 }
@@ -67,6 +72,9 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onArenaEnd(RoundEndEvent event){
         final Arena arena = event.getArena();
+        if (manager.getPrivateArenas().contains(arena)){
+            Bukkit.getServer().getPluginManager().callEvent(new PrivateGameEndEvent(arena, event.getWinners(), event.getWinnerTeam()));
+        }
         manager.getPrivateArenas().remove(arena);
         manager.partyMembersMangingMap.remove(arena);
     }
@@ -78,5 +86,12 @@ public class PlayerListener implements Listener {
             manager.getPrivateArenas().remove(arena);
         }
         manager.partyMembersMangingMap.remove(arena);
+    }
+    @EventHandler
+    public void onRoundStart(RoundStartEvent event){
+        final Arena arena = event.getArena();
+        if (manager.getPrivateArenas().contains(arena)){
+            Bukkit.getServer().getPluginManager().callEvent(new PrivateGameStartEvent(arena));
+        }
     }
 }
