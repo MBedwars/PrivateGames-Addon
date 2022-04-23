@@ -1,6 +1,5 @@
 package me.harsh.privategamesaddon.commands;
 
-import me.harsh.privategamesaddon.settings.Settings;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 
 public class PrivateCommandGroup extends SimpleCommandGroup {

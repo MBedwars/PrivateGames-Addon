@@ -1,5 +1,7 @@
 # Private Games Addon
 Prefix: '&cPrivate Games Addon&7>>'
+Placeholders:
+  is_private_game: '&7[Private]'
 Perms:
   global_perm: 'privategame.*'
   create_perm: 'privategame.create'
@@ -16,7 +18,7 @@ Menu:
     Speed_Buff: '&aSpeed Buff'
     Disable_Block_Protection_Buff: '&aDisable Block Protection'
     Respawn_Time_Buff: '&aRespawn Time Buff'
-    Spawn_Rate_Mutiplier_Buff: '&aSpawn Rate Mutiplier'
+    Spawn_Rate_Mutiplier_Buff: '&aSpawn Rate Multiplier'
 
 
 

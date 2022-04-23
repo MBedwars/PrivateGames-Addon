@@ -12,6 +12,7 @@ public class PrivateGameCreateCommand extends SimpleSubCommand {
 
     protected PrivateGameCreateCommand(SimpleCommandGroup parent) {
         super(parent, "private");
+        setPermission(null);
     }
 
     @Override

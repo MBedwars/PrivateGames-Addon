@@ -18,6 +18,7 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
 
     protected PrivateGamePartyWarpCommand(SimpleCommandGroup parent) {
         super(parent, "warp");
+        setPermission(null);
     }
 
     @Override

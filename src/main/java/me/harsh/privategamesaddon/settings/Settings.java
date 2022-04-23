@@ -27,6 +27,8 @@ public class Settings extends SimpleSettings {
     public static String CREATE_PERM;
     public static String GLOBAL_PERM;
 
+    // Placeholders
+    public static String IS_PRIVATE_GAME;
     @Override
     protected int getConfigVersion() {
         return 1;
@@ -48,7 +50,10 @@ public class Settings extends SimpleSettings {
         DISABLE_BLOCK_PROTECTION_BUFF = getString("Disable_Block_Protection_Buff");
         RESPAWN_TIME_BUFF = getString("Respawn_Time_Buff");
         SPAWN_RATE_MUTIPLIER_BUFF = getString("Spawn_Rate_Mutiplier_Buff");
+        pathPrefix("Perms");
         CREATE_PERM = getString("create_perm");
         GLOBAL_PERM = getString("global_perm");
+        pathPrefix("Placeholders");
+        IS_PRIVATE_GAME = getString("is_private_game");
     }
 }
