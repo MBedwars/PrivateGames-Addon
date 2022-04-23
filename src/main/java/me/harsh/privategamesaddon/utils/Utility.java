@@ -10,11 +10,10 @@ import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
-import org.bukkit.Bukkit;
+import me.harsh.privategamesaddon.settings.Settings;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.Valid;
-import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.remain.Remain;
 
 import java.util.UUID;
@@ -34,7 +33,6 @@ public class Utility {
         return api.getPartyPlayer(player.getUniqueId());
     }
 
-    ;
 
     public Party getParty(@NotNull Player player) {
         Valid.checkNotNull(getPlayer(player).getPartyId());
@@ -66,6 +64,10 @@ public class Utility {
             return getManager().arenaArenaBuffMap.get(arena);
         }
         return null;
+    }
+
+    public Boolean hasPermision(@NotNull Player player){
+        return player.hasPermission(Settings.GLOBAL_PERM) || player.hasPermission(Settings.CREATE_PERM) || player.hasPermission("*");
     }
 
 }

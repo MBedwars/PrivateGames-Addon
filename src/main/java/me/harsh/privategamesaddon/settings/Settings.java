@@ -5,13 +5,16 @@ import org.mineacademy.fo.settings.SimpleSettings;
 
 public class Settings extends SimpleSettings {
 
+    // Menu title, Prefix
     public static String PREFIX;
     public static String MENU_TITLE;
 
+    // Sub menus
     public static String HEALTH_BUFF_MENU;
     public static String SPEED_BUFF_MENU;
     public static String RESPAWN_BUFF_MENU;
 
+    // Buttons
     public static String ONE_HIT_BUFF;
     public static String HEALTH_BUFF;
     public static String LOW_GRAVITY_BUFF;
@@ -19,6 +22,10 @@ public class Settings extends SimpleSettings {
     public static String DISABLE_BLOCK_PROTECTION_BUFF;
     public static String RESPAWN_TIME_BUFF;
     public static String SPAWN_RATE_MUTIPLIER_BUFF;
+
+    // Permisions
+    public static String CREATE_PERM;
+    public static String GLOBAL_PERM;
 
     @Override
     protected int getConfigVersion() {
@@ -41,6 +48,7 @@ public class Settings extends SimpleSettings {
         DISABLE_BLOCK_PROTECTION_BUFF = getString("Disable_Block_Protection_Buff");
         RESPAWN_TIME_BUFF = getString("Respawn_Time_Buff");
         SPAWN_RATE_MUTIPLIER_BUFF = getString("Spawn_Rate_Mutiplier_Buff");
-
+        CREATE_PERM = getString("create_perm");
+        GLOBAL_PERM = getString("global_perm");
     }
 }

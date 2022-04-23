@@ -1,5 +1,8 @@
 # Private Games Addon
 Prefix: '&cPrivate Games Addon&7>>'
+Perms:
+  global_perm: 'privategame.*'
+  create_perm: 'privategame.create'
 Menu:
   Title: '&cPrivate &aGames Control Menu'
   Sub_Menu:

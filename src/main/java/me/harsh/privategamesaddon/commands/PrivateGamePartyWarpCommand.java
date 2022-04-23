@@ -22,6 +22,10 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
     protected void onCommand() {
         checkConsole();
         final Player p2 = getPlayer();
+        if (!Utility.hasPermision(p2)){
+            Common.tell(p2, Settings.PREFIX + " You Don't have permission to create private games!");
+            return;
+        }
         final Arena arena = GameAPI.get().getArenaByPlayer(p2);
         if (arena == null) {
             Common.tell(p2, Settings.PREFIX + " &cYou're not in an arena!");

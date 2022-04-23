@@ -1,19 +1,12 @@
 package me.harsh.privategamesaddon.commands;
 
-import com.alessiodp.parties.api.interfaces.Party;
-import com.alessiodp.parties.api.interfaces.PartyPlayer;
-import de.marcely.bedwars.api.GameAPI;
-import de.marcely.bedwars.api.arena.Arena;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.command.SimpleSubCommand;
-
-import java.util.UUID;
 
 public class PrivateGameCreateCommand extends SimpleSubCommand {
 
@@ -25,6 +18,10 @@ public class PrivateGameCreateCommand extends SimpleSubCommand {
     protected void onCommand() {
         checkConsole();
         final Player player = getPlayer();
+        if (!Utility.hasPermision(player)){
+            Common.tell(player, Settings.PREFIX + " You Don't have permission to create private games!");
+            return;
+        }
         final PrivateGameManager manager = Utility.getManager();
         if (manager.checkPlayer(player) && manager.getMode(player)){
             manager.setMode(player, false);
