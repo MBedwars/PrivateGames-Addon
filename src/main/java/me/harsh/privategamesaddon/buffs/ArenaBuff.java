@@ -11,7 +11,7 @@ public class ArenaBuff {
     private int speedModifier = 1;
     private boolean isBlocksProtected = true;
     private boolean isBedInstaBreakEnabled = false;
-    private boolean isNoSpawner = false;
+    private  int spawnRateMultiplier = 1;
 
     public void setHealth(int health) {
         this.health = health;
@@ -21,8 +21,9 @@ public class ArenaBuff {
         this.lowGravity = lowGravity;
     }
 
-    public void setNoSpawner(boolean noSpawner) {
-        isNoSpawner = noSpawner;
+
+    public void setSpawnRateMultiplier(int spawnRateMultiplier) {
+        this.spawnRateMultiplier = spawnRateMultiplier;
     }
 
     public void setOneHitKill(boolean oneHitKill) {

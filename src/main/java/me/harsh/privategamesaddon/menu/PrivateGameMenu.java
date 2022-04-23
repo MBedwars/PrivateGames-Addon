@@ -2,6 +2,7 @@ package me.harsh.privategamesaddon.menu;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.menu.subBuffMenu.HealthBuffMenu;
 import me.harsh.privategamesaddon.menu.subBuffMenu.RespawnBuffMenu;
+import me.harsh.privategamesaddon.menu.subBuffMenu.SpawnRateBuffMenu;
 import me.harsh.privategamesaddon.menu.subBuffMenu.SpeedBuffMenu;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
@@ -18,9 +19,9 @@ public class PrivateGameMenu extends Menu {
     private final Button oneHitBuff;
     private final Button gravityBuff;
     private final Button speedBuff;
-    private final Button spawnerBuff;
     private final Button blockProtBuff;
     private final Button respawnTimeBuff;
+    private final Button baseSpawnerBuff;
 
     public PrivateGameMenu(){
         setTitle(Settings.MENU_TITLE);
@@ -65,28 +66,19 @@ public class PrivateGameMenu extends Menu {
                         .build().make();
             }
         };
-        this.spawnerBuff = new Button() {
+        this.baseSpawnerBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (buff.isNoSpawner()){
-                    buff.setNoSpawner(false);
-                    restartMenu("&cDisabled No Spawner Mode!");
-                    return;
-                }
-                buff.setNoSpawner(true);
-                restartMenu("&aEnabled No Spawner Mode!");
+                new SpawnRateBuffMenu().displayTo(player);
             }
 
             @Override
             public ItemStack getItem() {
-                final ArenaBuff buff = Utility.getBuffSafe(getViewer());
-                return ItemCreator.of(CompMaterial.RED_BED,
-                        Settings.SPAWNER_BUFF,
-                        "",
-                        "Enables people play",
-                        "without any spawners!")
-                        .glow(buff.isNoSpawner())
+                return ItemCreator.of(CompMaterial.IRON_INGOT,
+                                Settings.SPAWN_RATE_MUTIPLIER_BUFF,
+                                "",
+                                "Enables people multiply",
+                                "spawn rate of base spawners!")
                         .build().make();
             }
         };
@@ -186,7 +178,7 @@ public class PrivateGameMenu extends Menu {
         }else if (slot == 16){
             return speedBuff.getItem();
         }else if (slot == 29){
-            return spawnerBuff.getItem();
+            return baseSpawnerBuff.getItem();
         }else if (slot == 33){
             return blockProtBuff.getItem();
         }else if (slot == 31){

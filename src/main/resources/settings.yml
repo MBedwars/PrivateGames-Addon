@@ -11,9 +11,9 @@ Menu:
     Health_Buff: '&aHealth Buff'
     Low_Gravity_Buff: '&aLow Gravity'
     Speed_Buff: '&aSpeed Buff'
-    Spawner_Buff: '&aSpawner Buff'
     Disable_Block_Protection_Buff: '&aDisable Block Protection'
     Respawn_Time_Buff: '&aRespawn Time Buff'
+    Spawn_Rate_Mutiplier_Buff: '&aSpawn Rate Mutiplier'
 
 
 

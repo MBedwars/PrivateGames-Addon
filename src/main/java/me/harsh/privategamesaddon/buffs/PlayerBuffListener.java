@@ -73,11 +73,11 @@ public class PlayerBuffListener implements Listener {
         }
         final ArenaBuff buff = Utility.getBuff(arena);
         Valid.checkNotNull(buff);
-        if (buff.isNoSpawner()){
-            for (Spawner spawner : arena.getSpawners()) {
+        if (buff.getSpawnRateMultiplier() != 1){
+            for (Spawner spawner: arena.getSpawners()){
                 for (Team team: arena.getEnabledTeams()){
-                    if (spawner.getLocation().distance(arena.getTeamSpawn(team)) >= 15){
-                        spawner.addDropDurationModifier("private", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, 99999999.9);
+                    if (spawner.getLocation().distance(arena.getTeamSpawn(team)) <= 10){
+                        spawner.addDropDurationModifier("privateMultiply", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.MULTIPLY, buff.getSpawnRateMultiplier());
                     }
                 }
             }
