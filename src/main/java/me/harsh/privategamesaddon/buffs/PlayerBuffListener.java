@@ -73,18 +73,19 @@ public class PlayerBuffListener implements Listener {
         }
         final ArenaBuff buff = Utility.getBuff(arena);
         Valid.checkNotNull(buff);
-        if (buff.getSpawnRateMultiplier() != 1){
+        if (buff.getSpawnRateMultiplier() != 3){
             for (Spawner spawner: arena.getSpawners()){
                 for (Team team: arena.getEnabledTeams()){
                     if (spawner.getLocation().distance(arena.getTeamSpawn(team)) <= 10){
-                        spawner.addDropDurationModifier("privateMultiply", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, buff.getSpawnRateMultiplier());
+                        spawner.addDropDurationModifier("privateMultiply", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, 100000.0);
                     }
                 }
+                break;
             }
         }
         arena.getPlayers().forEach(player -> {
             if (buff.isLowGravity()){
-                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 1000000, 3));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 1000000000, 3));
             }
             if (buff.getSpeedModifier() != 1){
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000000, buff.getSpeedModifier()));

@@ -9,6 +9,7 @@ import de.marcely.bedwars.api.event.arena.RoundEndEvent;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerJoinArenaEvent;
 import de.marcely.bedwars.api.event.player.PlayerQuitArenaEvent;
+import de.marcely.bedwars.api.event.player.PlayerStatChangeEvent;
 import me.harsh.privategamesaddon.api.events.PrivateGameCreateEvent;
 import me.harsh.privategamesaddon.api.events.PrivateGameEndEvent;
 import me.harsh.privategamesaddon.api.events.PrivateGameStartEvent;
@@ -21,6 +22,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Valid;
+
+import java.util.UUID;
 
 public class PlayerListener implements Listener {
     private final PrivateGameManager manager;
@@ -42,6 +45,7 @@ public class PlayerListener implements Listener {
                 final Party p  = manager.partyMembersMangingMap.get(arena);
                 if (party == p){
                     final String name = Bukkit.getPlayer(party.getLeader()).getName();
+                    Utility.doStatsThing(player.getUniqueId());
                     Common.tell(player, Settings.PREFIX + " You have joined " + name + "'s private game!");
                     return;
                 }
@@ -61,6 +65,7 @@ public class PlayerListener implements Listener {
             if (partyPlayer.isInParty()){
                 final Party party = Utility.getParty(player);
                 manager.partyMembersMangingMap.put(arena,party);
+                Utility.doStatsThing(player.getUniqueId());
                 Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
                 if (party.getMembers().size() == 1) {
                     Common.tell(player, Settings.PREFIX + "&c Couldn't Find Anyone in your party please invite some friend and warp them using /bwp warp :-)");
@@ -92,6 +97,15 @@ public class PlayerListener implements Listener {
         final Arena arena = event.getArena();
         if (manager.getPrivateArenas().contains(arena)){
             Bukkit.getServer().getPluginManager().callEvent(new PrivateGameStartEvent(arena));
+        }
+    }
+
+    @EventHandler
+    public void onPlayerStatGain(PlayerStatChangeEvent event){
+        final UUID uuid = event.getStats().getPlayerUUID();
+        if (manager.playerStatsList.contains(uuid)){
+            manager.playerStatsList.remove(uuid);
+            event.setCancelled(true);
         }
     }
 }

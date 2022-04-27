@@ -5,9 +5,10 @@ import org.mineacademy.fo.settings.SimpleSettings;
 
 public class Settings extends SimpleSettings {
 
-    // Menu title, Prefix
+    // Menu title, Prefix, Booleans
     public static String PREFIX;
     public static String MENU_TITLE;
+    public static Boolean SHOULD_SAVE_STATS;
 
     // Sub menus
     public static String HEALTH_BUFF_MENU;
@@ -36,6 +37,7 @@ public class Settings extends SimpleSettings {
 
     private static void init(){
         PREFIX = getString("Prefix");
+        SHOULD_SAVE_STATS = getBoolean("Save_Stats");
         pathPrefix("Menu");
         MENU_TITLE = getString("Title");
         pathPrefix("Menu.Sub_Menu");

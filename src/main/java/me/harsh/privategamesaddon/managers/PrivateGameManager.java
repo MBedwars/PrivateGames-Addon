@@ -15,6 +15,7 @@ public class PrivateGameManager {
     public final Map<Arena,Party> partyMembersMangingMap = new HashMap<>();
     public final StrictMap<Arena, ArenaBuff> arenaArenaBuffMap = new StrictMap<>();
     public final StrictMap<UUID,Boolean> privateGameMode = new StrictMap<>();
+    public final List<UUID> playerStatsList = new ArrayList<>();
     @Getter
     public final List<Arena> privateArenas = new ArrayList<>();
 

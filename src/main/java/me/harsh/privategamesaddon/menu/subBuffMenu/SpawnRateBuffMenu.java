@@ -35,11 +35,11 @@ public class SpawnRateBuffMenu extends Menu {
                 if (buff == null) return;
                 if (buff.getSpawnRateMultiplier() == 12){
                     buff.setSpawnRateMultiplier(3);
-                    restartMenu("&cSet Spawn rate multiplier to 1 time again!");
+                    restartMenu("&cSet Spawn rate multiplier to 5 seconds again!");
                     return;
                 }
-                buff.setSpawnRateMultiplier(12);
-                restartMenu("&aSet Spawn rate multiplier to 3 times!");
+                buff.setSpawnRateMultiplier(1);
+                restartMenu("&aSet Spawn rate multiplier to 1 second!");
             }
 
             @Override
@@ -48,11 +48,11 @@ public class SpawnRateBuffMenu extends Menu {
                 final Arena arena = GameAPI.get().getArenaByPlayer(player);
                 final ArenaBuff buff = Utility.getBuff(arena);
                 return ItemCreator.of(CompMaterial.GOLD_INGOT,
-                        "&a3 Times",
+                        "&a1 Second",
                         "",
                         "Set Spawner multiplier rate ",
-                        "to three times")
-                        .glow(buff.getSpawnRateMultiplier() == 12).build().make();
+                        "to one second")
+                        .glow(buff.getSpawnRateMultiplier() == 0.5).build().make();
             }
         };
         this.two = new Button() {
@@ -64,13 +64,13 @@ public class SpawnRateBuffMenu extends Menu {
                 }
                 final ArenaBuff buff = Utility.getBuff(arena);
                 if (buff == null) return;
-                if (buff.getSpawnRateMultiplier() == 9){
+                if (buff.getSpawnRateMultiplier() == 10){
                     buff.setSpawnRateMultiplier(3);
-                    restartMenu("&cSet Spawn rate multiplier to 1 time again!");
+                    restartMenu("&cSet Spawn rate multiplier to normal again!");
                     return;
                 }
-                buff.setSpawnRateMultiplier(9);
-                restartMenu("&aSet Spawn rate multiplier to 2 times!");
+                buff.setSpawnRateMultiplier(10);
+                restartMenu("&aSet Spawn rate multiplier to 10 seconds!");
             }
 
             @Override
@@ -79,11 +79,11 @@ public class SpawnRateBuffMenu extends Menu {
                 final Arena arena = GameAPI.get().getArenaByPlayer(player);
                 final ArenaBuff buff = Utility.getBuff(arena);
                 return ItemCreator.of(CompMaterial.GOLD_INGOT,
-                                "&a2 Times",
+                                "&a10 Seconds",
                                 "",
                                 "Set Spawner multiplier rate ",
-                                "to two times")
-                        .glow(buff.getSpawnRateMultiplier() == 9).build().make();
+                                "to ten seconds")
+                        .glow(buff.getSpawnRateMultiplier() == 10).build().make();
             }
         };
         this.one = new Button() {
@@ -108,7 +108,7 @@ public class SpawnRateBuffMenu extends Menu {
                                 "&aNormal",
                                 "",
                                 "Set Spawner multiplier rate ",
-                                "to one time (normal)")
+                                "to normal")
                         .glow(buff.getSpawnRateMultiplier() == 3).build().make();
             }
         };

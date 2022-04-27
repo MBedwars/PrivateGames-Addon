@@ -10,9 +10,11 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class PrivateGamePlaceholder extends PlaceholderExpansion {
+
+    // %privategames_isprivate%
     @Override
     public @NotNull String getIdentifier() {
-        return "isprivategame";
+        return "bw";
     }
     @Override
     public @NotNull String getAuthor() {
@@ -26,10 +28,12 @@ public class PrivateGamePlaceholder extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
-        final Arena arena = GameAPI.get().getArenaByPlayer((Player) player);
-        if (arena == null) return null;
-        if (Utility.getManager().getPrivateArenas().contains(arena)){
-            return Settings.IS_PRIVATE_GAME;
+        if (params.equalsIgnoreCase("private")){
+            final Arena arena = GameAPI.get().getArenaByPlayer((Player) player);
+            if (arena == null) return null;
+            if (Utility.getManager().getPrivateArenas().contains(arena)){
+                return Settings.IS_PRIVATE_GAME;
+            }
         }
         return null;
     }

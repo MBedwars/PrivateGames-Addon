@@ -11,7 +11,7 @@ public class ArenaBuff {
     private int speedModifier = 1;
     private boolean isBlocksProtected = true;
     private boolean isBedInstaBreakEnabled = false;
-    private  int spawnRateMultiplier = 1;
+    private  int spawnRateMultiplier = 3;
 
     public void setHealth(int health) {
         this.health = health;

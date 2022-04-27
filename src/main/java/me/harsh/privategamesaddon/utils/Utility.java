@@ -70,8 +70,10 @@ public class Utility {
         return player.hasPermission(Settings.GLOBAL_PERM) || player.hasPermission(Settings.CREATE_PERM) || player.hasPermission("*");
     }
 
-    public Boolean isPrivateGame(@NotNull Arena arena){
-        return getManager().privateArenas.contains(arena);
+    public void doStatsThing(UUID uuid){
+        if (Settings.SHOULD_SAVE_STATS){
+            Utility.getManager().playerStatsList.add(uuid);
+        }
     }
 
 }
