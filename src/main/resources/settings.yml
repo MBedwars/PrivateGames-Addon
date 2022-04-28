@@ -1,9 +1,10 @@
 # Private Games Addon
-Prefix: '&cPrivate Games Addon&7>>'
-# If Set to true it will register the stats of the private games to player
-Save_Stats: false
+Messages:
+  Prefix: '&cPrivate Games Addon&7>>'
+  no_perm: '&cSorry, you have to buy &6MVP++ to create private games!'
 Placeholders:
-  is_private_game: '&7[Private]'
+  # This placeholder can be used inside Scoreboard to present if the game is private or not! [P] on hypixel
+  is_private_game: '[Private]' # Color Codes not supported
 Perms:
   global_perm: 'privategame.*'
   create_perm: 'privategame.create'
@@ -21,6 +22,8 @@ Menu:
     Disable_Block_Protection_Buff: '&aDisable Block Protection'
     Respawn_Time_Buff: '&aRespawn Time Buff'
     Spawn_Rate_Mutiplier_Buff: '&aSpawn Rate Multiplier'
+# If Set to true it will register the stats of the private games to player
+Save_Stats: false
 
 
 

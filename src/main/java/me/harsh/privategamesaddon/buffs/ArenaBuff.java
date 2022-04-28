@@ -10,8 +10,7 @@ public class ArenaBuff {
     private boolean lowGravity = false;
     private int speedModifier = 1;
     private boolean isBlocksProtected = true;
-    private boolean isBedInstaBreakEnabled = false;
-    private  int spawnRateMultiplier = 3;
+    private double spawnRateMultiplier = 3;
 
     public void setHealth(int health) {
         this.health = health;
@@ -22,7 +21,7 @@ public class ArenaBuff {
     }
 
 
-    public void setSpawnRateMultiplier(int spawnRateMultiplier) {
+    public void setSpawnRateMultiplier(double spawnRateMultiplier) {
         this.spawnRateMultiplier = spawnRateMultiplier;
     }
 
@@ -42,7 +41,4 @@ public class ArenaBuff {
         isBlocksProtected = blocksProtected;
     }
 
-    public void setBedInstaBreakEnabled(boolean bedInstaBreakEnabled) {
-        isBedInstaBreakEnabled = bedInstaBreakEnabled;
-    }
 }

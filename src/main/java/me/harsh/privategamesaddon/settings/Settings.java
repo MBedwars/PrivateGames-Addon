@@ -30,13 +30,16 @@ public class Settings extends SimpleSettings {
 
     // Placeholders
     public static String IS_PRIVATE_GAME;
+
+    // Messages
+    public static String NO_PERM_EROR;
+
     @Override
     protected int getConfigVersion() {
         return 1;
     }
 
     private static void init(){
-        PREFIX = getString("Prefix");
         SHOULD_SAVE_STATS = getBoolean("Save_Stats");
         pathPrefix("Menu");
         MENU_TITLE = getString("Title");
@@ -57,5 +60,8 @@ public class Settings extends SimpleSettings {
         GLOBAL_PERM = getString("global_perm");
         pathPrefix("Placeholders");
         IS_PRIVATE_GAME = getString("is_private_game");
+        pathPrefix("Messages");
+        NO_PERM_EROR = getString("no_perm");
+        PREFIX = getString("Prefix");
     }
 }

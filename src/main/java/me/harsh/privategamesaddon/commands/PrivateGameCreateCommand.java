@@ -20,7 +20,7 @@ public class PrivateGameCreateCommand extends SimpleSubCommand {
         checkConsole();
         final Player player = getPlayer();
         if (!Utility.hasPermision(player)){
-            Common.tell(player, Settings.PREFIX + " You Don't have permission to create private games!");
+            Common.tell(player, Settings.PREFIX + Common.colorize(Settings.NO_PERM_EROR));
             return;
         }
         final PrivateGameManager manager = Utility.getManager();

@@ -80,6 +80,9 @@ public class PlayerListener implements Listener {
         if (manager.getPrivateArenas().contains(arena)){
             Bukkit.getServer().getPluginManager().callEvent(new PrivateGameEndEvent(arena, event.getWinners(), event.getWinnerTeam()));
         }
+        for (Player player : arena.getPlayers()) {
+            manager.playerStatsList.remove(player.getUniqueId());
+        }
         manager.getPrivateArenas().remove(arena);
         manager.partyMembersMangingMap.remove(arena);
     }
@@ -104,7 +107,6 @@ public class PlayerListener implements Listener {
     public void onPlayerStatGain(PlayerStatChangeEvent event){
         final UUID uuid = event.getStats().getPlayerUUID();
         if (manager.playerStatsList.contains(uuid)){
-            manager.playerStatsList.remove(uuid);
             event.setCancelled(true);
         }
     }

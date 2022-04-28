@@ -2,6 +2,7 @@ package me.harsh.privategamesaddon.buffs;
 
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.api.arena.ArenaStatus;
 import de.marcely.bedwars.api.arena.Team;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
@@ -10,15 +11,11 @@ import de.marcely.bedwars.api.event.player.PlayerIngameRespawnEvent;
 import de.marcely.bedwars.api.event.player.PlayerModifyBlockPermissionEvent;
 import de.marcely.bedwars.api.game.spawner.Spawner;
 import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier;
-import de.marcely.bedwars.tools.location.XYZD;
 import me.harsh.privategamesaddon.utils.Utility;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -32,6 +29,9 @@ public class PlayerBuffListener implements Listener {
     public void onPlayerHit(EntityDamageByEntityEvent event){
         if (event.getEntity() instanceof Player){
             final Player player = (Player) event.getEntity();
+            final Arena arena = GameAPI.get().getArenaByPlayer(player);
+            if ( arena == null) return;
+            if ( arena.getStatus() != ArenaStatus.RUNNING) return;
             if (!Utility.getManager().privateArenas.contains(GameAPI.get().getArenaByPlayer(player))){
                 return;
             }
@@ -77,10 +77,10 @@ public class PlayerBuffListener implements Listener {
             for (Spawner spawner: arena.getSpawners()){
                 for (Team team: arena.getEnabledTeams()){
                     if (spawner.getLocation().distance(arena.getTeamSpawn(team)) <= 10){
-                        spawner.addDropDurationModifier("privateMultiply", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, 100000.0);
+                        spawner.addDropDurationModifier("privateMultiply", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, buff.getSpawnRateMultiplier());
                     }
+                    break;
                 }
-                break;
             }
         }
         arena.getPlayers().forEach(player -> {
@@ -109,29 +109,12 @@ public class PlayerBuffListener implements Listener {
         if (!Utility.getManager().privateArenas.contains(arena)){
             return;
         }
+        for (Player player : arena.getPlayers()){
+            player.setMaxHealth(20);
+            player.setHealth(20);
+        }
        Utility.getManager().arenaArenaBuffMap.remove(arena);
 
-    }
-
-    @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event){
-        final Player player = event.getPlayer();
-        final Block block = event.getClickedBlock();
-        final Arena arena = GameAPI.get().getArenaByPlayer(player);
-        if (arena == null) return;
-        if (block == null) return;
-        final ArenaBuff buff = Utility.getBuff(arena);
-        if (buff == null) return;
-        if (!(buff.isBedInstaBreakEnabled())) return;
-        if (Utility.getManager().privateArenas.contains(arena)){
-            if (block.getType().name().contains("BED")){
-                if (event.getAction() == Action.LEFT_CLICK_BLOCK ){
-                    XYZD bedLoc = arena.getBedLocation(arena.getPlayerTeam(player));
-                    if (bedLoc.toLocation(arena.getGameWorld()) == block.getLocation())
-                    arena.destroyBed(arena.getPlayerTeam(player));
-                }
-            }
-        }
     }
     @EventHandler
     public void onPlayerDeath(PlayerIngameDeathEvent event){

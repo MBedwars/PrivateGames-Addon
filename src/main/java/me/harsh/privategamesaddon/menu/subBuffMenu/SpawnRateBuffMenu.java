@@ -17,9 +17,9 @@ import org.mineacademy.fo.remain.CompMaterial;
 
 
 public class SpawnRateBuffMenu extends Menu {
-    private final Button one;
-    private final Button two;
-    private final Button three;
+    private final Button one; // normal
+    private final Button two; // super slow
+    private final Button three; // super fast
     public SpawnRateBuffMenu(){
         super(new PrivateGameMenu());
         setTitle(Settings.RESPAWN_BUFF_MENU);
@@ -33,13 +33,13 @@ public class SpawnRateBuffMenu extends Menu {
                 }
                 final ArenaBuff buff = Utility.getBuff(arena);
                 if (buff == null) return;
-                if (buff.getSpawnRateMultiplier() == 12){
+                if (buff.getSpawnRateMultiplier() == 0.3){
                     buff.setSpawnRateMultiplier(3);
-                    restartMenu("&cSet Spawn rate multiplier to 5 seconds again!");
+                    restartMenu("&cSet Spawn rate to normal");
                     return;
                 }
-                buff.setSpawnRateMultiplier(1);
-                restartMenu("&aSet Spawn rate multiplier to 1 second!");
+                buff.setSpawnRateMultiplier(0.3);
+                restartMenu("&aSet Spawn rate multiplier to SUPER FAST!");
             }
 
             @Override
@@ -48,11 +48,11 @@ public class SpawnRateBuffMenu extends Menu {
                 final Arena arena = GameAPI.get().getArenaByPlayer(player);
                 final ArenaBuff buff = Utility.getBuff(arena);
                 return ItemCreator.of(CompMaterial.GOLD_INGOT,
-                        "&a1 Second",
+                        "&aSUPER FAST",
                         "",
                         "Set Spawner multiplier rate ",
-                        "to one second")
-                        .glow(buff.getSpawnRateMultiplier() == 0.5).build().make();
+                        "to super fast")
+                        .glow(buff.getSpawnRateMultiplier() == 0.3).build().make();
             }
         };
         this.two = new Button() {
@@ -70,7 +70,7 @@ public class SpawnRateBuffMenu extends Menu {
                     return;
                 }
                 buff.setSpawnRateMultiplier(10);
-                restartMenu("&aSet Spawn rate multiplier to 10 seconds!");
+                restartMenu("&aSet Spawn rate multiplier to SUPER SLOW!");
             }
 
             @Override
@@ -79,10 +79,10 @@ public class SpawnRateBuffMenu extends Menu {
                 final Arena arena = GameAPI.get().getArenaByPlayer(player);
                 final ArenaBuff buff = Utility.getBuff(arena);
                 return ItemCreator.of(CompMaterial.GOLD_INGOT,
-                                "&a10 Seconds",
+                                "&aSUPER SLOW",
                                 "",
                                 "Set Spawner multiplier rate ",
-                                "to ten seconds")
+                                "to super slow")
                         .glow(buff.getSpawnRateMultiplier() == 10).build().make();
             }
         };
@@ -117,11 +117,11 @@ public class SpawnRateBuffMenu extends Menu {
     @Override
     public ItemStack getItemAt(int slot) {
         if (slot == 10){
-            return one.getItem();
-        }else if (slot == 13){
-            return two.getItem();
-        }else if (slot == 16){
             return three.getItem();
+        }else if (slot == 13){
+            return one.getItem();
+        }else if (slot == 16){
+            return two.getItem();
         }
         return super.getItemAt(slot);
     }

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PrivateGamePlaceholder extends PlaceholderExpansion {
 
-    // %privategames_isprivate%
+    // %bw_private%
     @Override
     public @NotNull String getIdentifier() {
         return "bw";
