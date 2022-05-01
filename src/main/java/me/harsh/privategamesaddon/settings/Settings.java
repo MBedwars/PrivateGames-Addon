@@ -9,6 +9,7 @@ public class Settings extends SimpleSettings {
     public static String PREFIX;
     public static String MENU_TITLE;
     public static Boolean SHOULD_SAVE_STATS;
+    public static Boolean AUTO_WARP;
 
     // Sub menus
     public static String HEALTH_BUFF_MENU;
@@ -27,12 +28,14 @@ public class Settings extends SimpleSettings {
     // Permisions
     public static String CREATE_PERM;
     public static String GLOBAL_PERM;
+    public static String AUTO_WARP_PERM;
 
     // Placeholders
     public static String IS_PRIVATE_GAME;
 
     // Messages
     public static String NO_PERM_EROR;
+    public static String NO_AUTO_WARP_PERM_EROR;
 
     @Override
     protected int getConfigVersion() {
@@ -40,7 +43,9 @@ public class Settings extends SimpleSettings {
     }
 
     private static void init(){
+        pathPrefix("Features");
         SHOULD_SAVE_STATS = getBoolean("Save_Stats");
+        AUTO_WARP = getBoolean("Auto_warp");
         pathPrefix("Menu");
         MENU_TITLE = getString("Title");
         pathPrefix("Menu.Sub_Menu");
@@ -58,10 +63,12 @@ public class Settings extends SimpleSettings {
         pathPrefix("Perms");
         CREATE_PERM = getString("create_perm");
         GLOBAL_PERM = getString("global_perm");
+        AUTO_WARP_PERM = getString("auto_warp");
         pathPrefix("Placeholders");
         IS_PRIVATE_GAME = getString("is_private_game");
         pathPrefix("Messages");
         NO_PERM_EROR = getString("no_perm");
         PREFIX = getString("Prefix");
+        NO_AUTO_WARP_PERM_EROR = getString("Auto_warp_noperm");
     }
 }

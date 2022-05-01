@@ -21,8 +21,9 @@ public final class PrivateGamesAddon extends SimplePlugin {
 
     @Override
     protected void onPluginStart() {
-        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) {
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null || Bukkit.getPluginManager().getPlugin("MBedwars") == null || Bukkit.getPluginManager().getPlugin("Parties") == null) {
             Bukkit.getServer().getPluginManager().disablePlugin(this);
+            Common.log("Dependency PlaceholderAPI/Mbedwars/Parties wasn't present!");
         }
         Common.log("&a----------------------------");
         Common.log("&a    &r");
@@ -33,9 +34,7 @@ public final class PrivateGamesAddon extends SimplePlugin {
         registerEvents(new PlayerBuffListener());
         registerEvents(new InventoryListener());
         registerCommands("bwp", new PrivateCommandGroup());
-        BedwarsAPI.onReady(() -> {
-            GameAPI.get().registerLobbyItemHandler(new LobbyItems());
-        });
+        BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new LobbyItems()));
         new PrivateGamePlaceholder().register();
     }
 

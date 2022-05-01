@@ -24,7 +24,7 @@ public class PrivateCommandGroup extends SimpleCommandGroup {
         message.add("&f");
         message.add(" &7Made By WhoTech &7\u00a9 ");
         message.add("&7 Type &f/" + getLabel() + " private &7to go into private game creation room!");
-        message.add("f");
+        message.add("&f");
 
 
         return Common.convert(message, SimpleComponent::of);

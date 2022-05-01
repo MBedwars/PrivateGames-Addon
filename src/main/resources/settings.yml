@@ -1,13 +1,23 @@
 # Private Games Addon
+
+
+Features:
+  # If Set to true it will register the stats of the private games to player
+  Save_Stats: false
+  # If set to false you will have to manually use /bwp warp when you create a private game
+  Auto_warp: true
 Messages:
   Prefix: '&cPrivate Games Addon&7>>'
   no_perm: '&cSorry, you have to buy &6MVP++ to create private games!'
+  Auto_warp_noperm: '&cYou dont have enough permissions to auto warp party members'
 Placeholders:
   # This placeholder can be used inside Scoreboard to present if the game is private or not! [P] on hypixel
   is_private_game: '[Private]' # Color Codes not supported
 Perms:
+  # Dont add spaces here!
   global_perm: 'privategame.*'
   create_perm: 'privategame.create'
+  auto_warp: 'privategame.autowarp'
 Menu:
   Title: '&cPrivate &aGames Control Menu'
   Sub_Menu:
@@ -22,20 +32,6 @@ Menu:
     Disable_Block_Protection_Buff: '&aDisable Block Protection'
     Respawn_Time_Buff: '&aRespawn Time Buff'
     Spawn_Rate_Mutiplier_Buff: '&aSpawn Rate Multiplier'
-# If Set to true it will register the stats of the private games to player
-Save_Stats: false
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 Log_Lag_Over_Milis: 100

@@ -2,6 +2,7 @@ package me.harsh.privategamesaddon.events;
 
 import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
+import com.earth2me.essentials.libs.configurate.objectmapping.meta.Setting;
 import de.marcely.bedwars.api.arena.AddPlayerCause;
 import de.marcely.bedwars.api.arena.AddPlayerIssue;
 import de.marcely.bedwars.api.arena.Arena;
@@ -20,9 +21,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Valid;
+import org.mineacademy.fo.plugin.SimplePlugin;
 
+import java.util.Set;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
@@ -69,6 +73,19 @@ public class PlayerListener implements Listener {
                 Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
                 if (party.getMembers().size() == 1) {
                     Common.tell(player, Settings.PREFIX + "&c Couldn't Find Anyone in your party please invite some friend and warp them using /bwp warp :-)");
+                }else {
+                    new BukkitRunnable(){
+
+                        @Override
+                        public void run() {
+                            if (Settings.AUTO_WARP && player.hasPermission(Settings.AUTO_WARP_PERM)){
+                                Common.tell(player, Settings.PREFIX + "&a Auto Warping party members...");
+                                player.performCommand("bwp warp");
+                            }else if (!player.hasPermission(Settings.AUTO_WARP_PERM)){
+                                Common.tell(player, Settings.NO_AUTO_WARP_PERM_EROR);
+                            }
+                        }
+                    }.runTaskLater(SimplePlugin.getInstance(), 5);
                 }
             }
         }
