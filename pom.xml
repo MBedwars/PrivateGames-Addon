@@ -35,7 +35,7 @@
     <groupId>me.harsh</groupId>
     <artifactId>PrivateGamesAddon</artifactId>
     <name>PrivateGamesAddon</name>
-    <version>1.0.0</version>
+    <version>1.0.2-BETA</version>
 
     <!-- ############################################################################### -->
 
@@ -127,6 +127,7 @@
            -->
             <scope>provided</scope>
         </dependency>
+
 
         <!--
            Import the Foundation library to kickstart our plugin development
