@@ -31,21 +31,21 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
         checkConsole();
         final Player p2 = getPlayer();
         if (!Utility.hasPermision(p2)){
-            Common.tell(p2, Settings.PREFIX + " You Don't have permission to create private games!");
+            Common.tell(p2, Settings.PREFIX + Settings.NO_PERM_EROR);
             return;
         }
         final Arena arena = GameAPI.get().getArenaByPlayer(p2);
         if (arena == null) {
-            Common.tell(p2, Settings.PREFIX + " &cYou're not in an arena!");
+            Common.tell(p2, Settings.PREFIX + " " + Settings.NOT_IN_ARENA);
             return;
 
         }
         if (!Utility.getManager().getMode(p2)){
-            Common.tell(p2, Settings.PREFIX + " &cYou're not in private game creation mode!");
+            Common.tell(p2, Settings.PREFIX + " " + Settings.NOT_IN_PRIVATE_GAME_MODE);
             return;
         }
         if (!Utility.getManager().privateArenas.contains(arena)){
-            Common.tell(p2, Settings.PREFIX + "&cYou cannot warp players in a non-private game room!");
+            Common.tell(p2, Settings.PREFIX + " " + Settings.NOT_PRIVATE_ROOM_WARP);
             return;
         }
         if (Utility.isParty){
@@ -62,7 +62,7 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
                 });
                 Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent(party.getMembers(), arena));
             }else {
-                Common.tell(p2,Settings.PREFIX + "&cSorry you're not in a party to warp players");
+                Common.tell(p2,Settings.PREFIX + " " + Settings.NOT_IN_PARTY);
             }
         }else if (Utility.isPfa){
             final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(p2);

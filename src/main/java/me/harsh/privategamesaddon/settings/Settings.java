@@ -37,6 +37,15 @@ public class Settings extends SimpleSettings {
     // Messages
     public static String NO_PERM_EROR;
     public static String NO_AUTO_WARP_PERM_EROR;
+    public static String NO_PLAYER_FOUND_IN_PARTY;
+    public static String ARENA_IS_PRIVATE;
+    public static String NOT_IN_ARENA;
+    public static String NOT_IN_PRIVATE_GAME_MODE;
+    public static String PLAYER_JOIN_PRIVATE_GAME;
+    public static String NOT_PRIVATE_ROOM_WARP;
+    public static String NOT_IN_PARTY;
+    public static String PRIVATE_GAME_MODE;
+    public static String NORMAL_MODE;
 
     @Override
     protected int getConfigVersion() {
@@ -67,10 +76,19 @@ public class Settings extends SimpleSettings {
         GLOBAL_PERM = getString("global_perm");
         AUTO_WARP_PERM = getString("auto_warp");
         pathPrefix("Placeholders");
-        IS_PRIVATE_GAME = getString("is_private_game");
+        IS_PRIVATE_GAME = getString("Is_private_game");
         pathPrefix("Messages");
-        NO_PERM_EROR = getString("no_perm");
+        NO_PLAYER_FOUND_IN_PARTY = getString("No_players_found_in_party");
+        NO_PERM_EROR = getString("No_perm");
         PREFIX = getString("Prefix");
+        ARENA_IS_PRIVATE = getString("Arena_private");
         NO_AUTO_WARP_PERM_EROR = getString("Auto_warp_noperm");
+        NOT_IN_ARENA = getString("Arena_not_found");
+        NOT_IN_PRIVATE_GAME_MODE = getString("Private_game_wrong_mode");
+        PLAYER_JOIN_PRIVATE_GAME = getString("Private_game_join");
+        NOT_PRIVATE_ROOM_WARP = getString("Private_game_illegal_warp");
+        NOT_IN_PARTY = getString("Not_in_a_party_to_warp");
+        PRIVATE_GAME_MODE = getString("Private_game_creation_mode");
+        NORMAL_MODE = getString("Normal_game_mode");
     }
 }

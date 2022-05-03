@@ -3,7 +3,6 @@ package me.harsh.privategamesaddon.events;
 import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
-import com.earth2me.essentials.libs.configurate.objectmapping.meta.Setting;
 import de.marcely.bedwars.api.arena.AddPlayerCause;
 import de.marcely.bedwars.api.arena.AddPlayerIssue;
 import de.marcely.bedwars.api.arena.Arena;
@@ -19,7 +18,6 @@ import de.simonsator.partyandfriends.api.party.PlayerParty;
 import me.harsh.privategamesaddon.api.events.PrivateGameCreateEvent;
 import me.harsh.privategamesaddon.api.events.PrivateGameEndEvent;
 import me.harsh.privategamesaddon.api.events.PrivateGameStartEvent;
-import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.party.IParty;
 import me.harsh.privategamesaddon.party.PafParty;
@@ -32,10 +30,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
-import java.util.Set;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
@@ -60,7 +56,7 @@ public class PlayerListener implements Listener {
                     if (party == pafParty.getParty()){
                         final String name = party.getLeader().getName();
                         Utility.doStatsThing(player.getUniqueId());
-                        Common.tell(player, Settings.PREFIX + " You have joined " + name + "'s private game!");
+                        Common.tell(player, Settings.PREFIX + " " + Settings.PLAYER_JOIN_PRIVATE_GAME);
                         return;
                     }
                 }
@@ -73,7 +69,7 @@ public class PlayerListener implements Listener {
                     if (party == p.getParty()){
                         final String name = Bukkit.getPlayer(party.getLeader()).getName();
                         Utility.doStatsThing(player.getUniqueId());
-                        Common.tell(player, Settings.PREFIX + " You have joined " + name + "'s private game!");
+                        Common.tell(player, Settings.PREFIX + " " + Settings.PLAYER_JOIN_PRIVATE_GAME.replace("{name}", name));
                         return;
                     }
                 }
@@ -82,13 +78,13 @@ public class PlayerListener implements Listener {
             if (Utility.isParty){
                 final PartiesIParty party = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
                 if (party.getParty().getMembers().contains(player.getUniqueId())) return;
-                Common.tell(player, Settings.PREFIX + "&cArena is private!");
+                Common.tell(player, Settings.PREFIX + " "  + Settings.ARENA_IS_PRIVATE);
                 event.addIssue(AddPlayerIssue.PLUGIN);
             }else if (Utility.isPfa){
                 final PafParty party = (PafParty) manager.partyMembersMangingMap.get(arena);
                 final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(player);
                 if (party.getParty().getPlayers().contains(pafPlayer)) return;
-                Common.tell(player, Settings.PREFIX + "&cArena is private!");
+                Common.tell(player, Settings.PREFIX + " " + Settings.ARENA_IS_PRIVATE);
                 event.addIssue(AddPlayerIssue.PLUGIN);
             }
 
@@ -104,7 +100,7 @@ public class PlayerListener implements Listener {
                     Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
                     PafParty party = (PafParty) manager.partyMembersMangingMap.get(arena);
                     if (party.getParty().getPlayers().size() == 0){
-                        Common.tell(player, Settings.PREFIX + "&c Couldn't Find Anyone in your party please invite some friend and warp them using /bwp warp :-)");
+                        Common.tell(player, Settings.PREFIX + " " + Settings.NO_PLAYER_FOUND_IN_PARTY);
                     }else {
                         new BukkitRunnable(){
 
@@ -128,7 +124,7 @@ public class PlayerListener implements Listener {
                     Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
                     PartiesIParty party = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
                     if (party.getParty().getMembers().size() == 1) {
-                        Common.tell(player, Settings.PREFIX + "&c Couldn't Find Anyone in your party please invite some friend and warp them using /bwp warp :-)");
+                        Common.tell(player, Settings.PREFIX + " " + Settings.NO_PLAYER_FOUND_IN_PARTY);
                     }else {
                         new BukkitRunnable(){
 
