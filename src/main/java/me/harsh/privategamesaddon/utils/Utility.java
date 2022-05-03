@@ -6,6 +6,7 @@ import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
+import de.simonsator.partyandfriends.api.pafplayers.OnlinePAFPlayer;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
@@ -20,24 +21,15 @@ import java.util.UUID;
 
 @UtilityClass
 public class Utility {
+
+    public boolean isPfa;
+    public boolean isParty;
     public PrivateGameManager manager = new PrivateGameManager();
 
     public PrivateGameManager getManager() {
         return manager;
     }
 
-    @Getter
-    public PartiesAPI api = Parties.getApi();
-
-    public PartyPlayer getPlayer(@NotNull Player player) {
-        return api.getPartyPlayer(player.getUniqueId());
-    }
-
-
-    public Party getParty(@NotNull Player player) {
-        Valid.checkNotNull(getPlayer(player).getPartyId());
-        return api.getParty(getPlayer(player).getPartyId());
-    }
 
     public Player getPlayerByUuid(UUID uuid) {
         for (Player p : Remain.getOnlinePlayers())

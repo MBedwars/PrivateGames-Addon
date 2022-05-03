@@ -10,6 +10,7 @@ public class Settings extends SimpleSettings {
     public static String MENU_TITLE;
     public static Boolean SHOULD_SAVE_STATS;
     public static Boolean AUTO_WARP;
+    public static Boolean PARTIES_PRIORITY;
 
     // Sub menus
     public static String HEALTH_BUFF_MENU;
@@ -46,6 +47,7 @@ public class Settings extends SimpleSettings {
         pathPrefix("Features");
         SHOULD_SAVE_STATS = getBoolean("Save_Stats");
         AUTO_WARP = getBoolean("Auto_warp");
+        PARTIES_PRIORITY = getBoolean("Priority_parties");
         pathPrefix("Menu");
         MENU_TITLE = getString("Title");
         pathPrefix("Menu.Sub_Menu");

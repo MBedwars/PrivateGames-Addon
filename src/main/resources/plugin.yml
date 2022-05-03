@@ -4,3 +4,7 @@ main: me.harsh.privategamesaddon.PrivateGamesAddon
 api-version: 1.13
 depend:
   - MBedwars
+softdepend:
+  - PlaceholderAPI
+libraries:
+  - org.openjdk.nashorn:nashorn-core:15.3

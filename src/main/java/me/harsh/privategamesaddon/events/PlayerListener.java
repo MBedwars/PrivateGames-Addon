@@ -1,5 +1,6 @@
 package me.harsh.privategamesaddon.events;
 
+import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import com.earth2me.essentials.libs.configurate.objectmapping.meta.Setting;
@@ -11,10 +12,18 @@ import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerJoinArenaEvent;
 import de.marcely.bedwars.api.event.player.PlayerQuitArenaEvent;
 import de.marcely.bedwars.api.event.player.PlayerStatChangeEvent;
+import de.simonsator.partyandfriends.api.pafplayers.OnlinePAFPlayer;
+import de.simonsator.partyandfriends.api.pafplayers.PAFPlayerManager;
+import de.simonsator.partyandfriends.api.party.PartyManager;
+import de.simonsator.partyandfriends.api.party.PlayerParty;
 import me.harsh.privategamesaddon.api.events.PrivateGameCreateEvent;
 import me.harsh.privategamesaddon.api.events.PrivateGameEndEvent;
 import me.harsh.privategamesaddon.api.events.PrivateGameStartEvent;
+import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
+import me.harsh.privategamesaddon.party.IParty;
+import me.harsh.privategamesaddon.party.PafParty;
+import me.harsh.privategamesaddon.party.PartiesIParty;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.Bukkit;
@@ -43,50 +52,98 @@ public class PlayerListener implements Listener {
             if (event.getCause() == AddPlayerCause.PARTY_SWITCH_ARENA) {
                 event.addIssue(AddPlayerIssue.PLUGIN);
             }
-            final PartyPlayer partyPlayer = Utility.getPlayer(player);
-            if (partyPlayer.isInParty()){
-                final Party party = Utility.getParty(player);
-                final Party p  = manager.partyMembersMangingMap.get(arena);
-                if (party == p){
-                    final String name = Bukkit.getPlayer(party.getLeader()).getName();
-                    Utility.doStatsThing(player.getUniqueId());
-                    Common.tell(player, Settings.PREFIX + " You have joined " + name + "'s private game!");
-                    return;
+            if (Utility.isPfa){
+                final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(player);
+                if (pafPlayer.getParty() !=  null){
+                    final PlayerParty party = PartyManager.getInstance().getParty(pafPlayer);
+                    final PafParty pafParty = (PafParty) manager.partyMembersMangingMap.get(arena);
+                    if (party == pafParty.getParty()){
+                        final String name = party.getLeader().getName();
+                        Utility.doStatsThing(player.getUniqueId());
+                        Common.tell(player, Settings.PREFIX + " You have joined " + name + "'s private game!");
+                        return;
+                    }
+                }
+
+            }else if (Utility.isParty){
+                final PartyPlayer partyPlayer = Parties.getApi().getPartyPlayer(player.getUniqueId());
+                if (partyPlayer.isInParty()){
+                    final Party party = Parties.getApi().getParty(partyPlayer.getPartyId());
+                    final PartiesIParty p  = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
+                    if (party == p.getParty()){
+                        final String name = Bukkit.getPlayer(party.getLeader()).getName();
+                        Utility.doStatsThing(player.getUniqueId());
+                        Common.tell(player, Settings.PREFIX + " You have joined " + name + "'s private game!");
+                        return;
+                    }
                 }
             }
-            final Party p  = manager.partyMembersMangingMap.get(arena);
-            Valid.checkNotNull(p);
-            if (p.getMembers().contains(player.getUniqueId())){
-                return;
+
+            if (Utility.isParty){
+                final PartiesIParty party = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
+                if (party.getParty().getMembers().contains(player.getUniqueId())) return;
+                Common.tell(player, Settings.PREFIX + "&cArena is private!");
+                event.addIssue(AddPlayerIssue.PLUGIN);
+            }else if (Utility.isPfa){
+                final PafParty party = (PafParty) manager.partyMembersMangingMap.get(arena);
+                final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(player);
+                if (party.getParty().getPlayers().contains(pafPlayer)) return;
+                Common.tell(player, Settings.PREFIX + "&cArena is private!");
+                event.addIssue(AddPlayerIssue.PLUGIN);
             }
-            Common.tell(player, Settings.PREFIX + "&cArena is private!");
-            event.addIssue(AddPlayerIssue.PLUGIN);
+
         }
 
         if (manager.checkPlayer(player) && manager.getMode(player)){
             manager.getPrivateArenas().add(arena);
-            final PartyPlayer partyPlayer = Utility.getPlayer(player);
-            if (partyPlayer.isInParty()){
-                final Party party = Utility.getParty(player);
-                manager.partyMembersMangingMap.put(arena,party);
-                Utility.doStatsThing(player.getUniqueId());
-                Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
-                if (party.getMembers().size() == 1) {
-                    Common.tell(player, Settings.PREFIX + "&c Couldn't Find Anyone in your party please invite some friend and warp them using /bwp warp :-)");
-                }else {
-                    new BukkitRunnable(){
+            if (Utility.isPfa && !Utility.isParty){
+                final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(player);
+                if (pafPlayer.getParty() != null){
+                    setupParty(player, arena);
+                    Utility.doStatsThing(player.getUniqueId());
+                    Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
+                    PafParty party = (PafParty) manager.partyMembersMangingMap.get(arena);
+                    if (party.getParty().getPlayers().size() == 0){
+                        Common.tell(player, Settings.PREFIX + "&c Couldn't Find Anyone in your party please invite some friend and warp them using /bwp warp :-)");
+                    }else {
+                        new BukkitRunnable(){
 
-                        @Override
-                        public void run() {
-                            if (Settings.AUTO_WARP && player.hasPermission(Settings.AUTO_WARP_PERM)){
-                                Common.tell(player, Settings.PREFIX + "&a Auto Warping party members...");
-                                player.performCommand("bwp warp");
-                            }else if (!player.hasPermission(Settings.AUTO_WARP_PERM)){
-                                Common.tell(player, Settings.NO_AUTO_WARP_PERM_EROR);
+                            @Override
+                            public void run() {
+                                if (Settings.AUTO_WARP && player.hasPermission(Settings.AUTO_WARP_PERM)){
+                                    Common.tell(player, Settings.PREFIX + "&a Auto Warping party members...");
+                                    player.performCommand("bwp warp");
+                                }else if (!player.hasPermission(Settings.AUTO_WARP_PERM)){
+                                    Common.tell(player, Settings.NO_AUTO_WARP_PERM_EROR);
+                                }
                             }
-                        }
-                    }.runTaskLater(SimplePlugin.getInstance(), 5);
+                        }.runTaskLater(SimplePlugin.getInstance(), 5);
+                    }
                 }
+            } else if (Utility.isParty && !Utility.isPfa) {
+                final PartyPlayer partyPlayer = Parties.getApi().getPartyPlayer(player.getUniqueId());
+                if (partyPlayer.isInParty()){
+                    setupParty(player, arena);
+                    Utility.doStatsThing(player.getUniqueId());
+                    Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
+                    PartiesIParty party = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
+                    if (party.getParty().getMembers().size() == 1) {
+                        Common.tell(player, Settings.PREFIX + "&c Couldn't Find Anyone in your party please invite some friend and warp them using /bwp warp :-)");
+                    }else {
+                        new BukkitRunnable(){
+
+                            @Override
+                            public void run() {
+                                if (Settings.AUTO_WARP && player.hasPermission(Settings.AUTO_WARP_PERM)){
+                                    Common.tell(player, Settings.PREFIX + "&a Auto Warping party members...");
+                                    player.performCommand("bwp warp");
+                                }else if (!player.hasPermission(Settings.AUTO_WARP_PERM)){
+                                    Common.tell(player, Settings.NO_AUTO_WARP_PERM_EROR);
+                                }
+                            }
+                        }.runTaskLater(SimplePlugin.getInstance(), 5);
+                    }
+            }
             }
         }
     }
@@ -125,6 +182,24 @@ public class PlayerListener implements Listener {
         final UUID uuid = event.getStats().getPlayerUUID();
         if (manager.playerStatsList.contains(uuid)){
             event.setCancelled(true);
+        }
+    }
+
+    private void setupParty(Player player, Arena arena){
+        if (Utility.isParty){
+            final PartyPlayer partyPlayer = Parties.getApi().getPartyPlayer(player.getUniqueId());
+            if (!partyPlayer.isInParty()) return;
+            final Party party = Parties.getApi().getParty(partyPlayer.getPartyId());
+            if (party == null) return;
+            IParty iParty = new PartiesIParty(arena, player, party);
+            Utility.getManager().partyMembersMangingMap.put(arena, iParty);
+
+        }else if (Utility.isPfa){
+            final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(player);
+            final PlayerParty party = PartyManager.getInstance().getParty(pafPlayer);
+            if (party == null) return;
+            IParty iParty = new PafParty(arena, player, party);
+            Utility.getManager().partyMembersMangingMap.put(arena, iParty);
         }
     }
 }

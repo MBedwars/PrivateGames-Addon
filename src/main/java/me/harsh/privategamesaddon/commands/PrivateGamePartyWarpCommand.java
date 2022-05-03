@@ -1,9 +1,14 @@
 package me.harsh.privategamesaddon.commands;
 
+import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
+import de.simonsator.partyandfriends.api.pafplayers.OnlinePAFPlayer;
+import de.simonsator.partyandfriends.api.pafplayers.PAFPlayerManager;
+import de.simonsator.partyandfriends.api.party.PartyManager;
+import de.simonsator.partyandfriends.api.party.PlayerParty;
 import me.harsh.privategamesaddon.api.events.PrivateGameWarpEvent;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
@@ -43,20 +48,32 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
             Common.tell(p2, Settings.PREFIX + "&cYou cannot warp players in a non-private game room!");
             return;
         }
-        final PartyPlayer partyPlayer = Utility.getPlayer(p2);
-        if (partyPlayer.isInParty()){
-            final Party party = Utility.getParty(p2);
-            if (party == null) Common.log("Party is null");
-            party.getMembers().forEach(uuid -> {
-                final Player p = Utility.getPlayerByUuid(uuid);
-                if (p == null) Common.log("Player is Null!");
-                if (p == p2) return;
-                Common.tell(p2, Settings.PREFIX + "&aWarping " + p.getName());
-                arena.addPlayer(p);
-            });
-            Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent(party.getMembers(), arena));
-        }else {
-            Common.tell(p2,Settings.PREFIX + "&cSorry you're not in a party to warp players");
+        if (Utility.isParty){
+            final PartyPlayer partyPlayer = Parties.getApi().getPartyPlayer(p2.getUniqueId());
+            if (partyPlayer.isInParty()){
+                final Party party = Parties.getApi().getParty(partyPlayer.getPartyId());
+                if (party == null) Common.tell(p2, Settings.PREFIX + "&c Party not found!");
+                party.getMembers().forEach(uuid -> {
+                    final Player p = Utility.getPlayerByUuid(uuid);
+                    if (p == null) Common.log("Player is Null!");
+                    if (p == p2) return;
+                    Common.tell(p2, Settings.PREFIX + "&aWarping " + p.getName());
+                    arena.addPlayer(p);
+                });
+                Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent(party.getMembers(), arena));
+            }else {
+                Common.tell(p2,Settings.PREFIX + "&cSorry you're not in a party to warp players");
+            }
+        }else if (Utility.isPfa){
+            final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(p2);
+            if (pafPlayer.getParty() != null){
+                final PlayerParty party = PartyManager.getInstance().getParty(pafPlayer);
+                party.getPlayers().forEach(player -> {
+                    Common.tell(p2, Settings.PREFIX + "&aWarping " + player.getName());
+                    arena.addPlayer(player.getPlayer());
+                });
+            }
+
         }
 
     }

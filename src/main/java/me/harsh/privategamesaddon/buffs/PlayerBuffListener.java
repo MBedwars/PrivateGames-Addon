@@ -79,7 +79,6 @@ public class PlayerBuffListener implements Listener {
                     if (spawner.getLocation().distance(arena.getTeamSpawn(team)) <= 10){
                         spawner.addDropDurationModifier("privateMultiply", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, buff.getSpawnRateMultiplier());
                     }
-                    break;
                 }
             }
         }
