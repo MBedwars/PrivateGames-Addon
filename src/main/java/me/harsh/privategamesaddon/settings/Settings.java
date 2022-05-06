@@ -30,12 +30,16 @@ public class Settings extends SimpleSettings {
     public static String CREATE_PERM;
     public static String GLOBAL_PERM;
     public static String AUTO_WARP_PERM;
+    public static String RELOAD_PERM;
 
     // Placeholders
     public static String IS_PRIVATE_GAME;
 
     // Messages
+
+    public static String SUCCESSFUL_RELOAD;
     public static String NO_PERM_EROR;
+    public static String RELOAD_NO_PERM_EROR;
     public static String NO_AUTO_WARP_PERM_EROR;
     public static String NO_PLAYER_FOUND_IN_PARTY;
     public static String ARENA_IS_PRIVATE;
@@ -75,9 +79,12 @@ public class Settings extends SimpleSettings {
         CREATE_PERM = getString("create_perm");
         GLOBAL_PERM = getString("global_perm");
         AUTO_WARP_PERM = getString("auto_warp");
+        RELOAD_PERM = getString("reload_perm");
         pathPrefix("Placeholders");
         IS_PRIVATE_GAME = getString("Is_private_game");
         pathPrefix("Messages");
+        RELOAD_NO_PERM_EROR = getString("No_reload_perm");
+        SUCCESSFUL_RELOAD = getString("Successfully_reload");
         NO_PLAYER_FOUND_IN_PARTY = getString("No_players_found_in_party");
         NO_PERM_EROR = getString("No_perm");
         PREFIX = getString("Prefix");
