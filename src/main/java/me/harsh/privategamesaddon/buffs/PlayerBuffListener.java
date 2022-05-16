@@ -47,9 +47,6 @@ public class PlayerBuffListener implements Listener {
             if (buff == null){
                 return;
             }
-            if (buff.getKnockBackMultiper() != 1){
-                player.setVelocity(damager.getEyeLocation().getDirection().multiply(buff.getKnockBackMultiper()));
-            }
             if (buff.isOneHitKill()){
                 player.setHealth(0);
             }

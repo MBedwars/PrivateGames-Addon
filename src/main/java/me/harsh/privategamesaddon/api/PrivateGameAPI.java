@@ -7,6 +7,8 @@ import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 @UtilityClass
 public class PrivateGameAPI {
     public Boolean hasPermision(@NotNull Player player){
@@ -15,5 +17,9 @@ public class PrivateGameAPI {
 
     public Boolean isPrivateGame(@NotNull Arena arena){
         return Utility.getManager().privateArenas.contains(arena);
+    }
+
+    public List<Arena> getPrivateGames(){
+        return Utility.getManager().getPrivateArenas();
     }
 }

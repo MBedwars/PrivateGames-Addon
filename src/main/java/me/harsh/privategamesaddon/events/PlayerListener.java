@@ -13,6 +13,7 @@ import de.simonsator.partyandfriends.api.pafplayers.OnlinePAFPlayer;
 import de.simonsator.partyandfriends.api.pafplayers.PAFPlayerManager;
 import de.simonsator.partyandfriends.api.party.PartyManager;
 import de.simonsator.partyandfriends.api.party.PlayerParty;
+import me.harsh.privategamesaddon.api.PrivateGameAPI;
 import me.harsh.privategamesaddon.api.events.PrivateGameCreateEvent;
 import me.harsh.privategamesaddon.api.events.PrivateGameEndEvent;
 import me.harsh.privategamesaddon.api.events.PrivateGameStartEvent;
@@ -33,7 +34,6 @@ import org.mineacademy.fo.plugin.SimplePlugin;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
-    private final int afkTime = Settings.AFK_CHECK_TIME * 20; // Converting ticks into seconds
     private final PrivateGameManager manager;
     public PlayerListener(PrivateGameManager manager){
         this.manager = manager;
@@ -90,6 +90,8 @@ public class PlayerListener implements Listener {
         }
 
         if (manager.checkPlayer(player) && manager.getMode(player)){
+            // Converting ticks into seconds
+            int afkTime = 500;
             if (Utility.isPfa && !Utility.isParty){
                 final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(player);
                 if (pafPlayer.getParty() != null){
@@ -195,6 +197,9 @@ public class PlayerListener implements Listener {
         }
         for (Player player : arena.getPlayers()) {
             manager.playerStatsList.remove(player.getUniqueId());
+            if (PrivateGameAPI.hasPermision(player)){
+                manager.setMode(player, false);
+            }
         }
         manager.getPrivateArenas().remove(arena);
         manager.partyMembersMangingMap.remove(arena);

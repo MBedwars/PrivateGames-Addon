@@ -21,7 +21,6 @@ public class PrivateGameMenu extends Menu {
     private final Button blockProtBuff;
     private final Button respawnTimeBuff;
     private final Button baseSpawnerBuff;
-    private final Button knockBackBuff;
     private final Button fallDamageBuff;
     private final Button craftingBuff;
 
@@ -76,25 +75,6 @@ public class PrivateGameMenu extends Menu {
                         "Enables you to disable",
                         "or enable fall damage")
                         .glow(buff.isFallDamageEnabled()).build().make();
-            }
-        };
-        this.knockBackBuff = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                new KnockBackBuffMenu().displayTo(player);
-            }
-
-            @Override
-            public ItemStack getItem() {
-                final Player player = getViewer();
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                final ArenaBuff buff = Utility.getBuff(arena);
-                return ItemCreator.of(CompMaterial.IRON_SWORD,
-                        Settings.KNOCK_BACK_BUFF_MENU,
-                        "",
-                        "Enables you to",
-                        "set more/less kb")
-                        .build().make();
             }
         };
         this.respawnTimeBuff = new Button() {
@@ -251,15 +231,13 @@ public class PrivateGameMenu extends Menu {
         }else if (slot == 22){
             return this.craftingBuff.getItem();
         }else if (slot == 37) {
-            return this.knockBackBuff.getItem();
+            return this.respawnTimeBuff.getItem();
         }else if (slot == 43){
             return this.fallDamageBuff.getItem();
         }else if (slot == 29){
             return baseSpawnerBuff.getItem();
         }else if (slot == 33){
             return blockProtBuff.getItem();
-        }else if (slot == 40){
-            return respawnTimeBuff.getItem();
         }
         return ItemCreator.of(CompMaterial.CYAN_STAINED_GLASS_PANE).build().make();
     }
