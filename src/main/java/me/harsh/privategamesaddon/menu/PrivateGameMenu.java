@@ -1,9 +1,8 @@
 package me.harsh.privategamesaddon.menu;
+import de.marcely.bedwars.api.GameAPI;
+import de.marcely.bedwars.api.arena.Arena;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
-import me.harsh.privategamesaddon.menu.subBuffMenu.HealthBuffMenu;
-import me.harsh.privategamesaddon.menu.subBuffMenu.RespawnBuffMenu;
-import me.harsh.privategamesaddon.menu.subBuffMenu.SpawnRateBuffMenu;
-import me.harsh.privategamesaddon.menu.subBuffMenu.SpeedBuffMenu;
+import me.harsh.privategamesaddon.menu.subBuffMenu.*;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.entity.Player;
@@ -22,10 +21,82 @@ public class PrivateGameMenu extends Menu {
     private final Button blockProtBuff;
     private final Button respawnTimeBuff;
     private final Button baseSpawnerBuff;
+    private final Button knockBackBuff;
+    private final Button fallDamageBuff;
+    private final Button craftingBuff;
 
     public PrivateGameMenu(){
         setTitle(Settings.MENU_TITLE);
-        setSize(9*4);
+        setSize(9*5);
+        this.craftingBuff = new Button() {
+            @Override
+            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                final ArenaBuff buff = Utility.getBuffSafe(player);
+                if (buff.isCraftingAllowed()){
+                    buff.setCraftingAllowed(false);
+                    restartMenu("&aDisabled Crafting!");
+                    return;
+                }
+                buff.setCraftingAllowed(true);
+                restartMenu("&aEnabled Crafting!");
+            }
+
+            @Override
+            public ItemStack getItem() {
+                final ArenaBuff buff = Utility.getBuffSafe(getViewer());
+                return ItemCreator.of(CompMaterial.CRAFTING_TABLE,
+                                Settings.CRAFTING_BUFF,
+                        "",
+                        "Enables you to craft items",
+                        "Inside Private game")
+                        .glow(buff.isCraftingAllowed()).build().make();
+            }
+        };
+        this.fallDamageBuff = new Button() {
+            @Override
+            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                final ArenaBuff buff = Utility.getBuffSafe(player);
+                if (buff.isFallDamageEnabled()){
+                    buff.setFallDamageEnabled(false);
+                    restartMenu("&aDisabled Fall Damage!");
+                    return;
+                }
+                buff.setFallDamageEnabled(true);
+                restartMenu("&aEnabled Fall Damage!");
+            }
+
+            @Override
+            public ItemStack getItem() {
+                final Player player = getViewer();
+                final Arena arena = GameAPI.get().getArenaByPlayer(player);
+                final ArenaBuff buff = Utility.getBuff(arena);
+                return ItemCreator.of(CompMaterial.ENDER_PEARL,
+                        Settings.FALL_DAMAGE_BUFF,
+                        "",
+                        "Enables you to disable",
+                        "or enable fall damage")
+                        .glow(buff.isFallDamageEnabled()).build().make();
+            }
+        };
+        this.knockBackBuff = new Button() {
+            @Override
+            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                new KnockBackBuffMenu().displayTo(player);
+            }
+
+            @Override
+            public ItemStack getItem() {
+                final Player player = getViewer();
+                final Arena arena = GameAPI.get().getArenaByPlayer(player);
+                final ArenaBuff buff = Utility.getBuff(arena);
+                return ItemCreator.of(CompMaterial.IRON_SWORD,
+                        Settings.KNOCK_BACK_BUFF_MENU,
+                        "",
+                        "Enables you to",
+                        "set more/less kb")
+                        .build().make();
+            }
+        };
         this.respawnTimeBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
@@ -175,13 +246,19 @@ public class PrivateGameMenu extends Menu {
             return healthBuff.getItem();
         }else if (slot == 14){
             return gravityBuff.getItem();
-        }else if (slot == 16){
+        }else if (slot == 16) {
             return speedBuff.getItem();
+        }else if (slot == 22){
+            return this.craftingBuff.getItem();
+        }else if (slot == 37) {
+            return this.knockBackBuff.getItem();
+        }else if (slot == 43){
+            return this.fallDamageBuff.getItem();
         }else if (slot == 29){
             return baseSpawnerBuff.getItem();
         }else if (slot == 33){
             return blockProtBuff.getItem();
-        }else if (slot == 31){
+        }else if (slot == 40){
             return respawnTimeBuff.getItem();
         }
         return ItemCreator.of(CompMaterial.CYAN_STAINED_GLASS_PANE).build().make();

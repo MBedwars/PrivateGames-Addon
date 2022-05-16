@@ -33,7 +33,7 @@ public class PrivateGamePlaceholder extends PlaceholderExpansion {
             if (arena == null) return null;
             if (Utility.getManager().getPrivateArenas().contains(arena)){
                 return Settings.IS_PRIVATE_GAME;
-            }else return null;
+            }else return "";
         }
         return null;
     }

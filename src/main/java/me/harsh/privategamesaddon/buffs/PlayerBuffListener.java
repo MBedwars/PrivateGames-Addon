@@ -1,5 +1,6 @@
 package me.harsh.privategamesaddon.buffs;
 
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.arena.ArenaStatus;
@@ -12,23 +13,30 @@ import de.marcely.bedwars.api.event.player.PlayerModifyBlockPermissionEvent;
 import de.marcely.bedwars.api.game.spawner.Spawner;
 import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier;
 import me.harsh.privategamesaddon.utils.Utility;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.plugin.SimplePlugin;
+import org.mineacademy.fo.remain.CompMaterial;
 
 
 public class PlayerBuffListener implements Listener {
 
     @EventHandler
     public void onPlayerHit(EntityDamageByEntityEvent event){
-        if (event.getEntity() instanceof Player){
+        if (event.getEntity() instanceof Player && event.getDamager() instanceof Player){
             final Player player = (Player) event.getEntity();
+            final Player damager = (Player) event.getDamager();
             final Arena arena = GameAPI.get().getArenaByPlayer(player);
             if ( arena == null) return;
             if ( arena.getStatus() != ArenaStatus.RUNNING) return;
@@ -39,8 +47,44 @@ public class PlayerBuffListener implements Listener {
             if (buff == null){
                 return;
             }
+            if (buff.getKnockBackMultiper() != 1){
+                player.setVelocity(damager.getEyeLocation().getDirection().multiply(buff.getKnockBackMultiper()));
+            }
             if (buff.isOneHitKill()){
                 player.setHealth(0);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerCraft(CraftItemEvent event){
+        if (event.getWhoClicked() instanceof  Player){
+            final Player player = (Player) event.getWhoClicked();
+            final Arena arena = GameAPI.get().getArenaByPlayer(player);
+            if (arena == null) return;
+            final ArenaBuff buff = Utility.getBuff(arena);
+            if (buff.isCraftingAllowed()){
+                event.setCancelled(false);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerTakeFallDamage(EntityDamageEvent event){
+        if (event.getEntity() instanceof Player){
+            final Player player = (Player) event.getEntity();
+            final Arena arena = GameAPI.get().getArenaByPlayer(player);
+            if ( arena == null) return;
+            if ( arena.getStatus() != ArenaStatus.RUNNING) return;
+            if (!Utility.getManager().privateArenas.contains(GameAPI.get().getArenaByPlayer(player))){
+                return;
+            }
+            final ArenaBuff buff = Utility.getBuff(player);
+            if (buff == null)return;
+            if (!buff.isFallDamageEnabled()){
+                if (event.getCause() == EntityDamageEvent.DamageCause.FALL){
+                    event.setCancelled(true);
+                }
             }
         }
     }
@@ -134,6 +178,20 @@ public class PlayerBuffListener implements Listener {
             event.setIssuePresent(PlayerModifyBlockPermissionEvent.Issue.INSIDE_NON_BUILD_RADIUS, false);
             event.setIssuePresent(PlayerModifyBlockPermissionEvent.Issue.NON_PLAYER_PLACED, false);
             event.setIssuePresent(PlayerModifyBlockPermissionEvent.Issue.BLACKLISTED_MATERIAL, false);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerBlockPlace(BlockPlaceEvent event){
+        final Block block = event.getBlock();
+        final Player player = event.getPlayer();
+        final Arena arena = GameAPI.get().getArenaByPlayer(player);
+        if (arena == null) return;
+        if (!Utility.getManager().privateArenas.contains(arena)) return;
+        final ArenaBuff buff = Utility.getBuff(arena);
+        if (buff.isCraftingAllowed()){
+            if (block.getType() == CompMaterial.CRAFTING_TABLE.toMaterial()) event.setCancelled(false);
+
         }
     }
 }

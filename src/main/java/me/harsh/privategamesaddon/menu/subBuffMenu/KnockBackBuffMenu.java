@@ -16,13 +16,13 @@ import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
 
 
-public class SpawnRateBuffMenu extends Menu {
+public class KnockBackBuffMenu extends Menu {
     private final Button one; // normal
-    private final Button two; // super slow
-    private final Button three; // super fast
-    public SpawnRateBuffMenu(){
+    private final Button two; // super fast
+    private final Button three; // super slow
+    public KnockBackBuffMenu(){
         super(new PrivateGameMenu());
-        setTitle(Settings.SPAWN_RATE_BUFF_MENU);
+        setTitle(Settings.KNOCK_BACK_BUFF_MENU);
         setSize(9*3);
         this.three = new Button() {
             @Override
@@ -33,13 +33,13 @@ public class SpawnRateBuffMenu extends Menu {
                 }
                 final ArenaBuff buff = Utility.getBuff(arena);
                 if (buff == null) return;
-                if (buff.getSpawnRateMultiplier() == 0.3){
-                    buff.setSpawnRateMultiplier(3);
-                    restartMenu("&cSet Spawn rate to normal");
+                if (buff.getKnockBackMultiper() == 0.3){
+                    buff.setSpawnRateMultiplier(1);
+                    restartMenu("&cSet Knockback multiplier to normal");
                     return;
                 }
                 buff.setSpawnRateMultiplier(0.3);
-                restartMenu("&aSet Spawn rate multiplier to SUPER FAST!");
+                restartMenu("&aSet knockback multiplier to SUPER LOW!");
             }
 
             @Override
@@ -47,12 +47,12 @@ public class SpawnRateBuffMenu extends Menu {
                 final Player player = getViewer();
                 final Arena arena = GameAPI.get().getArenaByPlayer(player);
                 final ArenaBuff buff = Utility.getBuff(arena);
-                return ItemCreator.of(CompMaterial.GOLD_INGOT,
-                        "&aSUPER FAST",
+                return ItemCreator.of(CompMaterial.STICK,
+                        "&aSUPER LOW",
                         "",
-                        "Set Spawner multiplier rate ",
-                        "to super fast")
-                        .glow(buff.getSpawnRateMultiplier() == 0.3).build().make();
+                        "Set Knockback multiplier rate ",
+                        "to super low")
+                        .glow(buff.getKnockBackMultiper() == 0.3).build().make();
             }
         };
         this.two = new Button() {
@@ -64,13 +64,13 @@ public class SpawnRateBuffMenu extends Menu {
                 }
                 final ArenaBuff buff = Utility.getBuff(arena);
                 if (buff == null) return;
-                if (buff.getSpawnRateMultiplier() == 10){
-                    buff.setSpawnRateMultiplier(3);
-                    restartMenu("&cSet Spawn rate multiplier to normal again!");
+                if (buff.getKnockBackMultiper() == 5){
+                    buff.setSpawnRateMultiplier(1);
+                    restartMenu("&cSet Knockback multiplier to normal");
                     return;
                 }
-                buff.setSpawnRateMultiplier(10);
-                restartMenu("&aSet Spawn rate multiplier to SUPER SLOW!");
+                buff.setSpawnRateMultiplier(5);
+                restartMenu("&aSet Knockback multiplier to SUPER HIGH!");
             }
 
             @Override
@@ -78,12 +78,12 @@ public class SpawnRateBuffMenu extends Menu {
                 final Player player = getViewer();
                 final Arena arena = GameAPI.get().getArenaByPlayer(player);
                 final ArenaBuff buff = Utility.getBuff(arena);
-                return ItemCreator.of(CompMaterial.GOLD_INGOT,
-                                "&aSUPER SLOW",
+                return ItemCreator.of(CompMaterial.STICK,
+                                "&aSUPER HIGH",
                                 "",
-                                "Set Spawner multiplier rate ",
-                                "to super slow")
-                        .glow(buff.getSpawnRateMultiplier() == 10).build().make();
+                                "Set Knockback multiplier rate ",
+                                "to super high")
+                        .glow(buff.getKnockBackMultiper() == 5).build().make();
             }
         };
         this.one = new Button() {
@@ -95,8 +95,8 @@ public class SpawnRateBuffMenu extends Menu {
                 }
                 final ArenaBuff buff = Utility.getBuff(arena);
                 if (buff == null) return;
-                buff.setSpawnRateMultiplier(3);
-                restartMenu("&aSet Spawn rate multiplier to normal");
+                buff.setSpawnRateMultiplier(1);
+                restartMenu("&aSet Knockback multiplier to normal");
             }
 
             @Override
@@ -104,12 +104,12 @@ public class SpawnRateBuffMenu extends Menu {
                 final Player player = getViewer();
                 final Arena arena = GameAPI.get().getArenaByPlayer(player);
                 final ArenaBuff buff = Utility.getBuff(arena);
-                return ItemCreator.of(CompMaterial.GOLD_INGOT,
+                return ItemCreator.of(CompMaterial.STICK,
                                 "&aNormal",
                                 "",
-                                "Set Spawner multiplier rate ",
+                                "Set Knockback multiplier rate ",
                                 "to normal")
-                        .glow(buff.getSpawnRateMultiplier() == 3).build().make();
+                        .glow(buff.getKnockBackMultiper() == 1).build().make();
             }
         };
     }

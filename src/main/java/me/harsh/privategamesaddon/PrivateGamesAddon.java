@@ -2,7 +2,6 @@ package me.harsh.privategamesaddon;
 
 import de.marcely.bedwars.api.BedwarsAPI;
 import de.marcely.bedwars.api.GameAPI;
-
 import me.harsh.privategamesaddon.buffs.PlayerBuffListener;
 import me.harsh.privategamesaddon.commands.PrivateCommandGroup;
 import me.harsh.privategamesaddon.events.InventoryListener;
@@ -12,8 +11,6 @@ import me.harsh.privategamesaddon.placeholders.PrivateGamePlaceholder;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.settings.YamlStaticConfig;
@@ -77,6 +74,7 @@ public final class PrivateGamesAddon extends SimplePlugin {
 //        registerEvents(new PlayerBuffListener());
 //        registerEvents(new InventoryListener());
         registerCommands("bwp", new PrivateCommandGroup());
+        Common.log("Regitsered Timer");
 
         BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new LobbyItems()));
         new PrivateGamePlaceholder().register();

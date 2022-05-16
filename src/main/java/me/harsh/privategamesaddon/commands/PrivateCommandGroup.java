@@ -3,9 +3,7 @@ package me.harsh.privategamesaddon.commands;
 import me.harsh.privategamesaddon.settings.Settings;
 import org.bukkit.command.CommandSender;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.command.ReloadCommand;
 import org.mineacademy.fo.command.SimpleCommandGroup;
-import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.model.SimpleComponent;
 
 import java.util.ArrayList;

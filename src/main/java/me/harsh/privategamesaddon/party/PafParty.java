@@ -1,10 +1,8 @@
 package me.harsh.privategamesaddon.party;
 
 import de.marcely.bedwars.api.arena.Arena;
-
 import de.simonsator.partyandfriends.api.pafplayers.OnlinePAFPlayer;
 import de.simonsator.partyandfriends.api.pafplayers.PAFPlayerManager;
-import de.simonsator.partyandfriends.api.party.PartyManager;
 import de.simonsator.partyandfriends.api.party.PlayerParty;
 import org.bukkit.entity.Player;
 

@@ -3,9 +3,7 @@ package me.harsh.privategamesaddon.events;
 import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
-import de.marcely.bedwars.api.arena.AddPlayerCause;
-import de.marcely.bedwars.api.arena.AddPlayerIssue;
-import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.api.arena.*;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerJoinArenaEvent;
@@ -35,6 +33,7 @@ import org.mineacademy.fo.plugin.SimplePlugin;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
+    private final int afkTime = Settings.AFK_CHECK_TIME * 20; // Converting ticks into seconds
     private final PrivateGameManager manager;
     public PlayerListener(PrivateGameManager manager){
         this.manager = manager;
@@ -91,10 +90,10 @@ public class PlayerListener implements Listener {
         }
 
         if (manager.checkPlayer(player) && manager.getMode(player)){
-            manager.getPrivateArenas().add(arena);
             if (Utility.isPfa && !Utility.isParty){
                 final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(player);
                 if (pafPlayer.getParty() != null){
+                    manager.getPrivateArenas().add(arena);
                     setupParty(player, arena);
                     Utility.doStatsThing(player.getUniqueId());
                     Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
@@ -114,11 +113,33 @@ public class PlayerListener implements Listener {
                                 }
                             }
                         }.runTaskLater(SimplePlugin.getInstance(), 5);
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                if (manager.getPrivateArenas().contains(arena)){
+                                    if (arena.getStatus() == ArenaStatus.LOBBY){
+                                        for (Player arenaPlayer : arena.getPlayers()) {
+                                            final PafParty pafParty = (PafParty) manager.partyMembersMangingMap.get(arena);
+                                            if (pafParty.getLeader().getPlayer() == arenaPlayer){
+                                                Common.tell(player, Settings.PREFIX + " " + Settings.AFK_TIME_REACHED);
+                                            }
+                                            arena.kickPlayer(arenaPlayer);
+                                        }
+                                    }
+                                }
+                            }
+                        }.runTaskLater(SimplePlugin.getInstance(), afkTime);
+                    }
+                }else if (pafPlayer.getParty().getPlayers().size() == 0){
+                    if (!pafPlayer.getPlayer().hasPermission(Settings.PARTY_BYPASS_PERM)){
+                        Common.tell(player, Settings.NO_PARTY_ON_CREATE);
+                        arena.kickPlayer(player, KickReason.PLUGIN);
                     }
                 }
             } else if (Utility.isParty && !Utility.isPfa) {
                 final PartyPlayer partyPlayer = Parties.getApi().getPartyPlayer(player.getUniqueId());
                 if (partyPlayer.isInParty()){
+                    manager.getPrivateArenas().add(arena);
                     setupParty(player, arena);
                     Utility.doStatsThing(player.getUniqueId());
                     Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
@@ -138,8 +159,30 @@ public class PlayerListener implements Listener {
                                 }
                             }
                         }.runTaskLater(SimplePlugin.getInstance(), 5);
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                if (manager.getPrivateArenas().contains(arena)){
+                                    if (arena.getStatus() == ArenaStatus.LOBBY){
+                                        for (Player arenaPlayer : arena.getPlayers()) {
+                                            final PartiesIParty pafParty = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
+                                            if (pafParty.getLeader() == arenaPlayer.getUniqueId()){
+                                                Common.tell(player, Settings.PREFIX + " " + Settings.AFK_TIME_REACHED);
+                                            }
+                                            arena.kickPlayer(arenaPlayer);
+                                        }
+                                        manager.getPrivateArenas().remove(arena);
+                                    }
+                                }
+                            }
+                        }.runTaskLater(SimplePlugin.getInstance(), afkTime);
                     }
-            }
+            }else {
+                    if (!player.hasPermission(Settings.PARTY_BYPASS_PERM)){
+                        Common.tell(player, Settings.NO_PARTY_ON_CREATE);
+                        arena.kickPlayer(player, KickReason.PLUGIN);
+                    }
+                }
             }
         }
     }
@@ -163,6 +206,7 @@ public class PlayerListener implements Listener {
         if (manager.checkPlayer(player) && manager.getPrivateArenas().contains(arena)){
             manager.getPrivateArenas().remove(arena);
         }
+        manager.arenaArenaBuffMap.remove(arena);
         manager.partyMembersMangingMap.remove(arena);
     }
     @EventHandler

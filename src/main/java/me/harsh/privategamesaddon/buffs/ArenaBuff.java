@@ -9,8 +9,12 @@ public class ArenaBuff {
     private boolean oneHitKill = false;
     private boolean lowGravity = false;
     private int speedModifier = 1;
+
+    private boolean isFallDamageEnabled = true;
+    private boolean isCraftingAllowed = false;
     private boolean isBlocksProtected = true;
     private double spawnRateMultiplier = 3;
+    private float knockBackMultiper = 1;
 
     public void setHealth(int health) {
         this.health = health;
@@ -41,4 +45,15 @@ public class ArenaBuff {
         isBlocksProtected = blocksProtected;
     }
 
+    public void setKnockBackMultiper(float knockBackMultiper) {
+        this.knockBackMultiper = knockBackMultiper;
+    }
+
+    public void setFallDamageEnabled(boolean fallDamageEnabled) {
+        isFallDamageEnabled = fallDamageEnabled;
+    }
+
+    public void setCraftingAllowed(boolean craftingAllowed) {
+        isCraftingAllowed = craftingAllowed;
+    }
 }

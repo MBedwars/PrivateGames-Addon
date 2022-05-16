@@ -8,6 +8,8 @@ Features:
   Auto_warp: true
   # If set to true if both PAF and Parties are present Parties will be considered as the main source!
   Priority_parties: true
+  # After how many seconds we should check if the private arena owner is afk or not (only in lobby state)
+  Afk_check_time: 10
 Messages:
   # Every Message will start with this
   Prefix: '&cPrivate Games Addon&7>>'
@@ -21,6 +23,8 @@ Messages:
   Normal_game_mode: '&aYou are now in normal bedwars mode!'
   # When player don't have permission for auto warping party members
   Auto_warp_noperm: '&cYou dont have enough permissions to auto warp party members'
+  # When player is not in a party and creates a private game arena
+  No_party_found: "You must create a party first before you join arena"
   # When no player is found in party (when player joins the arena in private game creation mode)
   No_players_found_in_party: '&c Could not Find Anyone in your party please invite some friend and warp them using /bwp warp :-)'
   # When a Non-Party member tries to join arena
@@ -36,6 +40,8 @@ Messages:
   Private_game_illegal_warp: '&cYou cannot warp players in a non-private game room!'
   # When no party is found while warping
   Not_in_a_party_to_warp: '&cSorry you are not in a party to warp players'
+  # 90 Seconds timer runs when leader creates the PG once it's 90 it's gonna kick everyone!
+  Afk_limit_reached: "&cSorry AFKing with PGA mode and locking the arena isn't allowed!"
   # When player uses /bwp reload
   Successfully_reload: "&aSuccessfully Reloaded Private Games Addon!!"
 Placeholders:
@@ -47,12 +53,16 @@ Perms:
   create_perm: 'privategame.create'
   reload_perm: 'privategame.reload'
   auto_warp: 'privategame.autowarp'
+  # Bypasses the requirement of party at start!
+  party_requirement: 'privategame.bypass.create'
 Menu:
   Title: '&cPrivate &aGames Control Menu'
   Sub_Menu:
     Speed: 'Speed Buff Menu'
     Respawn: 'Respawn Buff Menu'
     Health: 'Custom Health Buff'
+    Spawn_rate: 'Spawn rate Buff'
+    KnockBack: 'Knock Back Buff'
   Buffs:
     One_Hit_Buff: '&aOne Hit Buff'
     Health_Buff: '&aHealth Buff'
@@ -61,6 +71,8 @@ Menu:
     Disable_Block_Protection_Buff: '&aDisable Block Protection'
     Respawn_Time_Buff: '&aRespawn Time Buff'
     Spawn_Rate_Mutiplier_Buff: '&aSpawn Rate Multiplier'
+    Fall_damage_buff: "&aFall Damage Buff"
+    Crafting_allow_buff: "&aAllow Crafting"
 
 
 # Don't change these else plugin will break!
