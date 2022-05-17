@@ -90,11 +90,14 @@ public class PlayerListener implements Listener {
         }
 
         if (manager.checkPlayer(player) && manager.getMode(player)){
-            // Converting ticks into seconds
-            int afkTime = 500;
             if (Utility.isPfa && !Utility.isParty){
                 final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(player);
                 if (pafPlayer.getParty() != null){
+                    if (pafPlayer.getParty().getLeader().getPlayer() != player){
+                        Common.tell(player, Settings.PREFIX + " &cSorry, your not the party leader!");
+                        arena.kickPlayer(player);
+                        return;
+                    }
                     manager.getPrivateArenas().add(arena);
                     setupParty(player, arena);
                     Utility.doStatsThing(player.getUniqueId());
@@ -115,22 +118,6 @@ public class PlayerListener implements Listener {
                                 }
                             }
                         }.runTaskLater(SimplePlugin.getInstance(), 5);
-                        new BukkitRunnable(){
-                            @Override
-                            public void run() {
-                                if (manager.getPrivateArenas().contains(arena)){
-                                    if (arena.getStatus() == ArenaStatus.LOBBY){
-                                        for (Player arenaPlayer : arena.getPlayers()) {
-                                            final PafParty pafParty = (PafParty) manager.partyMembersMangingMap.get(arena);
-                                            if (pafParty.getLeader().getPlayer() == arenaPlayer){
-                                                Common.tell(player, Settings.PREFIX + " " + Settings.AFK_TIME_REACHED);
-                                            }
-                                            arena.kickPlayer(arenaPlayer);
-                                        }
-                                    }
-                                }
-                            }
-                        }.runTaskLater(SimplePlugin.getInstance(), afkTime);
                     }
                 }else if (pafPlayer.getParty().getPlayers().size() == 0){
                     if (!pafPlayer.getPlayer().hasPermission(Settings.PARTY_BYPASS_PERM)){
@@ -141,6 +128,12 @@ public class PlayerListener implements Listener {
             } else if (Utility.isParty && !Utility.isPfa) {
                 final PartyPlayer partyPlayer = Parties.getApi().getPartyPlayer(player.getUniqueId());
                 if (partyPlayer.isInParty()){
+                    final Party pamty = Parties.getApi().getParty(partyPlayer.getPlayerUUID());
+                    if (pamty.getLeader() != player.getUniqueId()) {
+                        Common.tell(player, Settings.PREFIX + " &cSorry, your not the party leader!");
+                        arena.kickPlayer(player);
+                        return;
+                    }
                     manager.getPrivateArenas().add(arena);
                     setupParty(player, arena);
                     Utility.doStatsThing(player.getUniqueId());
@@ -161,23 +154,6 @@ public class PlayerListener implements Listener {
                                 }
                             }
                         }.runTaskLater(SimplePlugin.getInstance(), 5);
-                        new BukkitRunnable(){
-                            @Override
-                            public void run() {
-                                if (manager.getPrivateArenas().contains(arena)){
-                                    if (arena.getStatus() == ArenaStatus.LOBBY){
-                                        for (Player arenaPlayer : arena.getPlayers()) {
-                                            final PartiesIParty pafParty = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
-                                            if (pafParty.getLeader() == arenaPlayer.getUniqueId()){
-                                                Common.tell(player, Settings.PREFIX + " " + Settings.AFK_TIME_REACHED);
-                                            }
-                                            arena.kickPlayer(arenaPlayer);
-                                        }
-                                        manager.getPrivateArenas().remove(arena);
-                                    }
-                                }
-                            }
-                        }.runTaskLater(SimplePlugin.getInstance(), afkTime);
                     }
             }else {
                     if (!player.hasPermission(Settings.PARTY_BYPASS_PERM)){

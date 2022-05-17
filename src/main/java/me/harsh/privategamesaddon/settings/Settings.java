@@ -18,7 +18,6 @@ public class Settings extends SimpleSettings {
     public static String SPEED_BUFF_MENU;
     public static String RESPAWN_BUFF_MENU;
     public static String SPAWN_RATE_BUFF_MENU;
-    public static String KNOCK_BACK_BUFF_MENU;
 
     // Buttons
     public static String ONE_HIT_BUFF;
@@ -78,7 +77,6 @@ public class Settings extends SimpleSettings {
         SPEED_BUFF_MENU = getString("Speed");
         RESPAWN_BUFF_MENU = getString("Respawn");
         SPAWN_RATE_BUFF_MENU = getString("Spawn_rate");
-        KNOCK_BACK_BUFF_MENU = getString("KnockBack");
         pathPrefix("Menu.Buffs");
         NO_SPAWNERS_BUFF = getString("No_emeralds_and_diamonds");
         CRAFTING_BUFF = getString("Crafting_allow_buff");

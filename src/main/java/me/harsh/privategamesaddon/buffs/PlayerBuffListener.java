@@ -126,8 +126,9 @@ public class PlayerBuffListener implements Listener {
         if (buff.isNoEmeralds()){
             for (Spawner spawner : arena.getSpawners()){
                 for (Team team: arena.getEnabledTeams()){
-                    if (spawner.getLocation().distance(arena.getTeamSpawn(team)) <= 15) return;
-                    spawner.addDropDurationModifier("privateStop", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, 100000000);
+                    if (spawner.getLocation().distance(arena.getTeamSpawn(team)) >= 20) {
+                        spawner.addDropDurationModifier("privateStop", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, 9999999999999.9);
+                    }
                 }
             }
         }
