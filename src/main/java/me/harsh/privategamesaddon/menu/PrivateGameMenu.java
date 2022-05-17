@@ -23,10 +23,36 @@ public class PrivateGameMenu extends Menu {
     private final Button baseSpawnerBuff;
     private final Button fallDamageBuff;
     private final Button craftingBuff;
+    private final Button noSpawnerBuff;
 
     public PrivateGameMenu(){
         setTitle(Settings.MENU_TITLE);
         setSize(9*5);
+        this.noSpawnerBuff = new Button() {
+            @Override
+            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                final ArenaBuff buff = Utility.getBuffSafe(player);
+                if (buff.isNoEmeralds()){
+                    buff.setNoEmeralds(false);
+                    restartMenu("&aDisabled No Special Spawners!");
+                    return;
+                }
+                buff.setNoEmeralds(true);
+                restartMenu("&aEnabled Special Spawner!");
+            }
+
+            @Override
+            public ItemStack getItem() {
+                final ArenaBuff buff = Utility.getBuffSafe(getViewer());
+                return ItemCreator.of(CompMaterial.EMERALD,
+                        Settings.NO_SPAWNERS_BUFF,
+                        "",
+                        "Enabled you to disable",
+                        "All the special spawners like",
+                        "Emeralds and diamonds!")
+                        .glow(buff.isNoEmeralds()).build().make();
+            }
+        };
         this.craftingBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
@@ -238,6 +264,8 @@ public class PrivateGameMenu extends Menu {
             return baseSpawnerBuff.getItem();
         }else if (slot == 33){
             return blockProtBuff.getItem();
+        }else if (slot == 40){
+            return this.noSpawnerBuff.getItem();
         }
         return ItemCreator.of(CompMaterial.CYAN_STAINED_GLASS_PANE).build().make();
     }

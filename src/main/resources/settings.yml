@@ -1,6 +1,8 @@
-# Private Games Addon
-
-
+# ============================================
+#
+#     P R I V A T E  G A M E S  A D D O N
+#
+# ============================================
 Features:
   # If Set to true it will register the stats of the private games to player
   Save_Stats: false
@@ -62,7 +64,6 @@ Menu:
     Respawn: 'Respawn Buff Menu'
     Health: 'Custom Health Buff'
     Spawn_rate: 'Spawn rate Buff'
-    KnockBack: 'Knock Back Buff'
   Buffs:
     One_Hit_Buff: '&aOne Hit Buff'
     Health_Buff: '&aHealth Buff'
@@ -73,6 +74,7 @@ Menu:
     Spawn_Rate_Mutiplier_Buff: '&aSpawn Rate Multiplier'
     Fall_damage_buff: "&aFall Damage Buff"
     Crafting_allow_buff: "&aAllow Crafting"
+    No_emeralds_and_diamonds: "&aNo Special Spawners"
 
 
 # Don't change these else plugin will break!

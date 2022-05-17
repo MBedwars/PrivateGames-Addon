@@ -7,6 +7,7 @@ public class ArenaBuff {
     private int health = 20;
     private int respawnTime = 5;
     private boolean oneHitKill = false;
+    private boolean noEmeralds = false;
     private boolean lowGravity = false;
     private int speedModifier = 1;
 
@@ -50,5 +51,9 @@ public class ArenaBuff {
 
     public void setCraftingAllowed(boolean craftingAllowed) {
         isCraftingAllowed = craftingAllowed;
+    }
+
+    public void setNoEmeralds(boolean noEmeralds) {
+        this.noEmeralds = noEmeralds;
     }
 }

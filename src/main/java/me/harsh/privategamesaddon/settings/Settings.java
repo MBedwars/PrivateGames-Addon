@@ -30,6 +30,7 @@ public class Settings extends SimpleSettings {
     public static String RESPAWN_TIME_BUFF;
     public static String SPAWN_RATE_MUTIPLIER_BUFF;
     public static String FALL_DAMAGE_BUFF;
+    public static String NO_SPAWNERS_BUFF;
 
     // Permisions
     public static String CREATE_PERM;
@@ -79,6 +80,7 @@ public class Settings extends SimpleSettings {
         SPAWN_RATE_BUFF_MENU = getString("Spawn_rate");
         KNOCK_BACK_BUFF_MENU = getString("KnockBack");
         pathPrefix("Menu.Buffs");
+        NO_SPAWNERS_BUFF = getString("No_emeralds_and_diamonds");
         CRAFTING_BUFF = getString("Crafting_allow_buff");
         ONE_HIT_BUFF = getString("One_Hit_Buff");
         HEALTH_BUFF = getString("Health_Buff");

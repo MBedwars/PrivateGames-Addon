@@ -99,7 +99,7 @@ public class PlayerBuffListener implements Listener {
         player.setHealth(buff.getHealth());
 
         if (buff.isLowGravity()){
-            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 1000000, 3));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 100000000, 3));
         }
         if (buff.getSpeedModifier() != 1){
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000000, buff.getSpeedModifier()));
@@ -117,9 +117,17 @@ public class PlayerBuffListener implements Listener {
         if (buff.getSpawnRateMultiplier() != 3){
             for (Spawner spawner: arena.getSpawners()){
                 for (Team team: arena.getEnabledTeams()){
-                    if (spawner.getLocation().distance(arena.getTeamSpawn(team)) <= 10){
+                    if (spawner.getLocation().distance(arena.getTeamSpawn(team)) <= 15){
                         spawner.addDropDurationModifier("privateMultiply", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, buff.getSpawnRateMultiplier());
                     }
+                }
+            }
+        }
+        if (buff.isNoEmeralds()){
+            for (Spawner spawner : arena.getSpawners()){
+                for (Team team: arena.getEnabledTeams()){
+                    if (spawner.getLocation().distance(arena.getTeamSpawn(team)) <= 15) return;
+                    spawner.addDropDurationModifier("privateStop", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, 100000000);
                 }
             }
         }
