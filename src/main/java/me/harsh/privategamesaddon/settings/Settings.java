@@ -13,6 +13,8 @@ public class Settings extends SimpleSettings {
     public static Boolean PARTIES_PRIORITY;
     public static Integer AFK_CHECK_TIME;
 
+    public static Boolean PER_BUFF_PERM;
+
     // Sub menus
     public static String HEALTH_BUFF_MENU;
     public static String SPEED_BUFF_MENU;
@@ -37,6 +39,18 @@ public class Settings extends SimpleSettings {
     public static String AUTO_WARP_PERM;
     public static String RELOAD_PERM;
     public static String PARTY_BYPASS_PERM;
+
+    // Buff perms
+    public static String ONE_HIT_BUFF_PERM;
+    public static String CUSTOM_HEALTH_BUFF_PERM;
+    public static String GRAVITY_BUFF_PERM;
+    public static String RESPAWN_BUFF_PERM;
+    public static String NO_SPECIAL_SPAWNER_BUFF_PERM;
+    public static String SPEED_BUFF_PERM;
+    public static String NO_FALL_DAMAGE_BUFF_PERM;
+    public static String CRAFTING_BUFF_PERM;
+    public static String BLOCK_PROT_BUFF_PERM;
+    public static String SPAWN_RATE_MUTLIPLER_BUFF_PERM;
 
     // Placeholders
     public static String IS_PRIVATE_GAME;
@@ -70,6 +84,7 @@ public class Settings extends SimpleSettings {
         AUTO_WARP = getBoolean("Auto_warp");
         PARTIES_PRIORITY = getBoolean("Priority_parties");
         AFK_CHECK_TIME = getInteger("Afk_check_time");
+        PER_BUFF_PERM = getBoolean("Per_buff_perm");
         pathPrefix("Menu");
         MENU_TITLE = getString("Title");
         pathPrefix("Menu.Sub_Menu");
@@ -94,6 +109,17 @@ public class Settings extends SimpleSettings {
         AUTO_WARP_PERM = getString("auto_warp");
         RELOAD_PERM = getString("reload_perm");
         PARTY_BYPASS_PERM = getString("party_requirement");
+        pathPrefix("Perms.Buffs");
+        ONE_HIT_BUFF = getString("One_hit_buff_perm");
+        CUSTOM_HEALTH_BUFF_PERM = getString("Custom_health_buff_perm");
+        GRAVITY_BUFF_PERM = getString("Gravity_buff_perm");
+        RESPAWN_BUFF_PERM = getString("Respawn_time_buff_perm");
+        NO_SPECIAL_SPAWNER_BUFF_PERM = getString("No_special_spawner_buff_perm");
+        SPEED_BUFF_PERM = getString("Speed_buff_perm");
+        NO_FALL_DAMAGE_BUFF_PERM = getString("No_fall_damage_buff_perm");
+        CRAFTING_BUFF_PERM = getString("Crafting_buff_perm");
+        BLOCK_PROT_BUFF_PERM = getString("Block_protection_buff_perm");
+        SPAWN_RATE_MUTLIPLER_BUFF_PERM = getString("Spawn_rate_multiplier");
         pathPrefix("Placeholders");
         IS_PRIVATE_GAME = getString("Is_private_game");
         pathPrefix("Messages");

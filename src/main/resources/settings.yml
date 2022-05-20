@@ -10,8 +10,8 @@ Features:
   Auto_warp: true
   # If set to true if both PAF and Parties are present Parties will be considered as the main source!
   Priority_parties: true
-  # After how many seconds we should check if the private arena owner is afk or not (only in lobby state)
-  Afk_check_time: 10
+  # If set to true the perms set in the Perms section of that buff will be used..
+  Per_buff_perm: false
 Messages:
   # Every Message will start with this
   Prefix: '&cPrivate Games Addon&7>>'
@@ -57,6 +57,18 @@ Perms:
   auto_warp: 'privategame.autowarp'
   # Bypasses the requirement of party at start!
   party_requirement: 'privategame.bypass.create'
+  # Per buff permissions
+  Buffs:
+    One_hit_buff_perm: "privategame.buffs.onehit"
+    Custom_health_buff_perm: "privategame.buffs.health"
+    Gravity_buff_perm: "privategame.buffs.gravity"
+    Respawn_time_buff_perm: "privategame.buffs.respawn"
+    No_special_spawner_buff_perm: "privategame.buffs.nospawner"
+    Speed_buff_perm: "privategame.buffs.speed"
+    No_fall_damage_buff_perm: "privategame.buffs.falldamage"
+    Crafting_buff_perm: "privategame.buffs.crafting"
+    Block_protection_buff_perm: "privategame.buffs.blockprot"
+    Spawn_rate_multiplier: "privategame.buffs.spawnrate"
 Menu:
   Title: '&cPrivate &aGames Control Menu'
   Sub_Menu:

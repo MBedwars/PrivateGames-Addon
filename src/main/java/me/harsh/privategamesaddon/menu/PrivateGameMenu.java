@@ -31,6 +31,7 @@ public class PrivateGameMenu extends Menu {
         this.noSpawnerBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                if (!Utility.hasBuffPerm("SPAWNERS", player)) return;
                 final ArenaBuff buff = Utility.getBuffSafe(player);
                 if (buff.isNoEmeralds()){
                     buff.setNoEmeralds(false);
@@ -56,6 +57,7 @@ public class PrivateGameMenu extends Menu {
         this.craftingBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                if (!Utility.hasBuffPerm("CRAFT", player)) return;
                 final ArenaBuff buff = Utility.getBuffSafe(player);
                 if (buff.isCraftingAllowed()){
                     buff.setCraftingAllowed(false);
@@ -80,6 +82,7 @@ public class PrivateGameMenu extends Menu {
         this.fallDamageBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                if (!Utility.hasBuffPerm("FALL", player)) return;
                 final ArenaBuff buff = Utility.getBuffSafe(player);
                 if (buff.isFallDamageEnabled()){
                     buff.setFallDamageEnabled(false);
@@ -106,6 +109,7 @@ public class PrivateGameMenu extends Menu {
         this.respawnTimeBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                if (!Utility.hasBuffPerm("RESPAWN", player)) return;
                 new RespawnBuffMenu().displayTo(player);
             }
 
@@ -121,6 +125,7 @@ public class PrivateGameMenu extends Menu {
         this.blockProtBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                if (!Utility.hasBuffPerm("BLOCK", player)) return;
                 final ArenaBuff buff = Utility.getBuffSafe(player);
                 if (!buff.isBlocksProtected()){
                     buff.setBlocksProtection(true);
@@ -146,6 +151,7 @@ public class PrivateGameMenu extends Menu {
         this.baseSpawnerBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                if (!Utility.hasBuffPerm("SPAWNRATE", player)) return;
                 new SpawnRateBuffMenu().displayTo(player);
             }
 
@@ -178,6 +184,7 @@ public class PrivateGameMenu extends Menu {
         this.gravityBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                if (!Utility.hasBuffPerm("GRAVITY", player)) return;
                 final ArenaBuff buff = Utility.getBuffSafe(player);
                 if (buff.isLowGravity()){
                     buff.setLowGravity(false);
@@ -203,6 +210,7 @@ public class PrivateGameMenu extends Menu {
         this.oneHitBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                if (!Utility.hasBuffPerm("ONE", player)) return;
                 final ArenaBuff buff = Utility.getBuffSafe(player);
                 if (buff.isOneHitKill()){
                     buff.setOneHitKill(false);
@@ -228,6 +236,7 @@ public class PrivateGameMenu extends Menu {
         this.healthBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                if (!Utility.hasBuffPerm("HEALTH", player)) return;
                 final HealthBuffMenu menu1 = new HealthBuffMenu();
                 menu1.displayTo(player);
             }
