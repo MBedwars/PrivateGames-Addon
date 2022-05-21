@@ -1,11 +1,11 @@
 package me.harsh.privategamesaddon.managers;
 
 import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.libraries.org.jetbrains.annotations.NotNull;
 import lombok.Getter;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.party.IParty;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.collection.StrictMap;
 
 import java.util.*;

@@ -35,7 +35,7 @@
     <groupId>me.harsh</groupId>
     <artifactId>PrivateGamesAddon</artifactId>
     <name>PrivateGamesAddon</name>
-    <version>1.2.2</version>
+    <version>1.3.2</version>
 
     <!-- ############################################################################### -->
 
@@ -53,7 +53,7 @@
         <main.class>me.harsh.privategamesaddon.PrivateGamesAddon</main.class>
 
         <!-- The Foundation version - change to latest version from https://github.com/kangarko/Foundation/releases -->
-        <foundation.version>5.12.7</foundation.version>
+        <foundation.version>5.13.1</foundation.version>
 
         <!-- The Java version your plugin uses, see bstats.org for what most servers have and use that -->
         <java.version>8</java.version>

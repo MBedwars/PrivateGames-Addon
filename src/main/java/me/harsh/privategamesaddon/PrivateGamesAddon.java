@@ -6,6 +6,7 @@ import me.harsh.privategamesaddon.buffs.PlayerBuffListener;
 import me.harsh.privategamesaddon.commands.PrivateCommandGroup;
 import me.harsh.privategamesaddon.events.InventoryListener;
 import me.harsh.privategamesaddon.events.PlayerListener;
+import me.harsh.privategamesaddon.lobbyItems.BuffItem;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.placeholders.PrivateGamePlaceholder;
 import me.harsh.privategamesaddon.settings.Settings;
@@ -33,7 +34,7 @@ public final class PrivateGamesAddon extends SimplePlugin {
         registerEvents(new InventoryListener());
         registerCommands("bwp", new PrivateCommandGroup());
 
-        BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new LobbyItems()));
+        BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new BuffItem()));
         new PrivateGamePlaceholder().register();
         Common.log("&a----------------------------");
         Common.log("&a    &r");
@@ -76,7 +77,7 @@ public final class PrivateGamesAddon extends SimplePlugin {
         registerCommands("bwp", new PrivateCommandGroup());
         Common.log("Regitsered Timer");
 
-        BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new LobbyItems()));
+        BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new BuffItem()));
         new PrivateGamePlaceholder().register();
     }
 

@@ -11,7 +11,6 @@ public class Settings extends SimpleSettings {
     public static Boolean SHOULD_SAVE_STATS;
     public static Boolean AUTO_WARP;
     public static Boolean PARTIES_PRIORITY;
-    public static Integer AFK_CHECK_TIME;
 
     public static Boolean PER_BUFF_PERM;
 
@@ -39,6 +38,7 @@ public class Settings extends SimpleSettings {
     public static String AUTO_WARP_PERM;
     public static String RELOAD_PERM;
     public static String PARTY_BYPASS_PERM;
+    public static String ADMIN_PERM;
 
     // Buff perms
     public static String ONE_HIT_BUFF_PERM;
@@ -70,7 +70,6 @@ public class Settings extends SimpleSettings {
     public static String NOT_IN_PARTY;
     public static String PRIVATE_GAME_MODE;
     public static String NORMAL_MODE;
-    public static String AFK_TIME_REACHED;
     public static String NO_PARTY_ON_CREATE;
 
     @Override
@@ -83,7 +82,6 @@ public class Settings extends SimpleSettings {
         SHOULD_SAVE_STATS = getBoolean("Save_Stats");
         AUTO_WARP = getBoolean("Auto_warp");
         PARTIES_PRIORITY = getBoolean("Priority_parties");
-        AFK_CHECK_TIME = getInteger("Afk_check_time");
         PER_BUFF_PERM = getBoolean("Per_buff_perm");
         pathPrefix("Menu");
         MENU_TITLE = getString("Title");
@@ -109,8 +107,9 @@ public class Settings extends SimpleSettings {
         AUTO_WARP_PERM = getString("auto_warp");
         RELOAD_PERM = getString("reload_perm");
         PARTY_BYPASS_PERM = getString("party_requirement");
+        ADMIN_PERM = getString("admin_perm");
         pathPrefix("Perms.Buffs");
-        ONE_HIT_BUFF = getString("One_hit_buff_perm");
+        ONE_HIT_BUFF_PERM = getString("One_hit_buff_perm");
         CUSTOM_HEALTH_BUFF_PERM = getString("Custom_health_buff_perm");
         GRAVITY_BUFF_PERM = getString("Gravity_buff_perm");
         RESPAWN_BUFF_PERM = getString("Respawn_time_buff_perm");
@@ -123,7 +122,6 @@ public class Settings extends SimpleSettings {
         pathPrefix("Placeholders");
         IS_PRIVATE_GAME = getString("Is_private_game");
         pathPrefix("Messages");
-        AFK_TIME_REACHED = getString("Afk_limit_reached");
         RELOAD_NO_PERM_EROR = getString("No_reload_perm");
         SUCCESSFUL_RELOAD = getString("Successfully_reload");
         NO_PLAYER_FOUND_IN_PARTY = getString("No_players_found_in_party");

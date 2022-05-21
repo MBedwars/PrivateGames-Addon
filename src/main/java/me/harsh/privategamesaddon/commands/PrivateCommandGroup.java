@@ -15,6 +15,7 @@ public class PrivateCommandGroup extends SimpleCommandGroup {
         registerSubcommand(new PrivateGameCreateCommand(this));
         registerSubcommand(new PrivateGamePartyWarpCommand(this));
         registerSubcommand(new PrivateGameReloadCommand(this));
+        registerSubcommand(new PrivateGameControlCommand(this));
     }
 
     @Override

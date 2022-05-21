@@ -1,11 +1,8 @@
 package me.harsh.privategamesaddon.utils;
 
-import de.marcely.bedwars.R;
-import de.marcely.bedwars.S;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.libraries.org.jetbrains.annotations.NotNull;
-import jdk.internal.foreign.CABI;
 import lombok.experimental.UtilityClass;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
@@ -14,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.remain.Remain;
 
-import java.util.Set;
 import java.util.UUID;
 
 @UtilityClass
@@ -57,6 +53,7 @@ public class Utility {
     }
 
     public Boolean hasPermision(@NotNull Player player){
+        if (player.hasPermission(Settings.ADMIN_PERM)) return true;
         return player.hasPermission(Settings.GLOBAL_PERM) || player.hasPermission(Settings.CREATE_PERM) || player.hasPermission("*");
     }
 

@@ -93,11 +93,6 @@ public class PlayerListener implements Listener {
             if (Utility.isPfa && !Utility.isParty){
                 final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(player);
                 if (pafPlayer.getParty() != null){
-                    if (pafPlayer.getParty().getLeader().getPlayer() != player){
-                        Common.tell(player, Settings.PREFIX + " &cSorry, your not the party leader!");
-                        arena.kickPlayer(player);
-                        return;
-                    }
                     manager.getPrivateArenas().add(arena);
                     setupParty(player, arena);
                     Utility.doStatsThing(player.getUniqueId());
@@ -128,12 +123,6 @@ public class PlayerListener implements Listener {
             } else if (Utility.isParty && !Utility.isPfa) {
                 final PartyPlayer partyPlayer = Parties.getApi().getPartyPlayer(player.getUniqueId());
                 if (partyPlayer.isInParty()){
-                    final Party pamty = Parties.getApi().getParty(partyPlayer.getPlayerUUID());
-                    if (pamty.getLeader() != player.getUniqueId()) {
-                        Common.tell(player, Settings.PREFIX + " &cSorry, your not the party leader!");
-                        arena.kickPlayer(player);
-                        return;
-                    }
                     manager.getPrivateArenas().add(arena);
                     setupParty(player, arena);
                     Utility.doStatsThing(player.getUniqueId());

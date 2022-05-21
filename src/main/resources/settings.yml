@@ -51,7 +51,8 @@ Placeholders:
   Is_private_game: '[P]' # Color Codes not supported
 Perms:
   # Dont add spaces here!
-  global_perm: 'privategame.*'
+  global_perm: 'privategame.*' # Gives all the perms
+  admin_perm: 'privategame.admin' # Gives all the perms except reload
   create_perm: 'privategame.create'
   reload_perm: 'privategame.reload'
   auto_warp: 'privategame.autowarp'

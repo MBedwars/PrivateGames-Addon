@@ -1,4 +1,4 @@
-package me.harsh.privategamesaddon;
+package me.harsh.privategamesaddon.lobbyItems;
 
 import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
@@ -7,17 +7,17 @@ import de.marcely.bedwars.api.game.lobby.LobbyItem;
 import de.marcely.bedwars.api.game.lobby.LobbyItemHandler;
 import de.simonsator.partyandfriends.api.pafplayers.OnlinePAFPlayer;
 import de.simonsator.partyandfriends.api.pafplayers.PAFPlayerManager;
+import me.harsh.privategamesaddon.PrivateGamesAddon;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.menu.PrivateGameMenu;
 import me.harsh.privategamesaddon.party.PafParty;
 import me.harsh.privategamesaddon.party.PartiesIParty;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.entity.Player;
-import org.mineacademy.fo.Common;
 
 
-public class LobbyItems extends LobbyItemHandler {
-    public LobbyItems() {
+public class BuffItem extends LobbyItemHandler {
+    public BuffItem() {
         super("private", PrivateGamesAddon.getInstance());
     }
 
