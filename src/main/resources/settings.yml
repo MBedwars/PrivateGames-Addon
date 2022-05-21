@@ -46,6 +46,10 @@ Messages:
   Afk_limit_reached: "&cSorry AFKing with PGA mode and locking the arena isn't allowed!"
   # When player uses /bwp reload
   Successfully_reload: "&aSuccessfully Reloaded Private Games Addon!!"
+  # When the arena is running and you try to join using the control panel
+  Illegal_join_try: "&cSorry, the arena is running cannot join as a player, &aAdding as a spectator!"
+  # When Admin joins the arena using the control panel
+  Admin_join: "&aJoining {p}'s private game!"
 Placeholders:
   # This placeholder can be used inside Scoreboard to present if the game is private or not! [P] on hypixel
   Is_private_game: '[P]' # Color Codes not supported
@@ -71,7 +75,9 @@ Perms:
     Block_protection_buff_perm: "privategame.buffs.blockprot"
     Spawn_rate_multiplier: "privategame.buffs.spawnrate"
 Menu:
-  Title: '&cPrivate &aGames Control Menu'
+  Title: '&cPrivate &aGames Menu'
+  Control_panel: "&c&lADMIN PANEL"
+
   Sub_Menu:
     Speed: 'Speed Buff Menu'
     Respawn: 'Respawn Buff Menu'

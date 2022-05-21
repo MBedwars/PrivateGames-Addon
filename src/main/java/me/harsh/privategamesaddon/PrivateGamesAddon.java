@@ -33,7 +33,6 @@ public final class PrivateGamesAddon extends SimplePlugin {
         registerEvents(new PlayerBuffListener());
         registerEvents(new InventoryListener());
         registerCommands("bwp", new PrivateCommandGroup());
-
         BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new BuffItem()));
         new PrivateGamePlaceholder().register();
         Common.log("&a----------------------------");

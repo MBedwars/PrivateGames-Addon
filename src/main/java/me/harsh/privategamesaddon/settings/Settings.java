@@ -19,6 +19,7 @@ public class Settings extends SimpleSettings {
     public static String SPEED_BUFF_MENU;
     public static String RESPAWN_BUFF_MENU;
     public static String SPAWN_RATE_BUFF_MENU;
+    public static String ADMIN_CONTROL_PANEL;
 
     // Buttons
     public static String ONE_HIT_BUFF;
@@ -52,12 +53,16 @@ public class Settings extends SimpleSettings {
     public static String BLOCK_PROT_BUFF_PERM;
     public static String SPAWN_RATE_MUTLIPLER_BUFF_PERM;
 
+
+    public static String ADMIN_JOIN_PGA;
+
     // Placeholders
     public static String IS_PRIVATE_GAME;
 
     // Messages
 
     public static String SUCCESSFUL_RELOAD;
+    public static String ILLEGAL_JOIN_MESSAGE;
     public static String NO_PERM_EROR;
     public static String RELOAD_NO_PERM_EROR;
     public static String NO_AUTO_WARP_PERM_EROR;
@@ -85,6 +90,7 @@ public class Settings extends SimpleSettings {
         PER_BUFF_PERM = getBoolean("Per_buff_perm");
         pathPrefix("Menu");
         MENU_TITLE = getString("Title");
+        ADMIN_CONTROL_PANEL = getString("Control_panel");
         pathPrefix("Menu.Sub_Menu");
         HEALTH_BUFF_MENU = getString("Health");
         SPEED_BUFF_MENU = getString("Speed");
@@ -122,6 +128,8 @@ public class Settings extends SimpleSettings {
         pathPrefix("Placeholders");
         IS_PRIVATE_GAME = getString("Is_private_game");
         pathPrefix("Messages");
+        ADMIN_JOIN_PGA = getString("Admin_join");
+        ILLEGAL_JOIN_MESSAGE = getString("Illegal_join_try");
         RELOAD_NO_PERM_EROR = getString("No_reload_perm");
         SUCCESSFUL_RELOAD = getString("Successfully_reload");
         NO_PLAYER_FOUND_IN_PARTY = getString("No_players_found_in_party");

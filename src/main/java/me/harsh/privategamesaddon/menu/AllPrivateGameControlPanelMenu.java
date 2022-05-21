@@ -12,6 +12,7 @@ import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.mineacademy.fo.Common;
 import org.mineacademy.fo.menu.MenuPagged;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
@@ -19,6 +20,7 @@ import org.mineacademy.fo.remain.CompMaterial;
 public class AllPrivateGameControlPanelMenu extends MenuPagged<Arena> {
     public AllPrivateGameControlPanelMenu() {
         super(Utility.getManager().getPrivateArenas());
+        setTitle(Settings.ADMIN_CONTROL_PANEL);
     }
 
     @Override
@@ -32,19 +34,26 @@ public class AllPrivateGameControlPanelMenu extends MenuPagged<Arena> {
 
     @Override
     protected void onPageClick(Player player, Arena arena, ClickType clickType) {
+        if (arena.getStatus() == ArenaStatus.RUNNING){
+            tell(Settings.PREFIX + " " + Settings.ILLEGAL_JOIN_MESSAGE);
+            arena.addSpectator(player);
+        }
         final PrivateGameManager manager = Utility.getManager();
         if (clickType.isLeftClick()){
-            arena.broadcast(Settings.PREFIX + " &cTHE ARENA IS FORCED STOPPED BY ADMIN..");
-            manager.getPrivateArenas().remove(arena);
+            arena.broadcast(Common.colorize(Settings.PREFIX + " &cTHE ARENA IS FORCED STOPPED BY ADMIN.."));
+            if (manager.privateArenas.contains(arena)) manager.getPrivateArenas().remove(arena);
             manager.partyMembersMangingMap.remove(arena);
             arena.getPlayers().forEach(player1 -> manager.playerStatsList.remove(player1.getUniqueId()));
             arena.kickAllPlayers();
         }else if (clickType.isRightClick()){
             rightClick(player, arena);
+            final String message = Settings.ADMIN_JOIN_PGA.replace("{p}", player.getDisplayName());
+            tell(message);
         }
 
     }
     private void rightClick(Player player, Arena arena){
+        if (arena.getStatus() != ArenaStatus.LOBBY) return;
         final PrivateGameManager manager = Utility.getManager();
         if (Utility.isParty){
             PartiesIParty party = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
