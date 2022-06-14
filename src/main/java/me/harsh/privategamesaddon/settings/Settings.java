@@ -76,6 +76,7 @@ public class Settings extends SimpleSettings {
     public static String PRIVATE_GAME_MODE;
     public static String NORMAL_MODE;
     public static String NO_PARTY_ON_CREATE;
+    public static String ONLY_LEADER_IN_PARTY;
 
     @Override
     protected int getConfigVersion() {
@@ -145,5 +146,6 @@ public class Settings extends SimpleSettings {
         NOT_IN_PARTY = getString("Not_in_a_party_to_warp");
         PRIVATE_GAME_MODE = getString("Private_game_creation_mode");
         NORMAL_MODE = getString("Normal_game_mode");
+        ONLY_LEADER_IN_PARTY = getString("Only_leader_in_party");
     }
 }

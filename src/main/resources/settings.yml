@@ -42,6 +42,7 @@ Messages:
   Private_game_illegal_warp: '&cYou cannot warp players in a non-private game room!'
   # When no party is found while warping
   Not_in_a_party_to_warp: '&cSorry you are not in a party to warp players'
+  Only_leader_in_party: "&cSorry, please invite some players then warp <3"
   # 90 Seconds timer runs when leader creates the PG once it's 90 it's gonna kick everyone!
   Afk_limit_reached: "&cSorry AFKing with PGA mode and locking the arena isn't allowed!"
   # When player uses /bwp reload

@@ -167,7 +167,8 @@ public class PlayerListener implements Listener {
             }
         }
         manager.getPrivateArenas().remove(arena);
-        manager.partyMembersMangingMap.remove(arena);
+        if(manager.partyMembersMangingMap.containsKey(arena))
+            manager.partyMembersMangingMap.remove(arena);
     }
     @EventHandler
     public void onPlayerQuit(PlayerQuitArenaEvent event){
@@ -177,7 +178,8 @@ public class PlayerListener implements Listener {
             manager.getPrivateArenas().remove(arena);
         }
         manager.arenaArenaBuffMap.remove(arena);
-        manager.partyMembersMangingMap.remove(arena);
+        if(manager.partyMembersMangingMap.containsKey(arena))
+            manager.partyMembersMangingMap.remove(arena);
     }
     @EventHandler
     public void onRoundStart(RoundStartEvent event){

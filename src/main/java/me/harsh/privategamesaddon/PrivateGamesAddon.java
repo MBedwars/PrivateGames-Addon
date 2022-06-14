@@ -74,7 +74,6 @@ public final class PrivateGamesAddon extends SimplePlugin {
 //        registerEvents(new PlayerBuffListener());
 //        registerEvents(new InventoryListener());
         registerCommands("bwp", new PrivateCommandGroup());
-        Common.log("Regitsered Timer");
 
         BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new BuffItem()));
         new PrivateGamePlaceholder().register();

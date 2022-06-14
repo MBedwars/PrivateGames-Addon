@@ -148,7 +148,7 @@
             <artifactId>API</artifactId>
             <version>5.0.9</version>
             <scope>system</scope>
-            <systemPath>D:/Plugins/bedwars.jar</systemPath>
+            <systemPath>D:/Workspace/Plugins/bedwars.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.alessiodp.parties</groupId>

@@ -52,6 +52,10 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
             final PartyPlayer partyPlayer = Parties.getApi().getPartyPlayer(p2.getUniqueId());
             if (partyPlayer.isInParty()){
                 final Party party = Parties.getApi().getParty(partyPlayer.getPartyId());
+                if (party.getMembers().size() == 1){
+                    tell(Settings.PREFIX + " " + Settings.ONLY_LEADER_IN_PARTY);
+                    return;
+                }
                 if (party == null) Common.tell(p2, Settings.PREFIX + "&c Party not found!");
                 party.getMembers().forEach(uuid -> {
                     final Player p = Utility.getPlayerByUuid(uuid);
@@ -68,6 +72,10 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
             final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(p2);
             if (pafPlayer.getParty() != null){
                 final PlayerParty party = PartyManager.getInstance().getParty(pafPlayer);
+                if (party.getPlayers().size() == 0){
+                    tell(Settings.PREFIX + " " + Settings.ONLY_LEADER_IN_PARTY);
+                    return;
+                }
                 party.getPlayers().forEach(player -> {
                     Common.tell(p2, Settings.PREFIX + "&aWarping " + player.getName());
                     arena.addPlayer(player.getPlayer());
