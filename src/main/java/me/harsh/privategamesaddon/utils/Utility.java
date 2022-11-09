@@ -40,13 +40,13 @@ public class Utility {
         return Utility.getManager().arenaArenaBuffMap.get(arena);
     }
     public ArenaBuff getBuff(@NotNull Arena arena){
-        if (!getManager().arenaArenaBuffMap.contains(arena)) return null;
+        if (!getManager().arenaArenaBuffMap.containsKey(arena)) return null;
         return Utility.getManager().arenaArenaBuffMap.get(arena);
     }
     public ArenaBuff getBuffSafe(@NotNull Player player){
         final Arena arena = GameAPI.get().getArenaByPlayer(player);
         Valid.checkNotNull(arena, "Arena not found!");
-        if (getManager().arenaArenaBuffMap.contains(arena)){
+        if (getManager().arenaArenaBuffMap.containsKey(arena)){
             return getManager().arenaArenaBuffMap.get(arena);
         }
         return null;

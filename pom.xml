@@ -35,7 +35,7 @@
     <groupId>me.harsh</groupId>
     <artifactId>PrivateGamesAddon</artifactId>
     <name>PrivateGamesAddon</name>
-    <version>2.2.2</version>
+    <version>2.2.3</version>
 
     <!-- ############################################################################### -->
 
@@ -53,7 +53,7 @@
         <main.class>me.harsh.privategamesaddon.PrivateGamesAddon</main.class>
 
         <!-- The Foundation version - change to latest version from https://github.com/kangarko/Foundation/releases -->
-        <foundation.version>5.13.1</foundation.version>
+        <foundation.version>6.2.3</foundation.version>
 
         <!-- The Java version your plugin uses, see bstats.org for what most servers have and use that -->
         <java.version>8</java.version>
@@ -146,7 +146,7 @@
         <dependency>
             <groupId>de.marcely.bedwars</groupId>
             <artifactId>API</artifactId>
-            <version>5.0.9</version>
+            <version>5.1</version>
             <scope>system</scope>
             <systemPath>D:/Workspace/Plugins/bedwars.jar</systemPath>
         </dependency>
@@ -189,7 +189,7 @@
                    You want to check and update the latest version periodically from
                    https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin
                -->
-                <version>3.8.1</version>
+                <version>3.10.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -207,7 +207,7 @@
                    You want to check and update the latest version periodically from
                    https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin
                -->
-                <version>3.2.1</version>
+                <version>3.4.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

@@ -20,7 +20,7 @@ public class PrivateGameManager {
     public final List<Arena> privateArenas = new ArrayList<>();
 
     public Boolean checkPlayer(@NotNull Player player){
-        return privateGameMode.contains(player.getUniqueId());
+        return privateGameMode.containsKey(player.getUniqueId());
     }
 
     public Boolean getMode(@NotNull Player player){

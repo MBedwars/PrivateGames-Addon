@@ -97,7 +97,15 @@ Menu:
     No_emeralds_and_diamonds: "&aNo Special Spawners"
 
 
-# Don't change these else plugin will break!
-Log_Lag_Over_Milis: 100
-Version: 1
+# -------------------------------------------
+#         COMMAND ALIASES (E.G /bwp)
+# -------------------------------------------
+
+Command_Aliases: ["bwp"]
+
+# -----------------------------
+#       DO NOT CHANGE
+# -----------------------------
+
 Debug: []
+Version: 1

@@ -14,10 +14,6 @@ import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.Bukkit;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.plugin.SimplePlugin;
-import org.mineacademy.fo.settings.YamlStaticConfig;
-
-import java.util.Arrays;
-import java.util.List;
 
 public final class PrivateGamesAddon extends SimplePlugin {
 
@@ -32,7 +28,6 @@ public final class PrivateGamesAddon extends SimplePlugin {
         registerEvents(new PlayerListener(Utility.getManager()));
         registerEvents(new PlayerBuffListener());
         registerEvents(new InventoryListener());
-        registerCommands("bwp", new PrivateCommandGroup());
         BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new BuffItem()));
         new PrivateGamePlaceholder().register();
         Common.log("&a----------------------------");
@@ -73,7 +68,7 @@ public final class PrivateGamesAddon extends SimplePlugin {
 //        registerEvents(new PlayerListener(Utility.getManager()));
 //        registerEvents(new PlayerBuffListener());
 //        registerEvents(new InventoryListener());
-        registerCommands("bwp", new PrivateCommandGroup());
+        registerCommands( new PrivateCommandGroup());
 
         BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new BuffItem()));
         new PrivateGamePlaceholder().register();
@@ -91,8 +86,4 @@ public final class PrivateGamesAddon extends SimplePlugin {
         manager.privateGameMode.clear();
     }
 
-    @Override
-    public List<Class<? extends YamlStaticConfig>> getSettings() {
-        return Arrays.asList(Settings.class);
-    }
 }

@@ -25,10 +25,10 @@ public class BuffItem extends LobbyItemHandler {
     public void handleUse(Player player, Arena arena, LobbyItem lobbyItem) {
         if (Utility.getManager().privateArenas.contains(arena)){
             final PrivateGameMenu menu = new PrivateGameMenu();
-            if (Utility.getManager().arenaArenaBuffMap.contains(arena)){
+            if (Utility.getManager().arenaArenaBuffMap.containsKey(arena)){
                 menu.displayTo(player);
             }
-            if (!Utility.getManager().arenaArenaBuffMap.contains(arena)){
+            if (!Utility.getManager().arenaArenaBuffMap.containsKey(arena)){
                 Utility.getManager().arenaArenaBuffMap.put(arena, new ArenaBuff());
             }
         }

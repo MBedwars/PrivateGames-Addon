@@ -1,7 +1,6 @@
 package me.harsh.privategamesaddon.commands;
 
 import me.harsh.privategamesaddon.settings.Settings;
-import org.bukkit.command.CommandSender;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.model.SimpleComponent;
@@ -19,7 +18,7 @@ public class PrivateCommandGroup extends SimpleCommandGroup {
     }
 
     @Override
-    protected List<SimpleComponent> getNoParamsHeader(CommandSender sender) {
+    protected List<SimpleComponent> getNoParamsHeader() {
         final List<String> message = new ArrayList<>();
         message.add("&f");
         message.add(" " + Settings.PREFIX + "&8\u2122");
