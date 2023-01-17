@@ -161,7 +161,8 @@ public class PlayerListener implements Listener {
             Bukkit.getServer().getPluginManager().callEvent(new PrivateGameEndEvent(arena, event.getWinners(), event.getWinnerTeam()));
         }
         for (Player player : arena.getPlayers()) {
-            manager.playerStatsList.remove(player.getUniqueId());
+            if (manager.playerStatsList.contains(player.getUniqueId()))
+                manager.playerStatsList.remove(player.getUniqueId());
             if (PrivateGameAPI.hasPermision(player)){
                 manager.setMode(player, false);
             }
@@ -177,7 +178,9 @@ public class PlayerListener implements Listener {
         if (manager.checkPlayer(player) && manager.getPrivateArenas().contains(arena)){
             manager.getPrivateArenas().remove(arena);
         }
-        manager.arenaArenaBuffMap.remove(arena);
+        if (manager.arenaArenaBuffMap.containsKey(arena)){
+            manager.arenaArenaBuffMap.remove(arena);
+        }
         if(manager.partyMembersMangingMap.containsKey(arena))
             manager.partyMembersMangingMap.remove(arena);
     }
