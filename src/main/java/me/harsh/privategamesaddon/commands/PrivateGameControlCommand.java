@@ -28,6 +28,6 @@ public class PrivateGameControlCommand extends SimpleSubCommand {
             if (arena == null || arena.getStatus() == ArenaStatus.LOBBY){
                 new AllPrivateGameControlPanelMenu().displayTo(player);
             }
-        } else  tell(Settings.PREFIX + " &cSorry you're not allowed to use that!");
+        } else  tell( " &cSorry you're not allowed to use that!");
     }
 }

@@ -13,8 +13,6 @@ Features:
   # If set to true the perms set in the Perms section of that buff will be used..
   Per_buff_perm: false
 Messages:
-  # Every Message will start with this
-  Prefix: '&cPrivate Games Addon&7>>'
   # When player don't have the permission
   No_perm: '&cSorry, you have to buy &6MVP++ to create private games!'
   # When player don't have permission for /bwp reload
@@ -102,6 +100,15 @@ Menu:
 # -------------------------------------------
 
 Command_Aliases: ["bwp"]
+
+
+# -------------------------------------------
+#          MESSAGE PREFIX
+# -------------------------------------------
+
+# Every Message will start with this
+Prefix: '&cPrivate Games Addon&7>>'
+
 
 # -----------------------------
 #       DO NOT CHANGE

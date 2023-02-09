@@ -55,7 +55,7 @@ public class PlayerListener implements Listener {
                     if (party == pafParty.getParty()){
                         final String name = party.getLeader().getName();
                         Utility.doStatsThing(player.getUniqueId());
-                        Common.tell(player, Settings.PREFIX + " " + Settings.PLAYER_JOIN_PRIVATE_GAME);
+                        Common.tell(player,  " " + Settings.PLAYER_JOIN_PRIVATE_GAME);
                         return;
                     }
                 }
@@ -68,7 +68,7 @@ public class PlayerListener implements Listener {
                     if (party == p.getParty()){
                         final String name = Bukkit.getPlayer(party.getLeader()).getName();
                         Utility.doStatsThing(player.getUniqueId());
-                        Common.tell(player, Settings.PREFIX + " " + Settings.PLAYER_JOIN_PRIVATE_GAME.replace("{name}", name));
+                        Common.tell(player,  " " + Settings.PLAYER_JOIN_PRIVATE_GAME.replace("{name}", name));
                         return;
                     }
                 }
@@ -77,13 +77,13 @@ public class PlayerListener implements Listener {
             if (Utility.isParty){
                 final PartiesIParty party = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
                 if (party.getParty().getMembers().contains(player.getUniqueId())) return;
-                Common.tell(player, Settings.PREFIX + " "  + Settings.ARENA_IS_PRIVATE);
+                Common.tell(player,  " "  + Settings.ARENA_IS_PRIVATE);
                 event.addIssue(AddPlayerIssue.PLUGIN);
             }else if (Utility.isPfa){
                 final PafParty party = (PafParty) manager.partyMembersMangingMap.get(arena);
                 final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(player);
                 if (party.getParty().getPlayers().contains(pafPlayer)) return;
-                Common.tell(player, Settings.PREFIX + " " + Settings.ARENA_IS_PRIVATE);
+                Common.tell(player,  " " + Settings.ARENA_IS_PRIVATE);
                 event.addIssue(AddPlayerIssue.PLUGIN);
             }
 
@@ -99,14 +99,14 @@ public class PlayerListener implements Listener {
                     Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
                     PafParty party = (PafParty) manager.partyMembersMangingMap.get(arena);
                     if (party.getParty().getPlayers().size() == 0){
-                        Common.tell(player, Settings.PREFIX + " " + Settings.NO_PLAYER_FOUND_IN_PARTY);
+                        Common.tell(player,  " " + Settings.NO_PLAYER_FOUND_IN_PARTY);
                     }else {
                         new BukkitRunnable(){
 
                             @Override
                             public void run() {
                                 if (Settings.AUTO_WARP && player.hasPermission(Settings.AUTO_WARP_PERM)){
-                                    Common.tell(player, Settings.PREFIX + "&a Auto Warping party members...");
+                                    Common.tell(player,  "&a Auto Warping party members...");
                                     player.performCommand("bwp warp");
                                 }else if (!player.hasPermission(Settings.AUTO_WARP_PERM)){
                                     Common.tell(player, Settings.NO_AUTO_WARP_PERM_EROR);
@@ -129,14 +129,14 @@ public class PlayerListener implements Listener {
                     Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
                     PartiesIParty party = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
                     if (party.getParty().getMembers().size() == 1) {
-                        Common.tell(player, Settings.PREFIX + " " + Settings.NO_PLAYER_FOUND_IN_PARTY);
+                        Common.tell(player,  " " + Settings.NO_PLAYER_FOUND_IN_PARTY);
                     }else {
                         new BukkitRunnable(){
 
                             @Override
                             public void run() {
                                 if (Settings.AUTO_WARP && player.hasPermission(Settings.AUTO_WARP_PERM)){
-                                    Common.tell(player, Settings.PREFIX + "&a Auto Warping party members...");
+                                    Common.tell(player,  "&a Auto Warping party members...");
                                     player.performCommand("bwp warp");
                                 }else if (!player.hasPermission(Settings.AUTO_WARP_PERM)){
                                     Common.tell(player, Settings.NO_AUTO_WARP_PERM_EROR);

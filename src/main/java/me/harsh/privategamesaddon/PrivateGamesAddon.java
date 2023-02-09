@@ -17,8 +17,6 @@ import org.mineacademy.fo.plugin.SimplePlugin;
 
 public final class PrivateGamesAddon extends SimplePlugin {
 
-
-
     @Override
     protected void onPluginStart() {
         if(Bukkit.getPluginManager().getPlugin("MBedwars") == null) {

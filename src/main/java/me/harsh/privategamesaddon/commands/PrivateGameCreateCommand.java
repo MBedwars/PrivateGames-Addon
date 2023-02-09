@@ -20,18 +20,18 @@ public class PrivateGameCreateCommand extends SimpleSubCommand {
         checkConsole();
         final Player player = getPlayer();
         if (!Utility.hasPermision(player)){
-            Common.tell(player, Settings.PREFIX + Common.colorize(Settings.NO_PERM_EROR));
+            Common.tell(player,  Common.colorize(Settings.NO_PERM_EROR));
             return;
         }
         final PrivateGameManager manager = Utility.getManager();
         if (manager.checkPlayer(player) && manager.getMode(player)){
             manager.setMode(player, false);
-            Common.tell(player, Settings.PREFIX + " " + Settings.NORMAL_MODE);
+            Common.tell(player,  " " + Settings.NORMAL_MODE);
         }else if (manager.checkPlayer(player) && !(manager.getMode(player))){
-            Common.tell(player, Settings.PREFIX + " " + Settings.PRIVATE_GAME_MODE);
+            Common.tell(player,  " " + Settings.PRIVATE_GAME_MODE);
             manager.setMode(player, true);
         }else if (!manager.checkPlayer(player)){
-            Common.tell(player, Settings.PREFIX + " " + Settings.PRIVATE_GAME_MODE);
+            Common.tell(player,  " " + Settings.PRIVATE_GAME_MODE);
             manager.addPlayer(player, true);
         }
     }

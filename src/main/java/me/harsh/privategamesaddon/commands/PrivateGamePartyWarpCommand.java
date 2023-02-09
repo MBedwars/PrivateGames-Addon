@@ -31,21 +31,21 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
         checkConsole();
         final Player p2 = getPlayer();
         if (!Utility.hasPermision(p2)){
-            Common.tell(p2, Settings.PREFIX + Settings.NO_PERM_EROR);
+            Common.tell(p2,  Settings.NO_PERM_EROR);
             return;
         }
         final Arena arena = GameAPI.get().getArenaByPlayer(p2);
         if (arena == null) {
-            Common.tell(p2, Settings.PREFIX + " " + Settings.NOT_IN_ARENA);
+            Common.tell(p2,  " " + Settings.NOT_IN_ARENA);
             return;
 
         }
         if (!Utility.getManager().getMode(p2)){
-            Common.tell(p2, Settings.PREFIX + " " + Settings.NOT_IN_PRIVATE_GAME_MODE);
+            Common.tell(p2,  " " + Settings.NOT_IN_PRIVATE_GAME_MODE);
             return;
         }
         if (!Utility.getManager().privateArenas.contains(arena)){
-            Common.tell(p2, Settings.PREFIX + " " + Settings.NOT_PRIVATE_ROOM_WARP);
+            Common.tell(p2,  " " + Settings.NOT_PRIVATE_ROOM_WARP);
             return;
         }
         if (Utility.isParty){
@@ -53,31 +53,31 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
             if (partyPlayer.isInParty()){
                 final Party party = Parties.getApi().getParty(partyPlayer.getPartyId());
                 if (party.getMembers().size() == 1){
-                    tell(Settings.PREFIX + " " + Settings.ONLY_LEADER_IN_PARTY);
+                    tell( " " + Settings.ONLY_LEADER_IN_PARTY);
                     return;
                 }
-                if (party == null) Common.tell(p2, Settings.PREFIX + "&c Party not found!");
+                if (party == null) Common.tell(p2,  "&c Party not found!");
                 party.getMembers().forEach(uuid -> {
                     final Player p = Utility.getPlayerByUuid(uuid);
                     if (p == null) Common.log("Player is Null!");
                     if (p == p2) return;
-                    Common.tell(p2, Settings.PREFIX + "&aWarping " + p.getName());
+                    Common.tell(p2,  "&aWarping " + p.getName());
                     arena.addPlayer(p);
                 });
                 Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent(party.getMembers(), arena));
             }else {
-                Common.tell(p2,Settings.PREFIX + " " + Settings.NOT_IN_PARTY);
+                Common.tell(p2, " " + Settings.NOT_IN_PARTY);
             }
         }else if (Utility.isPfa){
             final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(p2);
             if (pafPlayer.getParty() != null){
                 final PlayerParty party = PartyManager.getInstance().getParty(pafPlayer);
                 if (party.getPlayers().size() == 0){
-                    tell(Settings.PREFIX + " " + Settings.ONLY_LEADER_IN_PARTY);
+                    tell( " " + Settings.ONLY_LEADER_IN_PARTY);
                     return;
                 }
                 party.getPlayers().forEach(player -> {
-                    Common.tell(p2, Settings.PREFIX + "&aWarping " + player.getName());
+                    Common.tell(p2,  "&aWarping " + player.getName());
                     arena.addPlayer(player.getPlayer());
                 });
             }

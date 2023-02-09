@@ -20,9 +20,9 @@ public class PrivateGameReloadCommand extends SimpleSubCommand {
         final Player player = getPlayer();
         if (player.hasPermission(Settings.RELOAD_PERM)){
             SimplePlugin.getInstance().reload();
-            Common.tell(player, Settings.PREFIX + " " +  Settings.SUCCESSFUL_RELOAD);
+            Common.tell(player,  " " +  Settings.SUCCESSFUL_RELOAD);
         }else {
-            Common.tell(player, Settings.PREFIX + " " + Settings.RELOAD_NO_PERM_EROR);
+            Common.tell(player,  " " + Settings.RELOAD_NO_PERM_EROR);
         }
     }
 }

@@ -1,6 +1,7 @@
 package me.harsh.privategamesaddon.settings;
 
 
+import org.mineacademy.fo.Common;
 import org.mineacademy.fo.settings.SimpleSettings;
 
 public class Settings extends SimpleSettings {
@@ -84,6 +85,8 @@ public class Settings extends SimpleSettings {
     }
 
     private static void init(){
+        PREFIX = getString("Prefix");
+        Common.setTellPrefix(Settings.PREFIX);
         pathPrefix("Features");
         SHOULD_SAVE_STATS = getBoolean("Save_Stats");
         AUTO_WARP = getBoolean("Auto_warp");
@@ -136,7 +139,6 @@ public class Settings extends SimpleSettings {
         NO_PLAYER_FOUND_IN_PARTY = getString("No_players_found_in_party");
         NO_PERM_EROR = getString("No_perm");
         NO_PARTY_ON_CREATE = getString("No_party_found");
-        PREFIX = getString("Prefix");
         ARENA_IS_PRIVATE = getString("Arena_private");
         NO_AUTO_WARP_PERM_EROR = getString("Auto_warp_noperm");
         NOT_IN_ARENA = getString("Arena_not_found");

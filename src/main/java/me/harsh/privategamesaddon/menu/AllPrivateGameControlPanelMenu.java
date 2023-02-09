@@ -35,12 +35,12 @@ public class AllPrivateGameControlPanelMenu extends MenuPagged<Arena> {
     @Override
     protected void onPageClick(Player player, Arena arena, ClickType clickType) {
         if (arena.getStatus() == ArenaStatus.RUNNING){
-            tell(Settings.PREFIX + " " + Settings.ILLEGAL_JOIN_MESSAGE);
+            tell( " " + Settings.ILLEGAL_JOIN_MESSAGE);
             arena.addSpectator(player);
         }
         final PrivateGameManager manager = Utility.getManager();
         if (clickType.isLeftClick()){
-            arena.broadcast(Common.colorize(Settings.PREFIX + " &cTHE ARENA IS FORCED STOPPED BY ADMIN.."));
+            arena.broadcast(Common.colorize( " &cTHE ARENA IS FORCED STOPPED BY ADMIN.."));
             if (manager.privateArenas.contains(arena)) manager.getPrivateArenas().remove(arena);
             manager.partyMembersMangingMap.remove(arena);
             arena.getPlayers().forEach(player1 -> manager.playerStatsList.remove(player1.getUniqueId()));
