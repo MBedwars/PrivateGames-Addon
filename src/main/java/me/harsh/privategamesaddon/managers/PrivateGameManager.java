@@ -1,7 +1,6 @@
 package me.harsh.privategamesaddon.managers;
 
 import de.marcely.bedwars.api.arena.Arena;
-import de.marcely.bedwars.libraries.org.jetbrains.annotations.NotNull;
 import lombok.Getter;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.party.IParty;
@@ -19,26 +18,26 @@ public class PrivateGameManager {
     @Getter
     public final List<Arena> privateArenas = new ArrayList<>();
 
-    public Boolean checkPlayer(@NotNull Player player){
+    public Boolean checkPlayer( Player player){
         return privateGameMode.containsKey(player.getUniqueId());
     }
 
-    public Boolean getMode(@NotNull Player player){
+    public Boolean getMode( Player player){
         return privateGameMode.get(player.getUniqueId());
     }
 
-    public void setMode(@NotNull Player player, Boolean bol){
+    public void setMode( Player player, Boolean bol){
         privateGameMode.remove(player.getUniqueId());
         addPlayer(player, bol);
     }
 
 
 
-    public void addPlayer(@NotNull Player player, Boolean bol){
+    public void addPlayer( Player player, Boolean bol){
         privateGameMode.put(player.getUniqueId(), bol);
     }
 
-    public void removePlayer(@NotNull Player player){
+    public void removePlayer( Player player){
         privateGameMode.remove(player.getUniqueId());
     }
 

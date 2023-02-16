@@ -22,4 +22,8 @@ public class PrivateGameAPI {
     public List<Arena> getPrivateGames(){
         return Utility.getManager().getPrivateArenas();
     }
+
+    public void setPrivateGameMode(Player player, Boolean bol){
+        Utility.getManager().addPlayer(player, bol);
+    }
 }
