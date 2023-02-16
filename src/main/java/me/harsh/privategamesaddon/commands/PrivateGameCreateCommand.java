@@ -26,12 +26,9 @@ public class PrivateGameCreateCommand extends SimpleSubCommand {
         final PrivateGameManager manager = Utility.getManager();
         if (manager.checkPlayer(player) && manager.getMode(player)){
             manager.setMode(player, false);
-            Common.tell(player,  " " + Settings.NORMAL_MODE);
         }else if (manager.checkPlayer(player) && !(manager.getMode(player))){
-            Common.tell(player,  " " + Settings.PRIVATE_GAME_MODE);
             manager.setMode(player, true);
         }else if (!manager.checkPlayer(player)){
-            Common.tell(player,  " " + Settings.PRIVATE_GAME_MODE);
             manager.addPlayer(player, true);
         }
     }

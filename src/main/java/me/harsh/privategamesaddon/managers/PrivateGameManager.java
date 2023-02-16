@@ -4,7 +4,9 @@ import de.marcely.bedwars.api.arena.Arena;
 import lombok.Getter;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.party.IParty;
+import me.harsh.privategamesaddon.settings.Settings;
 import org.bukkit.entity.Player;
+import org.mineacademy.fo.Common;
 import org.mineacademy.fo.collection.StrictMap;
 
 import java.util.*;
@@ -34,6 +36,10 @@ public class PrivateGameManager {
 
 
     public void addPlayer( Player player, Boolean bol){
+        if (bol)
+            Common.tell(player,  " " + Settings.PRIVATE_GAME_MODE);
+        else
+            Common.tell(player,  " " + Settings.NORMAL_MODE);
         privateGameMode.put(player.getUniqueId(), bol);
     }
 

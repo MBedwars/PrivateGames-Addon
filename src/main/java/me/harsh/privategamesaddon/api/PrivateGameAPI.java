@@ -26,4 +26,7 @@ public class PrivateGameAPI {
     public void setPrivateGameMode(Player player, Boolean bol){
         Utility.getManager().addPlayer(player, bol);
     }
+    public Boolean getPrivateGameMode(Player player){
+        return Utility.getManager().getMode(player);
+    }
 }
