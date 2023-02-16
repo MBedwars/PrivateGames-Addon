@@ -35,24 +35,34 @@ public final class PrivateGamesAddon extends SimplePlugin {
         Common.log("&a----------------------------");
         if (Bukkit.getPluginManager().getPlugin("Parties") == null && Bukkit.getPluginManager().getPlugin("PartyAndFriends") != null){
             Utility.isPfa = true;
-            Utility.isParty = false;
             Common.log("&a-----------Party and friends found!------------");
         }else if (Bukkit.getPluginManager().getPlugin("Parties") != null && Bukkit.getPluginManager().getPlugin("PartyAndFriends") == null){
             Common.log("&a----------Parties plugin found!---------------");
             Utility.isParty = true;
-            Utility.isPfa = false;
-        }else if (Bukkit.getPluginManager().getPlugin("Parties") != null && Bukkit.getPluginManager().getPlugin("PartyAndFriends") != null){
-            if (Settings.PARTIES_PRIORITY){
-                Common.log("&a--------- 2 Party plugins found!------------");
-                Common.log("&a--------- Using Parties due to priority------------");
-                Utility.isPfa = false;
-                Utility.isParty = true;
-            }else {
-                Common.log("&a--------- 2 Party plugins found!------------");
-                Common.log("&a--------- Using Party and friends due to priority------------");
-                Utility.isParty = false;
-                Utility.isPfa = true;
-        }
+        }else if (Bukkit.getPluginManager().getPlugin("Parties") == null && Bukkit.getPluginManager().getPlugin("PartyAndFriends") == null &&
+                Bukkit.getPluginManager().getPlugin("BedwarsParties") != null ) {
+            Common.log("&a----------Bedwars Parties plugin found!---------------");
+            Utility.isBedwarParty = true;
+        }else if (Bukkit.getPluginManager().getPlugin("Parties") != null && Bukkit.getPluginManager().getPlugin("PartyAndFriends") != null &&
+        Bukkit.getPluginManager().getPlugin("BedwarsParties") != null ){
+            switch (Settings.PARTY_PRIORITY.toLowerCase()){
+                case "bp":
+                    Common.log("&a--------- 2 Party plugins found!------------");
+                    Common.log("&a--------- Using BedwarsParty due to priority------------");
+                    Utility.isBedwarParty = true;
+                    break;
+                case "parties":
+                    Common.log("&a--------- 2 Party plugins found!------------");
+                    Common.log("&a--------- Using Parties due to priority------------");
+                    Utility.isParty = true;
+                    break;
+                case "paf":
+                    Common.log("&a--------- 2 Party plugins found!------------");
+                    Common.log("&a--------- Using Party and friends due to priority------------");
+                    Utility.isPfa = true;
+                    break;
+
+            }
         }
 
         else {

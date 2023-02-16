@@ -79,6 +79,8 @@ public class Settings extends SimpleSettings {
     public static String NO_PARTY_ON_CREATE;
     public static String ONLY_LEADER_IN_PARTY;
 
+    public static String PARTY_PRIORITY;
+
     @Override
     protected int getConfigVersion() {
         return 1;
@@ -90,7 +92,7 @@ public class Settings extends SimpleSettings {
         pathPrefix("Features");
         SHOULD_SAVE_STATS = getBoolean("Save_Stats");
         AUTO_WARP = getBoolean("Auto_warp");
-        PARTIES_PRIORITY = getBoolean("Priority_parties");
+        PARTY_PRIORITY = getString("Priority");
         PER_BUFF_PERM = getBoolean("Per_buff_perm");
         pathPrefix("Menu");
         MENU_TITLE = getString("Title");

@@ -18,6 +18,7 @@ import me.harsh.privategamesaddon.api.events.PrivateGameCreateEvent;
 import me.harsh.privategamesaddon.api.events.PrivateGameEndEvent;
 import me.harsh.privategamesaddon.api.events.PrivateGameStartEvent;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
+import me.harsh.privategamesaddon.party.BwParty;
 import me.harsh.privategamesaddon.party.IParty;
 import me.harsh.privategamesaddon.party.PafParty;
 import me.harsh.privategamesaddon.party.PartiesIParty;
@@ -72,6 +73,17 @@ public class PlayerListener implements Listener {
                         return;
                     }
                 }
+            }else if (Utility.isBedwarParty){
+                final me.harsh.bedwarsparties.party.PartyManager man = me.harsh.bedwarsparties.Utils.Utility.getManager();
+                if (!man.isInPartyAsLeader(player.getUniqueId())) return;
+                final me.harsh.bedwarsparties.party.Party party = man.getPartyByLeader(player.getUniqueId());
+                final BwParty p = (BwParty) manager.partyMembersMangingMap.get(arena);
+                if (party.getLeader() == p.getParty().getLeader()){
+                    final String name = Bukkit.getPlayer(party.getLeader()).getName();
+                    Utility.doStatsThing(player.getUniqueId());
+                    Common.tell(player,  " " + Settings.PLAYER_JOIN_PRIVATE_GAME.replace("{name}", name));
+                    return;
+                }
             }
 
             if (Utility.isParty){
@@ -85,12 +97,17 @@ public class PlayerListener implements Listener {
                 if (party.getParty().getPlayers().contains(pafPlayer)) return;
                 Common.tell(player,  " " + Settings.ARENA_IS_PRIVATE);
                 event.addIssue(AddPlayerIssue.PLUGIN);
+            }else if (Utility.isBedwarParty){
+                final BwParty party = (BwParty) manager.partyMembersMangingMap.get(arena);
+                if (party.getParty().getPlayers().contains(player.getUniqueId())) return;
+                Common.tell(player,  " "  + Settings.ARENA_IS_PRIVATE);
+                event.addIssue(AddPlayerIssue.PLUGIN);
             }
 
         }
 
         if (manager.checkPlayer(player) && manager.getMode(player)){
-            if (Utility.isPfa && !Utility.isParty){
+            if (Utility.isPfa){
                 final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(player);
                 if (pafPlayer.getParty() != null){
                     manager.getPrivateArenas().add(arena);
@@ -120,7 +137,7 @@ public class PlayerListener implements Listener {
                         arena.kickPlayer(player, KickReason.PLUGIN);
                     }
                 }
-            } else if (Utility.isParty && !Utility.isPfa) {
+            } else if (Utility.isParty) {
                 final PartyPlayer partyPlayer = Parties.getApi().getPartyPlayer(player.getUniqueId());
                 if (partyPlayer.isInParty()){
                     manager.getPrivateArenas().add(arena);
@@ -145,6 +162,36 @@ public class PlayerListener implements Listener {
                         }.runTaskLater(SimplePlugin.getInstance(), 5);
                     }
             }else {
+                    if (!player.hasPermission(Settings.PARTY_BYPASS_PERM)){
+                        Common.tell(player, Settings.NO_PARTY_ON_CREATE);
+                        arena.kickPlayer(player, KickReason.PLUGIN);
+                    }
+                }
+            } else if (Utility.isBedwarParty) {
+                final me.harsh.bedwarsparties.party.PartyManager man = me.harsh.bedwarsparties.Utils.Utility.getManager();
+                if (man.isInPartyAsLeader(player.getUniqueId())){
+                    manager.getPrivateArenas().add(arena);
+                    setupParty(player, arena);
+                    Utility.doStatsThing(player.getUniqueId());
+                    Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
+                    BwParty party = (BwParty) manager.partyMembersMangingMap.get(arena);
+                    if (party.getParty().getPlayers().size() == 1) {
+                        Common.tell(player,  " " + Settings.NO_PLAYER_FOUND_IN_PARTY);
+                    }else {
+                        new BukkitRunnable(){
+
+                            @Override
+                            public void run() {
+                                if (Settings.AUTO_WARP && player.hasPermission(Settings.AUTO_WARP_PERM)){
+                                    Common.tell(player,  "&a Auto Warping party members...");
+                                    player.performCommand("bwp warp");
+                                }else if (!player.hasPermission(Settings.AUTO_WARP_PERM)){
+                                    Common.tell(player, Settings.NO_AUTO_WARP_PERM_EROR);
+                                }
+                            }
+                        }.runTaskLater(SimplePlugin.getInstance(), 5);
+                    }
+                }else {
                     if (!player.hasPermission(Settings.PARTY_BYPASS_PERM)){
                         Common.tell(player, Settings.NO_PARTY_ON_CREATE);
                         arena.kickPlayer(player, KickReason.PLUGIN);
@@ -214,6 +261,11 @@ public class PlayerListener implements Listener {
             final PlayerParty party = PartyManager.getInstance().getParty(pafPlayer);
             if (party == null) return;
             IParty iParty = new PafParty(arena, player, party);
+            Utility.getManager().partyMembersMangingMap.put(arena, iParty);
+        }else if (Utility.isBedwarParty){
+            final me.harsh.bedwarsparties.party.Party party = me.harsh.bedwarsparties.Utils.Utility.getManager().getPartyByLeader(player.getUniqueId());
+            if (party == null) return;
+            IParty iParty = new BwParty(arena, party, player);
             Utility.getManager().partyMembersMangingMap.put(arena, iParty);
         }
     }
