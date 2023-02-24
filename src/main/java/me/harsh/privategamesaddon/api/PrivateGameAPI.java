@@ -33,6 +33,6 @@ public class PrivateGameAPI {
         Utility.getManager().setPrivateGameMode(player, bol);
     }
     public Boolean getPrivateGameMode(Player player){
-        return Utility.getManager().getPrivateGameMode(player);
+        return Utility.getManager().getPlayerPrivateMode(player);
     }
 }
