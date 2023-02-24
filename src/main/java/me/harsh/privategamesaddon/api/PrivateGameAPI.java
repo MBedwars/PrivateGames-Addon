@@ -23,10 +23,16 @@ public class PrivateGameAPI {
         return Utility.getManager().getPrivateArenas();
     }
 
+    public String getPrivateGamePlaceholder(Arena arena){
+        if (isPrivateGame(arena))
+            return Settings.IS_PRIVATE_GAME;
+        return null;
+    }
+
     public void setPrivateGameMode(Player player, Boolean bol){
-        Utility.getManager().addPlayer(player, bol);
+        Utility.getManager().setPrivateGameMode(player, bol);
     }
     public Boolean getPrivateGameMode(Player player){
-        return Utility.getManager().getMode(player);
+        return Utility.getManager().getPrivateGameMode(player);
     }
 }

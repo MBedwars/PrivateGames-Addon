@@ -43,7 +43,7 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
             return;
 
         }
-        if (!Utility.getManager().getMode(p2)){
+        if (!Utility.getManager().getPlayerPrivateMode(p2)){
             Common.tell(p2,  " " + Settings.NOT_IN_PRIVATE_GAME_MODE);
             return;
         }

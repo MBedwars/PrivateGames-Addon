@@ -91,7 +91,6 @@ public final class PrivateGamesAddon extends SimplePlugin {
         });
         manager.partyMembersMangingMap.clear();
         manager.playerStatsList.clear();
-        manager.privateGameMode.clear();
     }
 
 }

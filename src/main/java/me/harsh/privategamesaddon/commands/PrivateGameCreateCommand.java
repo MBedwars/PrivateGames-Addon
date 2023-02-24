@@ -24,12 +24,10 @@ public class PrivateGameCreateCommand extends SimpleSubCommand {
             return;
         }
         final PrivateGameManager manager = Utility.getManager();
-        if (manager.checkPlayer(player) && manager.getMode(player)){
-            manager.setMode(player, false);
-        }else if (manager.checkPlayer(player) && !(manager.getMode(player))){
-            manager.setMode(player, true);
-        }else if (!manager.checkPlayer(player)){
-            manager.addPlayer(player, true);
+        if (manager.getPlayerPrivateMode(player) ){
+            manager.setPrivateGameMode(player, false);
+        }else if ((manager.getPlayerPrivateMode(player))){
+            manager.setPrivateGameMode(player, true);
         }
     }
 }

@@ -106,7 +106,7 @@ public class PlayerListener implements Listener {
 
         }
 
-        if (manager.checkPlayer(player) && manager.getMode(player)){
+        if (manager.getPlayerPrivateMode(player)){
             if (Utility.isPfa){
                 final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(player);
                 if (pafPlayer.getParty() != null){
@@ -211,7 +211,7 @@ public class PlayerListener implements Listener {
             if (manager.playerStatsList.contains(player.getUniqueId()))
                 manager.playerStatsList.remove(player.getUniqueId());
             if (PrivateGameAPI.hasPermision(player)){
-                manager.setMode(player, false);
+                manager.setPrivateGameMode(player, false);
             }
         }
         manager.getPrivateArenas().remove(arena);
@@ -222,7 +222,7 @@ public class PlayerListener implements Listener {
     public void onPlayerQuit(PlayerQuitArenaEvent event){
         final Arena arena = event.getArena();
         final Player player = event.getPlayer();
-        if (manager.checkPlayer(player) && manager.getPrivateArenas().contains(arena)){
+        if (manager.getPrivateArenas().contains(arena)){
             manager.getPrivateArenas().remove(arena);
         }
         if (manager.arenaArenaBuffMap.containsKey(arena)){
