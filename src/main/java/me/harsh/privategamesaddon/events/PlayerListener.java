@@ -219,14 +219,10 @@ public class PlayerListener implements Listener {
             manager.partyMembersMangingMap.remove(arena);
     }
     @EventHandler
-    public void onPlayerQuit(PlayerQuitArenaEvent event){
+    public void onRoundEnd(RoundEndEvent event){
         final Arena arena = event.getArena();
-        final Player player = event.getPlayer();
         if (manager.getPrivateArenas().contains(arena)){
             manager.getPrivateArenas().remove(arena);
-        }
-        if (manager.arenaArenaBuffMap.containsKey(arena)){
-            manager.arenaArenaBuffMap.remove(arena);
         }
         if(manager.partyMembersMangingMap.containsKey(arena))
             manager.partyMembersMangingMap.remove(arena);
