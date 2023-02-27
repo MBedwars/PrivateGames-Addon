@@ -11,7 +11,7 @@ public class Settings extends SimpleSettings {
     public static String MENU_TITLE;
     public static Boolean SHOULD_SAVE_STATS;
     public static Boolean AUTO_WARP;
-    public static Boolean PARTIES_PRIORITY;
+    public static Boolean BUNGEE;
 
     public static Boolean PER_BUFF_PERM;
 
@@ -89,20 +89,21 @@ public class Settings extends SimpleSettings {
     private static void init(){
         PREFIX = getString("Prefix");
         Common.setTellPrefix(Settings.PREFIX);
-        pathPrefix("Features");
+        setPathPrefix("Features");
+        BUNGEE = getBoolean("Bungee");
         SHOULD_SAVE_STATS = getBoolean("Save_Stats");
         AUTO_WARP = getBoolean("Auto_warp");
         PARTY_PRIORITY = getString("Priority");
         PER_BUFF_PERM = getBoolean("Per_buff_perm");
-        pathPrefix("Menu");
+        setPathPrefix("Menu");
         MENU_TITLE = getString("Title");
         ADMIN_CONTROL_PANEL = getString("Control_panel");
-        pathPrefix("Menu.Sub_Menu");
+        setPathPrefix("Menu.Sub_Menu");
         HEALTH_BUFF_MENU = getString("Health");
         SPEED_BUFF_MENU = getString("Speed");
         RESPAWN_BUFF_MENU = getString("Respawn");
         SPAWN_RATE_BUFF_MENU = getString("Spawn_rate");
-        pathPrefix("Menu.Buffs");
+        setPathPrefix("Menu.Buffs");
         NO_SPAWNERS_BUFF = getString("No_emeralds_and_diamonds");
         CRAFTING_BUFF = getString("Crafting_allow_buff");
         ONE_HIT_BUFF = getString("One_Hit_Buff");
@@ -113,14 +114,14 @@ public class Settings extends SimpleSettings {
         RESPAWN_TIME_BUFF = getString("Respawn_Time_Buff");
         SPAWN_RATE_MUTIPLIER_BUFF = getString("Spawn_Rate_Mutiplier_Buff");
         FALL_DAMAGE_BUFF = getString("Fall_damage_buff");
-        pathPrefix("Perms");
+        setPathPrefix("Perms");
         CREATE_PERM = getString("create_perm");
         GLOBAL_PERM = getString("global_perm");
         AUTO_WARP_PERM = getString("auto_warp");
         RELOAD_PERM = getString("reload_perm");
         PARTY_BYPASS_PERM = getString("party_requirement");
         ADMIN_PERM = getString("admin_perm");
-        pathPrefix("Perms.Buffs");
+        setPathPrefix("Perms.Buffs");
         ONE_HIT_BUFF_PERM = getString("One_hit_buff_perm");
         CUSTOM_HEALTH_BUFF_PERM = getString("Custom_health_buff_perm");
         GRAVITY_BUFF_PERM = getString("Gravity_buff_perm");
@@ -131,9 +132,9 @@ public class Settings extends SimpleSettings {
         CRAFTING_BUFF_PERM = getString("Crafting_buff_perm");
         BLOCK_PROT_BUFF_PERM = getString("Block_protection_buff_perm");
         SPAWN_RATE_MUTLIPLER_BUFF_PERM = getString("Spawn_rate_multiplier");
-        pathPrefix("Placeholders");
+        setPathPrefix("Placeholders");
         IS_PRIVATE_GAME = getString("Is_private_game");
-        pathPrefix("Messages");
+        setPathPrefix("Messages");
         ADMIN_JOIN_PGA = getString("Admin_join");
         ILLEGAL_JOIN_MESSAGE = getString("Illegal_join_try");
         RELOAD_NO_PERM_EROR = getString("No_reload_perm");

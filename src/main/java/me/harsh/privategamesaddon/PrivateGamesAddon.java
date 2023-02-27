@@ -6,6 +6,7 @@ import me.harsh.privategamesaddon.buffs.PlayerBuffListener;
 import me.harsh.privategamesaddon.commands.PrivateCommandGroup;
 import me.harsh.privategamesaddon.events.InventoryListener;
 import me.harsh.privategamesaddon.events.PlayerListener;
+import me.harsh.privategamesaddon.events.PlayerListenerBungee;
 import me.harsh.privategamesaddon.lobbyItems.BuffItem;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.placeholders.PrivateGamePlaceholder;
@@ -23,7 +24,10 @@ public final class PrivateGamesAddon extends SimplePlugin {
             Bukkit.getServer().getPluginManager().disablePlugin(this);
             Common.log("Dependency MBedwars wasn't present!");
         }
-        registerEvents(new PlayerListener(Utility.getManager()));
+        if (Settings.BUNGEE) {
+            registerEvents(new PlayerListenerBungee(Utility.getManager()));
+        }else registerEvents(new PlayerListener(Utility.getManager()));
+
         registerEvents(new PlayerBuffListener());
         registerEvents(new InventoryListener());
         BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new BuffItem()));
