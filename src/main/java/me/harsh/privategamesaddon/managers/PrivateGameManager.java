@@ -94,8 +94,10 @@ public class PrivateGameManager {
     public void setPrivateGameMode(Player player, boolean mode){
         final Optional<PlayerProperties> prop = optionalPlayerProperties(player);
         if (!prop.isPresent())return;
-        if (!getValue(player).isPresent())
+        if (!(getValue(player).isPresent())) {
             addPlayerToPrivateGameMap(player);
+            return;
+        }
         prop.get().replace(PRIVATE, String.valueOf(mode));
         if (mode)
             Common.tell(player,  " " + Settings.PRIVATE_GAME_MODE);
@@ -121,7 +123,7 @@ public class PrivateGameManager {
     private Optional<String> getValue(Player player){
         final Optional<PlayerProperties> optionalProperties = PlayerDataAPI.get().getPropertiesNow(player);
         if(!optionalProperties.isPresent())
-            return null;
+            return Optional.empty();
         return optionalProperties.get().get(PRIVATE);
     }
     private Optional<PlayerProperties> optionalPlayerProperties(Player player){
