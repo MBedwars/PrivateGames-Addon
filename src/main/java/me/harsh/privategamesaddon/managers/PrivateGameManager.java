@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.collection.StrictMap;
 
-import javax.security.auth.callback.Callback;
 import java.util.*;
 
 public class PrivateGameManager {
@@ -77,28 +76,29 @@ public class PrivateGameManager {
 //        privateGameMode.put(player.getUniqueId(), bol);
 //    }
     public boolean getPlayerPrivateMode(Player player){
-        Common.log("============================================================");
-        Common.log("           M E S S A G E  F R O M  #getPlayerPrivateMode    ");
-        Common.log("============================================================");
-        Common.log("Value found for {p}:- ".replace("{p}", player.getName()) + " " + getValue(player));
         if (!getValue(player).isPresent()) return false;
         final Optional<String> value = getValue(player);
         if(!value.isPresent()){
             addPlayerToPrivateGameMap(player);
+            Common.log("Player not in map adding him manually and returning true");
             return true;
         } else {
-            return Boolean.getBoolean(value.get());
+            return getBool(value.get());
         }
     }
 
     public void setPrivateGameMode(Player player, boolean mode){
         final Optional<PlayerProperties> prop = optionalPlayerProperties(player);
-        if (!prop.isPresent())return;
+        if (!prop.isPresent()) {
+            System.out.println("[!] prop is null");
+            return;
+        }
         if (!(getValue(player).isPresent())) {
             addPlayerToPrivateGameMap(player);
             return;
         }
-        prop.get().replace(PRIVATE, String.valueOf(mode));
+//        prop.get().replace(PRIVATE, String.valueOf(mode));
+        prop.get().set(PRIVATE, getBool(mode));
         if (mode)
             Common.tell(player,  " " + Settings.PRIVATE_GAME_MODE);
         else
@@ -128,6 +128,14 @@ public class PrivateGameManager {
     }
     private Optional<PlayerProperties> optionalPlayerProperties(Player player){
         return PlayerDataAPI.get().getPropertiesNow(player);
+    }
+    private String getBool(boolean bol){
+        if (bol)
+            return "true";
+        return "false";
+    }
+    private boolean getBool(String bol){
+        return bol.equalsIgnoreCase("true");
     }
 
 }
