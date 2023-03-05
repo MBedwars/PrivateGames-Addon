@@ -77,8 +77,11 @@ public class PrivateGameManager {
 //        privateGameMode.put(player.getUniqueId(), bol);
 //    }
     public boolean getPlayerPrivateMode(Player player){
+        Common.log("============================================================");
+        Common.log("           M E S S A G E  F R O M  #getPlayerPrivateMode    ");
+        Common.log("============================================================");
         Common.log("Value found for {p}:- ".replace("{p}", player.getName()) + " " + getValue(player));
-        if (getValue(player) == null) return false;
+        if (!getValue(player).isPresent()) return false;
         final Optional<String> value = getValue(player);
         if(!value.isPresent()){
             addPlayerToPrivateGameMap(player);
