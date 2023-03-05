@@ -147,7 +147,8 @@
             <groupId>de.marcely.bedwars</groupId>
             <artifactId>API</artifactId>
             <version>5.1.1</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>D:/Workspace/Plugins/bedwars.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.alessiodp.parties</groupId>

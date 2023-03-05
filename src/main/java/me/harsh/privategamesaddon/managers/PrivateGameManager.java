@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.collection.StrictMap;
 
+import javax.security.auth.callback.Callback;
 import java.util.*;
 
 public class PrivateGameManager {
@@ -76,14 +77,14 @@ public class PrivateGameManager {
 //        privateGameMode.put(player.getUniqueId(), bol);
 //    }
     public boolean getPlayerPrivateMode(Player player){
+        Common.log("Value found for {p}:- ".replace("{p}", player.getName()) + " " + getValue(player));
         if (getValue(player) == null) return false;
         final Optional<String> value = getValue(player);
         if(!value.isPresent()){
             addPlayerToPrivateGameMap(player);
             return true;
         } else {
-            final boolean bool = Boolean.getBoolean(value.get());
-            return bool;
+            return Boolean.getBoolean(value.get());
         }
     }
 

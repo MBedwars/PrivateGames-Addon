@@ -26,7 +26,7 @@ public class PrivateGameMenu extends Menu {
     private final Button respawnTimeBuff;
     private final Button baseSpawnerBuff;
     private final Button fallDamageBuff;
-    private final Button craftingBuff;
+    private final Button maxUpgradesBuff;
     private final Button noSpawnerBuff;
 
     public PrivateGameMenu(){
@@ -55,32 +55,32 @@ public class PrivateGameMenu extends Menu {
                         "Enabled you to disable",
                         "All the special spawners like",
                         "Emeralds and diamonds!")
-                        .glow(buff.isNoEmeralds()).build().make();
+                        .glow(buff.isNoEmeralds()).make();
             }
         };
-        this.craftingBuff = new Button() {
+        this.maxUpgradesBuff = new Button() {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                if (!player.hasPermission(Settings.CRAFTING_BUFF_PERM)) return;
+                if (!player.hasPermission(Settings.MAX_UPGRADE_BUFF_PERM)) return;
                 final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (buff.isCraftingAllowed()){
-                    buff.setCraftingAllowed(false);
-                    restartMenu("&aDisabled Crafting!");
+                if (buff.isMaxUpgrades()){
+                    buff.setMaxUpgrades(false);
+                    restartMenu("&aDisabled Max Upgrades!");
                     return;
                 }
-                buff.setCraftingAllowed(true);
-                restartMenu("&aEnabled Crafting!");
+                buff.setMaxUpgrades(true);
+                restartMenu("&aEnabled Max Upgrades!");
             }
 
             @Override
             public ItemStack getItem() {
                 final ArenaBuff buff = Utility.getBuffSafe(getViewer());
-                return ItemCreator.of(CompMaterial.CRAFTING_TABLE,
-                                Settings.CRAFTING_BUFF,
+                return ItemCreator.of(CompMaterial.DIAMOND_CHESTPLATE,
+                                Settings.MAX_UPGRADES_BUFF,
                         "",
-                        "Enables you to craft items",
-                        "Inside Private game")
-                        .glow(buff.isCraftingAllowed()).build().make();
+                        "Enables you to to give",
+                        "max upgrade buffs at start")
+                        .glow(buff.isMaxUpgrades()).make();
             }
         };
         this.fallDamageBuff = new Button() {
@@ -107,7 +107,7 @@ public class PrivateGameMenu extends Menu {
                         "",
                         "Enables you to disable",
                         "or enable fall damage")
-                        .glow(buff.isFallDamageEnabled()).build().make();
+                        .glow(buff.isFallDamageEnabled()).make();
             }
         };
         this.respawnTimeBuff = new Button() {
@@ -123,7 +123,7 @@ public class PrivateGameMenu extends Menu {
                         Settings.RESPAWN_TIME_BUFF,
                         "",
                         "Enables you to ",
-                        "Change respawn time").build().make();
+                        "Change respawn time").make();
             }
         };
         this.blockProtBuff = new Button() {
@@ -149,7 +149,7 @@ public class PrivateGameMenu extends Menu {
                         "Enables you to stop the",
                         "Block protection in arenas")
                         .glow(buff.isBlocksProtected())
-                        .build().make();
+                        .make();
             }
         };
         this.baseSpawnerBuff = new Button() {
@@ -166,7 +166,7 @@ public class PrivateGameMenu extends Menu {
                                 "",
                                 "Enables people multiply",
                                 "spawn rate of base spawners!")
-                        .build().make();
+                        .make();
             }
         };
         this.speedBuff = new Button() {
@@ -183,7 +183,7 @@ public class PrivateGameMenu extends Menu {
                         Settings.SPEED_BUFF,
                         "",
                         "Enables you to play",
-                        "in more speed than normal").build().make();
+                        "in more speed than normal").make();
             }
         };
         this.gravityBuff = new Button() {
@@ -209,7 +209,7 @@ public class PrivateGameMenu extends Menu {
                         "Enables you to play in",
                         "low gravity in bedwars")
                         .glow(buff.isLowGravity())
-                        .build().make();
+                        .make();
             }
         };
         this.oneHitBuff = new Button() {
@@ -235,7 +235,7 @@ public class PrivateGameMenu extends Menu {
                         "Enables to one hit anyone",
                         "in the bedwars game")
                         .glow(buff.isOneHitKill())
-                        .build().make();
+                        .make();
             }
         };
         this.healthBuff = new Button() {
@@ -251,7 +251,7 @@ public class PrivateGameMenu extends Menu {
                 return ItemCreator.of(CompMaterial.GOLDEN_APPLE, Settings.HEALTH_BUFF,
                         "",
                         "Enables you to",
-                        "increase custom health").build().make();
+                        "increase custom health").make();
 
             }
         };
@@ -269,7 +269,7 @@ public class PrivateGameMenu extends Menu {
         }else if (slot == 16) {
             return speedBuff.getItem();
         }else if (slot == 22){
-            return this.craftingBuff.getItem();
+            return this.maxUpgradesBuff.getItem();
         }else if (slot == 37) {
             return this.respawnTimeBuff.getItem();
         }else if (slot == 43){
@@ -281,6 +281,6 @@ public class PrivateGameMenu extends Menu {
         }else if (slot == 40){
             return this.noSpawnerBuff.getItem();
         }
-        return ItemCreator.of(CompMaterial.CYAN_STAINED_GLASS_PANE).build().make();
+        return ItemCreator.of(CompMaterial.CYAN_STAINED_GLASS_PANE).make();
     }
 }

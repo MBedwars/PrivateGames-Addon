@@ -24,7 +24,7 @@ public class Settings extends SimpleSettings {
 
     // Buttons
     public static String ONE_HIT_BUFF;
-    public static String CRAFTING_BUFF;
+    public static String MAX_UPGRADES_BUFF;
     public static String HEALTH_BUFF;
     public static String LOW_GRAVITY_BUFF;
     public static String SPEED_BUFF;
@@ -50,7 +50,7 @@ public class Settings extends SimpleSettings {
     public static String NO_SPECIAL_SPAWNER_BUFF_PERM;
     public static String SPEED_BUFF_PERM;
     public static String NO_FALL_DAMAGE_BUFF_PERM;
-    public static String CRAFTING_BUFF_PERM;
+    public static String MAX_UPGRADE_BUFF_PERM;
     public static String BLOCK_PROT_BUFF_PERM;
     public static String SPAWN_RATE_MUTLIPLER_BUFF_PERM;
 
@@ -105,7 +105,7 @@ public class Settings extends SimpleSettings {
         SPAWN_RATE_BUFF_MENU = getString("Spawn_rate");
         setPathPrefix("Menu.Buffs");
         NO_SPAWNERS_BUFF = getString("No_emeralds_and_diamonds");
-        CRAFTING_BUFF = getString("Crafting_allow_buff");
+        MAX_UPGRADES_BUFF = getString("Max_upgrades_buff");
         ONE_HIT_BUFF = getString("One_Hit_Buff");
         HEALTH_BUFF = getString("Health_Buff");
         LOW_GRAVITY_BUFF = getString("Low_Gravity_Buff");
@@ -129,7 +129,7 @@ public class Settings extends SimpleSettings {
         NO_SPECIAL_SPAWNER_BUFF_PERM = getString("No_special_spawner_buff_perm");
         SPEED_BUFF_PERM = getString("Speed_buff_perm");
         NO_FALL_DAMAGE_BUFF_PERM = getString("No_fall_damage_buff_perm");
-        CRAFTING_BUFF_PERM = getString("Crafting_buff_perm");
+        MAX_UPGRADE_BUFF_PERM = getString("Max_upgrades_buff_perm");
         BLOCK_PROT_BUFF_PERM = getString("Block_protection_buff_perm");
         SPAWN_RATE_MUTLIPLER_BUFF_PERM = getString("Spawn_rate_multiplier");
         setPathPrefix("Placeholders");

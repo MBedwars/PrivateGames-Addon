@@ -73,7 +73,7 @@ Perms:
     No_special_spawner_buff_perm: "privategame.buffs.nospawner"
     Speed_buff_perm: "privategame.buffs.speed"
     No_fall_damage_buff_perm: "privategame.buffs.falldamage"
-    Crafting_buff_perm: "privategame.buffs.crafting"
+    Max_upgrades_buff_perm: "privategame.buffs.maxupgrade"
     Block_protection_buff_perm: "privategame.buffs.blockprot"
     Spawn_rate_multiplier: "privategame.buffs.spawnrate"
 Menu:
@@ -94,7 +94,7 @@ Menu:
     Respawn_Time_Buff: '&aRespawn Time Buff'
     Spawn_Rate_Mutiplier_Buff: '&aSpawn Rate Multiplier'
     Fall_damage_buff: "&aFall Damage Buff"
-    Crafting_allow_buff: "&aAllow Crafting"
+    Max_upgrades_buff: "&aMax upgrades Buff"
     No_emeralds_and_diamonds: "&aNo Special Spawners"
 
 

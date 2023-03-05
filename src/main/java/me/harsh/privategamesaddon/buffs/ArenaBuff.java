@@ -11,6 +11,7 @@ public class ArenaBuff {
     private boolean lowGravity = false;
     private int speedModifier = 1;
 
+    private boolean maxUpgrades = false;
     private boolean isFallDamageEnabled = true;
     private boolean isCraftingAllowed = false;
     private boolean isBlocksProtected = true;
@@ -55,5 +56,9 @@ public class ArenaBuff {
 
     public void setNoEmeralds(boolean noEmeralds) {
         this.noEmeralds = noEmeralds;
+    }
+
+    public void setMaxUpgrades(boolean maxUpgrades) {
+        this.maxUpgrades = maxUpgrades;
     }
 }

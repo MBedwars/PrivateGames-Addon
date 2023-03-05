@@ -53,19 +53,6 @@ public class PlayerBuffListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerCraft(CraftItemEvent event){
-        if (event.getWhoClicked() instanceof  Player){
-            final Player player = (Player) event.getWhoClicked();
-            final Arena arena = GameAPI.get().getArenaByPlayer(player);
-            if (arena == null) return;
-            final ArenaBuff buff = Utility.getBuff(arena);
-            if (buff.isCraftingAllowed()){
-                event.setCancelled(false);
-            }
-        }
-    }
-
     @EventHandler
     public void onPlayerTakeFallDamage(EntityDamageEvent event){
         if (event.getEntity() instanceof Player){
@@ -150,6 +137,11 @@ public class PlayerBuffListener implements Listener {
                 });
             }
         }.runTaskLater(SimplePlugin.getInstance(), 10);
+
+        if (buff.isMaxUpgrades()){
+            // TODO: ADD UPGRADES
+            System.out.println("Upgrades are not impleemented bro");
+        }
     }
 
     @EventHandler
@@ -195,9 +187,5 @@ public class PlayerBuffListener implements Listener {
         if (arena == null) return;
         if (!Utility.getManager().privateArenas.contains(arena)) return;
         final ArenaBuff buff = Utility.getBuff(arena);
-        if (buff.isCraftingAllowed()){
-            if (block.getType() == CompMaterial.CRAFTING_TABLE.toMaterial()) event.setCancelled(false);
-
-        }
     }
 }
