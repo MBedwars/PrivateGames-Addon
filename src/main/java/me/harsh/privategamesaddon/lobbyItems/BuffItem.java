@@ -7,13 +7,18 @@ import de.marcely.bedwars.api.game.lobby.LobbyItem;
 import de.marcely.bedwars.api.game.lobby.LobbyItemHandler;
 import de.simonsator.partyandfriends.api.pafplayers.OnlinePAFPlayer;
 import de.simonsator.partyandfriends.api.pafplayers.PAFPlayerManager;
+import me.harsh.bedwarsparties.party.Party;
+import me.harsh.bedwarsparties.party.PartyManager;
 import me.harsh.privategamesaddon.PrivateGamesAddon;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.menu.PrivateGameMenu;
+import me.harsh.privategamesaddon.party.BwParty;
 import me.harsh.privategamesaddon.party.PafParty;
 import me.harsh.privategamesaddon.party.PartiesIParty;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 
 public class BuffItem extends LobbyItemHandler {
@@ -52,6 +57,14 @@ public class BuffItem extends LobbyItemHandler {
             final Player p = Utility.getPlayerByUuid(party.getLeader().getUniqueId());
             if (p == null) return false;
             return p == player;
+        } else if (Utility.isBedwarParty){
+            final PartyManager manager = me.harsh.bedwarsparties.Utils.Utility.getManager();
+            if (!manager.isInPartyAsLeader(player.getUniqueId())) return false;
+            final Party party = manager.getPartyByLeader(player.getUniqueId());
+            final BwParty bwParty = (BwParty) Utility.getManager().partyMembersMangingMap.get(arena);
+            final UUID leader = bwParty.getParty().getLeader();
+            if (leader == null) return false;
+            return leader.toString().equalsIgnoreCase(party.getLeader().toString());
         }
         return false;
     }

@@ -18,6 +18,8 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -93,19 +95,29 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
                     tell( " " + Settings.ONLY_LEADER_IN_PARTY);
                     return;
                 }
-                if (party == null) Common.tell(p2,  "&c Party not found!");
+                if (party == null) {
+                    Common.tell(p2,  "&c Party not found!");
+                    return;
+                }
                 party.getPlayers().forEach(uuid -> {
                     final Player p = Utility.getPlayerByUuid(uuid);
-                    if (p == null) Common.log("Player is Null!");
+                    if (p == null) {
+                        Common.log("Player is Null!");
+                        return;
+                    }
                     if (p == p2) return;
                     Common.tell(p2,  "&aWarping " + p.getName());
                     arena.addPlayer(p);
                 });
-                Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent((Set<UUID>) party.getPlayers(), arena));
+                Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent(convertListToSet(party.getPlayers()), arena));
             }else {
                 Common.tell(p2, " " + Settings.NOT_IN_PARTY);
             }
         }
 
+    }
+
+    private Set<UUID> convertListToSet(List<UUID> list){
+        return new HashSet<>(list);
     }
 }

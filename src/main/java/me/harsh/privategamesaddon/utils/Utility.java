@@ -30,8 +30,7 @@ public class Utility {
             if (p.getUniqueId().equals(uuid)) {
                 return p;
             }
-        throw new IllegalArgumentException();
-
+        return null;
     }
 
     public ArenaBuff getBuff( Player player){

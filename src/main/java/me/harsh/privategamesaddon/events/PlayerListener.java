@@ -176,7 +176,7 @@ public class PlayerListener implements Listener {
                     setupParty(player, arena);
                     Utility.doStatsThing(player.getUniqueId());
                     Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
-                    BwParty party = (BwParty) manager.partyMembersMangingMap.get(arena);
+                    final BwParty party = (BwParty) manager.partyMembersMangingMap.get(arena);
                     if (party.getParty().getPlayers().size() == 1) {
                         Common.tell(player,  " " + Settings.NO_PLAYER_FOUND_IN_PARTY);
                     }else {

@@ -1,6 +1,5 @@
 package me.harsh.privategamesaddon.buffs;
 
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.arena.ArenaStatus;
@@ -12,6 +11,9 @@ import de.marcely.bedwars.api.event.player.PlayerIngameRespawnEvent;
 import de.marcely.bedwars.api.event.player.PlayerModifyBlockPermissionEvent;
 import de.marcely.bedwars.api.game.spawner.Spawner;
 import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier;
+import de.marcely.bedwars.api.game.upgrade.Upgrade;
+import de.marcely.bedwars.api.game.upgrade.UpgradeLevel;
+import de.marcely.bedwars.api.game.upgrade.UpgradeState;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -21,13 +23,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.plugin.SimplePlugin;
-import org.mineacademy.fo.remain.CompMaterial;
 
 
 public class PlayerBuffListener implements Listener {
@@ -139,8 +140,18 @@ public class PlayerBuffListener implements Listener {
         }.runTaskLater(SimplePlugin.getInstance(), 10);
 
         if (buff.isMaxUpgrades()){
-            // TODO: ADD UPGRADES
-            System.out.println("Upgrades are not impleemented bro");
+            Common.runLater(10, ()-> {
+                for (Team team: arena.getRemainingTeams()){
+                    final UpgradeState state = arena.getUpgradeState(team);
+                    for (Upgrade upgrade : GameAPI.get().getUpgrades()) {
+                        if (state.isMaxLevel(upgrade)){
+                            continue;
+                        }else {
+                            state.doUpgrade(upgrade.getMaxLevel(), null);
+                        }
+                    }
+                }
+            });
         }
     }
 

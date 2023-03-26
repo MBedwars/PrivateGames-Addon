@@ -50,9 +50,6 @@ public class ArenaBuff {
         isFallDamageEnabled = fallDamageEnabled;
     }
 
-    public void setCraftingAllowed(boolean craftingAllowed) {
-        isCraftingAllowed = craftingAllowed;
-    }
 
     public void setNoEmeralds(boolean noEmeralds) {
         this.noEmeralds = noEmeralds;
