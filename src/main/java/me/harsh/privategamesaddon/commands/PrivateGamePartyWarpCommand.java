@@ -61,13 +61,12 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
                     tell( " " + Settings.ONLY_LEADER_IN_PARTY);
                     return;
                 }
-                if (party == null) Common.tell(p2,  "&c Party not found!");
                 party.getMembers().forEach(uuid -> {
                     final Player p = Utility.getPlayerByUuid(uuid);
-                    if (p == null) Common.log("Player is Null!");
-                    if (p == p2) return;
+                    if (p == null || p == p2) return;
                     Common.tell(p2,  "&aWarping " + p.getName());
                     arena.addPlayer(p);
+                    arena.teleport(p, arena.getLobbyLocation());
                 });
                 Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent(party.getMembers(), arena));
             }else {
@@ -84,6 +83,7 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
                 party.getPlayers().forEach(player -> {
                     Common.tell(p2,  "&aWarping " + player.getName());
                     arena.addPlayer(player.getPlayer());
+                    arena.teleport(player.getPlayer(), arena.getLobbyLocation());
                 });
             }
 
@@ -108,6 +108,7 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
                     if (p == p2) return;
                     Common.tell(p2,  "&aWarping " + p.getName());
                     arena.addPlayer(p);
+                    arena.teleport(p, arena.getLobbyLocation());
                 });
                 Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent(convertListToSet(party.getPlayers()), arena));
             }else {

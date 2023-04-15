@@ -2,6 +2,8 @@ package me.harsh.privategamesaddon;
 
 import de.marcely.bedwars.api.BedwarsAPI;
 import de.marcely.bedwars.api.GameAPI;
+import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.api.arena.picker.ArenaPickerAPI;
 import me.harsh.privategamesaddon.buffs.PlayerBuffListener;
 import me.harsh.privategamesaddon.commands.PrivateCommandGroup;
 import me.harsh.privategamesaddon.events.InventoryListener;
@@ -64,34 +66,30 @@ public final class PrivateGamesAddon extends SimplePlugin {
                     break;
 
             }
+
         }
 
         else {
             Common.log("&cNO PARTY PLUGIN FOUND! DISABLING PLUGIN!");
             this.getServer().getPluginManager().disablePlugin(this);
         }
+        ArenaPickerAPI.get().registerConditionVariable(new PrivateArenaConditionVariable());
     }
 
     @Override
     protected void onReloadablesStart() {
-//        registerEvents(new PlayerListener(Utility.getManager()));
-//        registerEvents(new PlayerBuffListener());
-//        registerEvents(new InventoryListener());
+        final PrivateGameManager manager = Utility.getManager();
+        for (Arena privateArena : manager.getPrivateArenas()) {
+            privateArena.endMatch(null);
+            manager.getPrivateArenas().remove(privateArena);
+        }
+        manager.partyMembersMangingMap.clear();
+        manager.playerStatsList.clear();
         registerCommands( new PrivateCommandGroup());
 
         BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new BuffItem()));
         new PrivateGamePlaceholder().register();
     }
 
-    @Override
-    protected void onPluginReload() {
-        final PrivateGameManager manager = Utility.getManager();
-        manager.getPrivateArenas().forEach(arena -> {
-            arena.endMatch(null);
-            manager.getPrivateArenas().remove(arena);
-        });
-        manager.partyMembersMangingMap.clear();
-        manager.playerStatsList.clear();
-    }
 
 }

@@ -16,7 +16,10 @@ public class PrivateGameReloadCommand extends SimpleSubCommand {
 
     @Override
     protected void onCommand() {
-        checkConsole();
+        if (!isPlayer()){
+            SimplePlugin.getInstance().reload();
+            Common.log(Settings.SUCCESSFUL_RELOAD);
+        }
         final Player player = getPlayer();
         if (player.hasPermission(Settings.RELOAD_PERM)){
             SimplePlugin.getInstance().reload();

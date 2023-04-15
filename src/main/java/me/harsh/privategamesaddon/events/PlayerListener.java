@@ -3,13 +3,11 @@ package me.harsh.privategamesaddon.events;
 import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
-import de.marcely.bedwars.api.arena.AddPlayerCause;
-import de.marcely.bedwars.api.arena.AddPlayerIssue;
-import de.marcely.bedwars.api.arena.Arena;
-import de.marcely.bedwars.api.arena.KickReason;
+import de.marcely.bedwars.api.arena.*;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerJoinArenaEvent;
+import de.marcely.bedwars.api.event.player.PlayerQuitArenaEvent;
 import de.marcely.bedwars.api.event.player.PlayerStatChangeEvent;
 import de.simonsator.partyandfriends.api.pafplayers.OnlinePAFPlayer;
 import de.simonsator.partyandfriends.api.pafplayers.PAFPlayerManager;
@@ -90,7 +88,7 @@ public class PlayerListener implements Listener {
 
             if (Utility.isParty){
                 final PartiesIParty party = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
-                if (party.getParty().getMembers().contains(player.getUniqueId())) return;
+                if (party.getParty() != null && party.getParty().getMembers().contains(player.getUniqueId())) return;
                 Common.tell(player,  " "  + Settings.ARENA_IS_PRIVATE);
                 event.addIssue(AddPlayerIssue.PLUGIN);
             }else if (Utility.isPfa){
@@ -237,6 +235,27 @@ public class PlayerListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onPlayerLEAVE(PlayerQuitArenaEvent event){
+        if (event.getArena().getStatus() == ArenaStatus.LOBBY && manager.getPrivateArenas().contains(event.getArena())){
+            if (Utility.isPfa){
+                final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(event.getPlayer());
+                if (pafPlayer.getParty() != null && pafPlayer.getParty().getLeader().getPlayer().getUniqueId().toString().equalsIgnoreCase(event.getPlayer().getUniqueId().toString())){
+                    manager.getPrivateArenas().remove(event.getArena());
+                }
+            }else if (Utility.isParty){
+                final PartyPlayer partyPlayer = Parties.getApi().getPartyPlayer(event.getPlayer().getUniqueId());
+                if (partyPlayer.isInParty() && Parties.getApi().getParty(partyPlayer.getPartyId()).getLeader().toString().equalsIgnoreCase(event.getPlayer().getUniqueId().toString())){
+                    manager.getPrivateArenas().remove(event.getArena());
+                }
+            }else if (Utility.isBedwarParty){
+                final me.harsh.bedwarsparties.party.PartyManager man = me.harsh.bedwarsparties.Utils.Utility.getManager();
+                if (man.isInPartyAsLeader(event.getPlayer().getUniqueId())){
+                    manager.getPrivateArenas().remove(event.getArena());
+                }
+            }
+        }
+    }
     @EventHandler
     public void onPlayerStatGain(PlayerStatChangeEvent event){
         final UUID uuid = event.getStats().getPlayerUUID();
