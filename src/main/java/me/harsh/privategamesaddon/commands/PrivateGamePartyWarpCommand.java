@@ -89,31 +89,33 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
 
         }else if (Utility.isBedwarParty){
             final me.harsh.bedwarsparties.party.PartyManager manager = me.harsh.bedwarsparties.Utils.Utility.getManager();
-            if (manager.isInPartyAsLeader(p2.getUniqueId())){
-                final me.harsh.bedwarsparties.party.Party party = manager.getPartyByLeader(p2.getUniqueId());
-                if (party.getPlayers().size() == 1){
-                    tell( " " + Settings.ONLY_LEADER_IN_PARTY);
-                    return;
-                }
-                if (party == null) {
-                    Common.tell(p2,  "&c Party not found!");
-                    return;
-                }
-                party.getPlayers().forEach(uuid -> {
-                    final Player p = Utility.getPlayerByUuid(uuid);
-                    if (p == null) {
-                        Common.log("Player is Null!");
-                        return;
-                    }
-                    if (p == p2) return;
-                    Common.tell(p2,  "&aWarping " + p.getName());
-                    arena.addPlayer(p);
-                    arena.teleport(p, arena.getLobbyLocation());
-                });
-                Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent(convertListToSet(party.getPlayers()), arena));
-            }else {
-                Common.tell(p2, " " + Settings.NOT_IN_PARTY);
-            }
+            manager.getPartyByLeader(p2.getUniqueId(), partyData -> {
+
+            });
+            manager.isInPartyAsLeader(p2.getUniqueId(), isInParty -> {
+                if (isInParty){
+                    manager.getPartyByLeader(p2.getUniqueId(), partyData -> {
+                        if (partyData.getPlayers().size() == 1){
+                            tell( " " + Settings.ONLY_LEADER_IN_PARTY);
+                            return;
+                        }
+                        partyData.getPlayers().forEach(uuid -> {
+                            final Player p = Utility.getPlayerByUuid(uuid);
+                            if (p == null) {
+                                Common.log("Player is Null!");
+                                return;
+                            }
+                            if (p == p2) return;
+                            Common.tell(p2,  "&aWarping " + p.getName());
+                            arena.addPlayer(p);
+                            arena.teleport(p, arena.getLobbyLocation());
+                        });
+                        Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent(convertListToSet(partyData.getPlayers()), arena));
+                    });
+
+                }else
+                    Common.tell(p2, " " + Settings.NOT_IN_PARTY);
+            });
         }
 
     }

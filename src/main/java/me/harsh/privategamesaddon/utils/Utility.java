@@ -18,6 +18,7 @@ public class Utility {
     public boolean isPfa = false;
     public boolean isParty = false;
     public boolean isBedwarParty = false;
+    public boolean isIsPfaB = false;
     public PrivateGameManager manager = new PrivateGameManager();
 
     public PrivateGameManager getManager() {

@@ -82,7 +82,8 @@ public class PlayerBuffListener implements Listener {
             return;
         }
         final ArenaBuff buff = Utility.getBuff(arena);
-
+        if (buff == null)
+            return;
         player.setMaxHealth(buff.getHealth());
         player.setHealth(buff.getHealth());
 

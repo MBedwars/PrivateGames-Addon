@@ -9,6 +9,7 @@ import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerJoinArenaEvent;
 import de.marcely.bedwars.api.event.player.PlayerQuitArenaEvent;
 import de.marcely.bedwars.api.event.player.PlayerStatChangeEvent;
+import de.marcely.bedwars.api.remote.RemoteAPI;
 import de.simonsator.partyandfriends.api.pafplayers.OnlinePAFPlayer;
 import de.simonsator.partyandfriends.api.pafplayers.PAFPlayerManager;
 import de.simonsator.partyandfriends.api.party.PartyManager;
@@ -75,15 +76,17 @@ public class PlayerListener implements Listener {
                 }
             }else if (Utility.isBedwarParty){
                 final me.harsh.bedwarsparties.party.PartyManager man = me.harsh.bedwarsparties.Utils.Utility.getManager();
-                if (!man.isInPartyAsLeader(player.getUniqueId())) return;
-                final me.harsh.bedwarsparties.party.Party party = man.getPartyByLeader(player.getUniqueId());
-                final BwParty p = (BwParty) manager.partyMembersMangingMap.get(arena);
-                if (party.getLeader() == p.getParty().getLeader()){
-                    final String name = Bukkit.getPlayer(party.getLeader()).getName();
-                    Utility.doStatsThing(player.getUniqueId());
-                    Common.tell(player,  " " + Settings.PLAYER_JOIN_PRIVATE_GAME.replace("{name}", name));
-                    return;
-                }
+                man.getPartyByLeader(player.getUniqueId(),partyData -> {
+                    final BwParty p = (BwParty) manager.partyMembersMangingMap.get(arena);
+                    if (partyData.getLeader().toString().equalsIgnoreCase(p.getParty().getLeader().toString())){
+                        if (RemoteAPI.get().getOnlinePlayer(partyData.getLeader()) == null)
+                            return;
+                        final String name = RemoteAPI.get().getOnlinePlayer(partyData.getLeader()).getName();
+                        Utility.doStatsThing(player.getUniqueId());
+                        Common.tell(player,  " " + Settings.PLAYER_JOIN_PRIVATE_GAME.replace("{name}", name));
+                        return;
+                    }
+                });
             }
 
             if (Utility.isParty){
@@ -169,34 +172,36 @@ public class PlayerListener implements Listener {
                 }
             } else if (Utility.isBedwarParty) {
                 final me.harsh.bedwarsparties.party.PartyManager man = me.harsh.bedwarsparties.Utils.Utility.getManager();
-                if (man.isInPartyAsLeader(player.getUniqueId())){
-                    manager.getPrivateArenas().add(arena);
-                    setupParty(player, arena);
-                    Utility.doStatsThing(player.getUniqueId());
-                    Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
-                    final BwParty party = (BwParty) manager.partyMembersMangingMap.get(arena);
-                    if (party.getParty().getPlayers().size() == 1) {
-                        Common.tell(player,  " " + Settings.NO_PLAYER_FOUND_IN_PARTY);
-                    }else {
-                        new BukkitRunnable(){
+                man.isInPartyAsLeader(player.getUniqueId(), isInParty -> {
+                    if (isInParty){
+                        manager.getPrivateArenas().add(arena);
+                        setupParty(player, arena);
+                        Utility.doStatsThing(player.getUniqueId());
+                        Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
+                        final BwParty party = (BwParty) manager.partyMembersMangingMap.get(arena);
+                        if (party.getParty().getPlayers().size() == 1) {
+                            Common.tell(player,  " " + Settings.NO_PLAYER_FOUND_IN_PARTY);
+                        }else {
+                            new BukkitRunnable(){
 
-                            @Override
-                            public void run() {
-                                if (Settings.AUTO_WARP && player.hasPermission(Settings.AUTO_WARP_PERM)){
-                                    Common.tell(player,  "&a Auto Warping party members...");
-                                    player.performCommand("bwp warp");
-                                }else if (!player.hasPermission(Settings.AUTO_WARP_PERM)){
-                                    Common.tell(player, Settings.NO_AUTO_WARP_PERM_EROR);
+                                @Override
+                                public void run() {
+                                    if (Settings.AUTO_WARP && player.hasPermission(Settings.AUTO_WARP_PERM)){
+                                        Common.tell(player,  "&a Auto Warping party members...");
+                                        player.performCommand("bwp warp");
+                                    }else if (!player.hasPermission(Settings.AUTO_WARP_PERM)){
+                                        Common.tell(player, Settings.NO_AUTO_WARP_PERM_EROR);
+                                    }
                                 }
-                            }
-                        }.runTaskLater(SimplePlugin.getInstance(), 5);
+                            }.runTaskLater(SimplePlugin.getInstance(), 5);
+                        }
+                    }else {
+                        if (!player.hasPermission(Settings.PARTY_BYPASS_PERM)){
+                            Common.tell(player, Settings.NO_PARTY_ON_CREATE);
+                            arena.kickPlayer(player, KickReason.PLUGIN);
+                        }
                     }
-                }else {
-                    if (!player.hasPermission(Settings.PARTY_BYPASS_PERM)){
-                        Common.tell(player, Settings.NO_PARTY_ON_CREATE);
-                        arena.kickPlayer(player, KickReason.PLUGIN);
-                    }
-                }
+                });
             }
         }
     }
@@ -250,9 +255,11 @@ public class PlayerListener implements Listener {
                 }
             }else if (Utility.isBedwarParty){
                 final me.harsh.bedwarsparties.party.PartyManager man = me.harsh.bedwarsparties.Utils.Utility.getManager();
-                if (man.isInPartyAsLeader(event.getPlayer().getUniqueId())){
-                    manager.getPrivateArenas().remove(event.getArena());
-                }
+                man.isInPartyAsLeader(event.getPlayer().getUniqueId(), isInPartyAsLeader -> {
+                    if (isInPartyAsLeader){
+                        manager.getPrivateArenas().remove(event.getArena());
+                    }
+                });
             }
         }
     }
@@ -280,10 +287,11 @@ public class PlayerListener implements Listener {
             IParty iParty = new PafParty(arena, player, party);
             Utility.getManager().partyMembersMangingMap.put(arena, iParty);
         }else if (Utility.isBedwarParty){
-            final me.harsh.bedwarsparties.party.Party party = me.harsh.bedwarsparties.Utils.Utility.getManager().getPartyByLeader(player.getUniqueId());
-            if (party == null) return;
-            IParty iParty = new BwParty(arena, party, player);
-            Utility.getManager().partyMembersMangingMap.put(arena, iParty);
+            me.harsh.bedwarsparties.Utils.Utility.getManager().getPartyByLeader(player.getUniqueId(), partyData -> {
+                if (partyData == null) return;
+                IParty iParty = new BwParty(arena, partyData, player);
+                Utility.getManager().partyMembersMangingMap.put(arena, iParty);
+            });
         }
     }
 }

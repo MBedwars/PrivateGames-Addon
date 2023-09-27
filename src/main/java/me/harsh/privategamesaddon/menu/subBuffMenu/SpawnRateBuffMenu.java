@@ -33,12 +33,12 @@ public class SpawnRateBuffMenu extends Menu {
                 }
                 final ArenaBuff buff = Utility.getBuff(arena);
                 if (buff == null) return;
-                if (buff.getSpawnRateMultiplier() == 0.3){
+                if (buff.getSpawnRateMultiplier() == 10){
                     buff.setSpawnRateMultiplier(3);
                     restartMenu("&cSet Spawn rate to normal");
                     return;
                 }
-                buff.setSpawnRateMultiplier(0.3);
+                buff.setSpawnRateMultiplier(10);
                 restartMenu("&aSet Spawn rate multiplier to SUPER FAST!");
             }
 
@@ -52,7 +52,7 @@ public class SpawnRateBuffMenu extends Menu {
                         "",
                         "Set Spawner multiplier rate ",
                         "to super fast")
-                        .glow(buff.getSpawnRateMultiplier() == 0.3).build().make();
+                        .glow(buff.getSpawnRateMultiplier() == 10).build().make();
             }
         };
         this.two = new Button() {
@@ -64,12 +64,12 @@ public class SpawnRateBuffMenu extends Menu {
                 }
                 final ArenaBuff buff = Utility.getBuff(arena);
                 if (buff == null) return;
-                if (buff.getSpawnRateMultiplier() == 10){
+                if (buff.getSpawnRateMultiplier() == 0.3){
                     buff.setSpawnRateMultiplier(3);
                     restartMenu("&cSet Spawn rate multiplier to normal again!");
                     return;
                 }
-                buff.setSpawnRateMultiplier(10);
+                buff.setSpawnRateMultiplier(0.3);
                 restartMenu("&aSet Spawn rate multiplier to SUPER SLOW!");
             }
 
@@ -83,7 +83,7 @@ public class SpawnRateBuffMenu extends Menu {
                                 "",
                                 "Set Spawner multiplier rate ",
                                 "to super slow")
-                        .glow(buff.getSpawnRateMultiplier() == 10).build().make();
+                        .glow(buff.getSpawnRateMultiplier() == 0.3).build().make();
             }
         };
         this.one = new Button() {
