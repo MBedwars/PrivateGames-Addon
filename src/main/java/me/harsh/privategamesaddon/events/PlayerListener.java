@@ -7,8 +7,12 @@ import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerJoinArenaEvent;
 import de.marcely.bedwars.api.event.player.PlayerQuitArenaEvent;
 import de.marcely.bedwars.api.event.player.PlayerStatChangeEvent;
+import de.marcely.bedwars.api.hook.PartiesHook.Member;
 import de.marcely.bedwars.api.hook.PartiesHook.Party;
+import de.marcely.bedwars.api.message.Message;
+import de.marcely.bedwars.api.player.PlayerDataAPI;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 import me.harsh.privategamesaddon.api.PrivateGameAPI;
 import me.harsh.privategamesaddon.api.events.PrivateGameCreateEvent;
 import me.harsh.privategamesaddon.api.events.PrivateGameEndEvent;
@@ -44,45 +48,62 @@ public class PlayerListener implements Listener {
 
         final AtomicBoolean methodFinished = new AtomicBoolean(false);
 
-        manager.getPlayerPrivateMode(player, privateMode -> {
+        PlayerDataAPI.get().getProperties(player, props -> {
+            final boolean privateMode = manager.getPlayerPrivateMode(props);
+            final Runnable forbidJoin = () -> {
+                if (!isPrivateArena)
+                    return;
+
+                // not allowed, send him back where he belongs to
+                Common.tell(player,  " "  + Settings.ARENA_IS_PRIVATE);
+
+                if (methodFinished.get())
+                    GameAPI.get().sendToHub(player);
+                else
+                    event.addIssue(AddPlayerIssue.PLUGIN);
+            };
+
+            // no need to check, just add him
+            if (manager.isJoinEnforced(props)) {
+                manager.setJoinEnforced(props, false);
+                return;
+            }
+
             manager.getParty(player, member -> {
-                boolean allowed = false;
+                if (!player.isOnline())
+                    return;
 
-                try {
-                    // he is not a leader
-                    if (!member.isPresent() || !member.get().isLeader())
-                        return;
-
-                    // he is not managing the arena
-                    final Party managingParty = manager.partyMembersMangingMap.get(arena);
-
-                    if (managingParty == null) {
-                        // nobody is managing the arena yet, take it over
-                        if (!privateMode)
-                            return;
-
-                        manager.getPrivateArenas().add(arena);
-                        Utility.getManager().partyMembersMangingMap.put(arena, member.get().getParty());
-
-                        Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
-                    } else if (!manager.match(member.get().getParty(), managingParty))
-                        return;
-
-                    // private game
-                    allowed = true;
-                    Utility.doStatsThing(player.getUniqueId());
-                    Common.tell(player, " " + Settings.PLAYER_JOIN_PRIVATE_GAME);
-                } finally {
-                    // not allowed, send him back where he belongs to
-                    if (!allowed) {
-                        Common.tell(player,  " "  + Settings.ARENA_IS_PRIVATE);
-
-                        if (methodFinished.get())
-                            GameAPI.get().sendToHub(player);
-                        else
-                            event.addIssue(AddPlayerIssue.PLUGIN);
-                    }
+                // not a member
+                if (!member.isPresent()) {
+                    forbidJoin.run();
+                    return;
                 }
+
+                // he is not managing the arena
+                final Party managingParty = manager.partyMembersMangingMap.get(arena);
+
+                if (managingParty == null) {
+                    // nobody is managing the arena yet, take it over
+                    if (!privateMode || !member.get().isLeader())
+                        return;
+
+                    manager.getPrivateArenas().add(arena);
+                    Utility.getManager().partyMembersMangingMap.put(arena, member.get().getParty());
+
+                    Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
+
+                } else if (!manager.match(member.get().getParty(), managingParty)) {
+                    forbidJoin.run();
+                    return;
+                }
+
+                // private game
+                Utility.doStatsThing(player.getUniqueId());
+                Message.build(Settings.PLAYER_JOIN_PRIVATE_GAME)
+                    .placeholder("player", managingParty.getLeaders().stream()
+                        .map(Member::getUsername)
+                        .collect(Collectors.joining(", ")))
+                    .send(player);
             });
         });
 
@@ -146,8 +167,11 @@ public class PlayerListener implements Listener {
         for (Player player : arena.getPlayers()) {
             if (manager.playerStatsList.contains(player.getUniqueId()))
                 manager.playerStatsList.remove(player.getUniqueId());
-            if (PrivateGameAPI.hasPermision(player)){
-                manager.setPrivateGameMode(player, false);
+
+            if (PrivateGameAPI.hasPermision(player)) {
+                PlayerDataAPI.get().getProperties(player, props -> {
+                    manager.setPrivateGameMode(props, false);
+                });
             }
         }
 

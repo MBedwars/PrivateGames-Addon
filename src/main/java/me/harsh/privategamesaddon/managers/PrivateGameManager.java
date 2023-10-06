@@ -7,6 +7,7 @@ import de.marcely.bedwars.api.hook.PartiesHook.Member;
 import de.marcely.bedwars.api.hook.PartiesHook.Party;
 import de.marcely.bedwars.api.player.PlayerDataAPI;
 import de.marcely.bedwars.api.player.PlayerProperties;
+import de.marcely.bedwars.tools.Helper;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import lombok.Getter;
@@ -20,28 +21,35 @@ import java.util.*;
 
 public class PrivateGameManager {
 
-    private final String PRIVATE = "privategames:is_private";
+    private static final String PROP_PRIVATE = "privategames:is_private";
+    private static final String PROP_ENFORCE_JOIN = "privategames:enforce_join";
+
     public final Map<Arena, Party> partyMembersMangingMap = new HashMap<>();
     public final StrictMap<Arena, ArenaBuff> arenaArenaBuffMap = new StrictMap<>();
     public final List<UUID> playerStatsList = new ArrayList<>();
     @Getter
     public final List<Arena> privateArenas = new ArrayList<>();
 
-    public void getPlayerPrivateMode(Player player, Consumer<Boolean> callback) {
-        PlayerDataAPI.get().getProperties(player, props -> {
-            final Optional<Boolean> isPrivate = props.getBoolean(PRIVATE);
-
-            callback.accept(isPrivate.orElse(false));
-        });
+    public boolean getPlayerPrivateMode(PlayerProperties props) {
+        return props.getBoolean(PROP_PRIVATE).orElse(false);
     }
 
-    public void setPrivateGameMode(Player player, boolean mode) {
-        PlayerDataAPI.get().getProperties(player, props -> {
-            if (mode)
-                props.set(PRIVATE, true);
-            else
-                props.remove(PRIVATE);
-        });
+    public void setPrivateGameMode(PlayerProperties props, boolean mode) {
+        if (mode)
+            props.set(PROP_PRIVATE, true);
+        else
+            props.remove(PROP_PRIVATE);
+    }
+
+    public boolean isJoinEnforced(PlayerProperties props) {
+        return props.getBoolean(PROP_ENFORCE_JOIN).orElse(false);
+    }
+
+    public void setJoinEnforced(PlayerProperties props, boolean value) {
+        if (value)
+            props.set(PROP_ENFORCE_JOIN, true);
+        else
+            props.remove(PROP_ENFORCE_JOIN);
     }
 
     public void getParty(Player player, Consumer<Optional<Member>> callback) {
@@ -63,13 +71,13 @@ public class PrivateGameManager {
 
                 if (index < 0 || !member.isPresent()) {
                     if (index == 0) // We went through all parties, and found none
-                        callback.accept(Optional.empty());
+                        Helper.get().synchronize(() -> callback.accept(Optional.empty()));
 
                     return;
                 }
 
                 remaining.set(-1); // avoid it getting called again
-                callback.accept(member);
+                Helper.get().synchronize(() -> callback.accept(member));
             });
         }
     }

@@ -1,8 +1,6 @@
 name: PrivateGamesAddon
 version: '${project.version}'
-main: me.harsh.privategamesaddon.PrivateGamesAddon
+main: me.harsh.privategamesaddon.PrivateGamesPlugin
 api-version: 1.13
 depend:
   - MBedwars
-libraries:
-  - org.openjdk.nashorn:nashorn-core:15.3

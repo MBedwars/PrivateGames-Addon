@@ -1,5 +1,6 @@
 package me.harsh.privategamesaddon.commands;
 
+import de.marcely.bedwars.api.player.PlayerDataAPI;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
@@ -28,8 +29,10 @@ public class PrivateGameCreateCommand extends SimpleSubCommand {
 
         final PrivateGameManager manager = Utility.getManager();
 
-        manager.getPlayerPrivateMode(player, mode -> {
-            manager.setPrivateGameMode(player, !mode);
+        PlayerDataAPI.get().getProperties(player, props -> {
+            final boolean mode = manager.getPlayerPrivateMode(props);
+
+            manager.setPrivateGameMode(props, !mode);
 
             if (!mode)
                 Common.tell(player,  " " + Settings.PRIVATE_GAME_MODE);

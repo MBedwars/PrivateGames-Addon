@@ -3,6 +3,7 @@ package me.harsh.privategamesaddon.commands;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.hook.PartiesHook.Member;
+import de.marcely.bedwars.api.player.PlayerDataAPI;
 import de.marcely.bedwars.api.remote.RemoteAPI;
 import de.marcely.bedwars.api.remote.RemotePlayer;
 import java.util.Collection;
@@ -45,13 +46,14 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
             Common.tell(player, " " + Settings.NOT_IN_ARENA);
             return;
         }
+
         if (!manager.privateArenas.contains(arena)) {
             Common.tell(player, " " + Settings.NOT_PRIVATE_ROOM_WARP);
             return;
         }
 
-        manager.getPlayerPrivateMode(player, privateMode -> {
-            if (!privateMode) {
+        PlayerDataAPI.get().getProperties(player, props -> {
+            if (!manager.getPlayerPrivateMode(props)) {
                 Common.tell(player, " " + Settings.NOT_IN_PRIVATE_GAME_MODE);
                 return;
             }

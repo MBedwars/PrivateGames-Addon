@@ -2,6 +2,7 @@ package me.harsh.privategamesaddon.menu;
 
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.arena.ArenaStatus;
+import de.marcely.bedwars.api.player.PlayerDataAPI;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
@@ -34,13 +35,16 @@ public class AllPrivateGameControlPanelMenu extends MenuPagged<Arena> {
             tell( " " + Settings.ILLEGAL_JOIN_MESSAGE);
             arena.addSpectator(player);
         }
+
         final PrivateGameManager manager = Utility.getManager();
+
         if (clickType.isLeftClick()){
             arena.broadcast(Common.colorize( " &cTHE ARENA IS FORCED STOPPED BY ADMIN.."));
             if (manager.privateArenas.contains(arena)) manager.getPrivateArenas().remove(arena);
             manager.partyMembersMangingMap.remove(arena);
             arena.getPlayers().forEach(player1 -> manager.playerStatsList.remove(player1.getUniqueId()));
             arena.kickAllPlayers();
+
         }else if (clickType.isRightClick()){
             rightClick(player, arena);
             final String message = Settings.ADMIN_JOIN_PGA.replace("{p}", player.getDisplayName());
@@ -49,22 +53,16 @@ public class AllPrivateGameControlPanelMenu extends MenuPagged<Arena> {
 
     }
     private void rightClick(Player player, Arena arena) {
-        player.sendMessage("TODO");
-        /*if (arena.getStatus() != ArenaStatus.LOBBY)
+        if (arena.getStatus() != ArenaStatus.LOBBY)
             return;
 
-        final PrivateGameManager manager = Utility.getManager();
+        PlayerDataAPI.get().getProperties(player, props -> {
+            final PrivateGameManager manager = Utility.getManager();
 
-        if (Utility.isParty){
-            PartiesIParty party = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
-            party.getParty().addMember(Parties.getApi().getPartyPlayer(player.getUniqueId()));
-        } else {
-            PafParty party = (PafParty) manager.partyMembersMangingMap.get(arena);
-            party.getParty().addPlayer(PAFPlayerManager.getInstance().getPlayer(player));
-        }
+            manager.playerStatsList.add(player.getUniqueId());
 
-        manager.playerStatsList.add(player.getUniqueId());
-
-        arena.addPlayer(player);*/
+            manager.setJoinEnforced(props, true);
+            arena.addPlayer(player);
+        });
     }
 }
