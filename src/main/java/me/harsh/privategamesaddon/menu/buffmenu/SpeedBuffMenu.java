@@ -1,4 +1,4 @@
-package me.harsh.privategamesaddon.menu.subBuffMenu;
+package me.harsh.privategamesaddon.menu.buffmenu;
 
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.menu.PrivateGameMenu;

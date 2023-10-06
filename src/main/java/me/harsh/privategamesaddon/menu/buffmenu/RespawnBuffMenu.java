@@ -1,4 +1,4 @@
-package me.harsh.privategamesaddon.menu.subBuffMenu;
+package me.harsh.privategamesaddon.menu.buffmenu;
 
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
