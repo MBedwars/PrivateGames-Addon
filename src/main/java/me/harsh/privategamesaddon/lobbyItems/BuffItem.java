@@ -70,15 +70,14 @@ public class BuffItem extends LobbyItemHandler {
                 // callback got returned later. lets make it visible ourselves
                 if (GameAPI.get().getArenaByPlayer(player) != arena || arena.getStatus() != ArenaStatus.LOBBY || res.getLeader() == null)
                     return;
-                if (res.getLeader().toString().equalsIgnoreCase(player.getUniqueId().toString())){
+                if (res.getLeader().equals(player.getUniqueId())){
                     System.out.println("Player is leader. " +player.getName());
                     player.getInventory().setItem(lobbyItem.getSlot(), lobbyItem.getItem());
                 }
 
             });
+            return ref.getAndSet(false);
 
-            ref.set(false);
-            return ref.get();
 //            return visible.get();
 //            manager.getPartyByLeader(player.getUniqueId(), partyData -> {
 //                final BwParty bwParty = (BwParty) Utility.getManager().partyMembersMangingMap.get(arena);

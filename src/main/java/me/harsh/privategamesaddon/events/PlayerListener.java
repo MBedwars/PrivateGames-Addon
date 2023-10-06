@@ -29,6 +29,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.plugin.SimplePlugin;
@@ -78,7 +80,7 @@ public class PlayerListener implements Listener {
                 final me.harsh.bedwarsparties.party.PartyManager man = me.harsh.bedwarsparties.Utils.Utility.getManager();
                 man.getPartyByLeader(player.getUniqueId(),partyData -> {
                     final BwParty p = (BwParty) manager.partyMembersMangingMap.get(arena);
-                    if (partyData.getLeader().toString().equalsIgnoreCase(p.getParty().getLeader().toString())){
+                    if (partyData.getLeader().equals(p.getParty().getLeader())){
                         if (RemoteAPI.get().getOnlinePlayer(partyData.getLeader()) == null)
                             return;
                         final String name = RemoteAPI.get().getOnlinePlayer(partyData.getLeader()).getName();
@@ -205,6 +207,9 @@ public class PlayerListener implements Listener {
             }
         }
     }
+
+
+
 
     @EventHandler
     public void onArenaEnd(RoundEndEvent event){
