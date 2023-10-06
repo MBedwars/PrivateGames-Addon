@@ -1,11 +1,16 @@
 package me.harsh.privategamesaddon.managers;
 
 import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.api.hook.HookAPI;
+import de.marcely.bedwars.api.hook.PartiesHook;
+import de.marcely.bedwars.api.hook.PartiesHook.Member;
+import de.marcely.bedwars.api.hook.PartiesHook.Party;
 import de.marcely.bedwars.api.player.PlayerDataAPI;
 import de.marcely.bedwars.api.player.PlayerProperties;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import lombok.Getter;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
-import me.harsh.privategamesaddon.party.IParty;
 import me.harsh.privategamesaddon.settings.Settings;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
@@ -15,127 +20,68 @@ import java.util.*;
 
 public class PrivateGameManager {
 
-    private final String PRIVATE = "private";
-    public final Map<Arena, IParty> partyMembersMangingMap = new HashMap<>();
+    private final String PRIVATE = "privategames:is_private";
+    public final Map<Arena, Party> partyMembersMangingMap = new HashMap<>();
     public final StrictMap<Arena, ArenaBuff> arenaArenaBuffMap = new StrictMap<>();
     public final List<UUID> playerStatsList = new ArrayList<>();
     @Getter
     public final List<Arena> privateArenas = new ArrayList<>();
 
-    // Old system
-//    public Boolean checkPlayer( Player player){
-//        return privateGameMode.containsKey(player.getUniqueId());
-//    }
-//
-//    public Boolean getMode( Player player){
-//        return privateGameMode.get(player.getUniqueId());
-//    }
-//
-//    public void setMode( Player player, Boolean bol){
-//        privateGameMode.remove(player.getUniqueId());
-//        addPlayer(player, bol);
-//    }
+    public void getPlayerPrivateMode(Player player, Consumer<Boolean> callback) {
+        PlayerDataAPI.get().getProperties(player, props -> {
+            final Optional<Boolean> isPrivate = props.getBoolean(PRIVATE);
 
-//    public Boolean isInPrivateGameMap(Player player){
-//        AtomicBoolean bol = new AtomicBoolean(true);
-//        PlayerDataAPI.get().getProperties(player.getUniqueId(), playerProperties -> {
-//            if (playerProperties.get(PRIVATE).toString() == null){
-//                bol.set(false);
-//            }
-//        });
-//        return bol.get();
-//    }
-//    public void setPrivateGameMode(Player player, Boolean mode){
-//        PlayerDataAPI.get().getProperties(player.getUniqueId(), playerProperties -> {
-//            playerProperties.set(PRIVATE, mode.toString());
-//            if (mode)
-//                Common.tell(player,  " " + Settings.PRIVATE_GAME_MODE);
-//            else
-//                Common.tell(player,  " " + Settings.NORMAL_MODE);
-//        });
-//    }
-//    public Boolean getPrivateGameMode(Player player){
-//        AtomicBoolean mode = new AtomicBoolean(false);
-//        PlayerDataAPI.get().getProperties(player.getUniqueId(), playerProperties -> {
-//            String pga = String.valueOf(playerProperties.get(PRIVATE));
-//            if (pga.equalsIgnoreCase("true"))
-//                mode.set(true);
-//            else if(pga.equalsIgnoreCase("false"))
-//                mode.set(false);
-//        });
-//        return mode.get();
-//    }
-//
-//
-//
-//    public void addPlayer( Player player, Boolean bol){
-//        if (bol)
-//            Common.tell(player,  " " + Settings.PRIVATE_GAME_MODE);
-//        else
-//            Common.tell(player,  " " + Settings.NORMAL_MODE);
-//        privateGameMode.put(player.getUniqueId(), bol);
-//    }
-    public boolean getPlayerPrivateMode(Player player){
-        if (!getValue(player).isPresent()) return false;
-        final Optional<String> value = getValue(player);
-        if(!value.isPresent()){
-            addPlayerToPrivateGameMap(player);
-            Common.log("Player not in map adding him manually and returning true");
-            return true;
-        } else {
-            return getBool(value.get());
-        }
+            callback.accept(isPrivate.orElse(false));
+        });
     }
 
-    public void setPrivateGameMode(Player player, boolean mode){
-        final Optional<PlayerProperties> prop = optionalPlayerProperties(player);
-        if (!prop.isPresent()) {
-            System.out.println("[!] prop is null");
+    public void setPrivateGameMode(Player player, boolean mode) {
+        PlayerDataAPI.get().getProperties(player, props -> {
+            if (mode)
+                props.set(PRIVATE, true);
+            else
+                props.remove(PRIVATE);
+        });
+    }
+
+    public void getParty(Player player, Consumer<Optional<Member>> callback) {
+        getParty(player.getUniqueId(), callback);
+    }
+
+    public void getParty(UUID uuid, Consumer<Optional<Member>> callback) {
+        final PartiesHook[] hooks = HookAPI.get().getPartiesHooks();
+        final AtomicInteger remaining = new AtomicInteger(hooks.length);
+
+        if (hooks.length == 0) {
+            callback.accept(Optional.empty());
             return;
         }
-        if (!(getValue(player).isPresent())) {
-            addPlayerToPrivateGameMap(player);
-            return;
+
+        for (PartiesHook hook : hooks) {
+            hook.getMember(uuid, member -> {
+                final int index = remaining.decrementAndGet();
+
+                if (index < 0 || !member.isPresent()) {
+                    if (index == 0) // We went through all parties, and found none
+                        callback.accept(Optional.empty());
+
+                    return;
+                }
+
+                remaining.set(-1); // avoid it getting called again
+                callback.accept(member);
+            });
         }
-//        prop.get().replace(PRIVATE, String.valueOf(mode));
-        prop.get().set(PRIVATE, getBool(mode));
-        if (mode)
-            Common.tell(player,  " " + Settings.PRIVATE_GAME_MODE);
-        else
-            Common.tell(player,  " " + Settings.NORMAL_MODE);
     }
 
-    public void addPlayerToPrivateGameMap(Player player){
-        addPlayerToPrivateGameMap(player, true);
-    }
-    private void addPlayerToPrivateGameMap(Player player, boolean bool){
-        final Optional<PlayerProperties> prop = optionalPlayerProperties(player);
-        final Optional<String> value = getValue(player);
-        if (value.isPresent()) return;
-        if (!prop.isPresent()) return;
-        prop.get().set(PRIVATE, String.valueOf(bool));
-        if (bool)
-            Common.tell(player,  " " + Settings.PRIVATE_GAME_MODE);
-        else
-            Common.tell(player,  " " + Settings.NORMAL_MODE);
-    }
+    public boolean match(Party party1, Party party2) {
+        for (Member member : party1.getLeaders()) {
+            final Member matchingMember = party2.getMember(member.getUniqueId());
 
-    private Optional<String> getValue(Player player){
-        final Optional<PlayerProperties> optionalProperties = PlayerDataAPI.get().getPropertiesNow(player);
-        if(!optionalProperties.isPresent())
-            return Optional.empty();
-        return optionalProperties.get().get(PRIVATE);
-    }
-    private Optional<PlayerProperties> optionalPlayerProperties(Player player){
-        return PlayerDataAPI.get().getPropertiesNow(player);
-    }
-    private String getBool(boolean bol){
-        if (bol)
-            return "true";
-        return "false";
-    }
-    private boolean getBool(String bol){
-        return bol.equalsIgnoreCase("true");
-    }
+            if (matchingMember != null && matchingMember.isLeader())
+                return true;
+        }
 
+        return false;
+    }
 }

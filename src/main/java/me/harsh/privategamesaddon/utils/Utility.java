@@ -2,6 +2,7 @@ package me.harsh.privategamesaddon.utils;
 
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
@@ -15,15 +16,8 @@ import java.util.UUID;
 @UtilityClass
 public class Utility {
 
-    public boolean isPfa = false;
-    public boolean isParty = false;
-    public boolean isBedwarParty = false;
-    public boolean isIsPfaB = false;
+    @Getter
     public PrivateGameManager manager = new PrivateGameManager();
-
-    public PrivateGameManager getManager() {
-        return manager;
-    }
 
 
     public Player getPlayerByUuid(UUID uuid) {

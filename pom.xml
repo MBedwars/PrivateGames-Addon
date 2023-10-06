@@ -146,34 +146,8 @@
         <dependency>
             <groupId>de.marcely.bedwars</groupId>
             <artifactId>API</artifactId>
-            <version>5.2.5</version>
+            <version>5.3.2</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.alessiodp.parties</groupId>
-            <artifactId>parties-api</artifactId>
-            <version>3.2.9</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.simonsator</groupId>
-            <artifactId>DevelopmentPAFSpigot</artifactId>
-            <version>1.0.65</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.simonsator</groupId>
-            <artifactId>BungeecordPartyAndFriends</artifactId>
-            <version>1.0.92</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.harsh</groupId>
-            <artifactId>BedwarsParties</artifactId>
-            <version>1.0.0-BETA</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/bp.jar</systemPath>
-
         </dependency>
     </dependencies>
 

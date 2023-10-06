@@ -1,6 +1,7 @@
 package me.harsh.privategamesaddon.api;
 
 import de.marcely.bedwars.api.arena.Arena;
+import java.util.function.Consumer;
 import lombok.experimental.UtilityClass;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
@@ -26,13 +27,14 @@ public class PrivateGameAPI {
     public String getPrivateGamePlaceholder(Arena arena){
         if (isPrivateGame(arena))
             return Settings.IS_PRIVATE_GAME;
+
         return null;
     }
 
-    public void setPrivateGameMode(Player player, Boolean bol){
-        Utility.getManager().setPrivateGameMode(player, bol);
+    public void setPrivateGameMode(Player player, boolean value){
+        Utility.getManager().setPrivateGameMode(player, value);
     }
-    public Boolean getPrivateGameMode(Player player){
-        return Utility.getManager().getPlayerPrivateMode(player);
+    public void getPrivateGameMode(Player player, Consumer<Boolean> callback){
+        Utility.getManager().getPlayerPrivateMode(player, callback);
     }
 }

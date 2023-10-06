@@ -4,6 +4,8 @@ import de.marcely.bedwars.api.BedwarsAPI;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.arena.picker.ArenaPickerAPI;
+import de.marcely.bedwars.api.hook.HookAPI;
+import de.marcely.bedwars.api.hook.PartiesHook;
 import me.harsh.privategamesaddon.buffs.PlayerBuffListener;
 import me.harsh.privategamesaddon.commands.PrivateCommandGroup;
 import me.harsh.privategamesaddon.events.InventoryListener;
@@ -19,61 +21,58 @@ import org.mineacademy.fo.plugin.SimplePlugin;
 
 public final class PrivateGamesAddon extends SimplePlugin {
 
+    private static final int MBEDWARS_MIN_API = 24;
+    private static final String MBEDWARS_MIN_VERSION = "5.3.2";
+
     @Override
     protected void onPluginStart() {
-        if(Bukkit.getPluginManager().getPlugin("MBedwars") == null) {
-            Bukkit.getServer().getPluginManager().disablePlugin(this);
-            Common.log("Dependency MBedwars wasn't present!");
-        }
-        registerEvents(new PlayerListener(Utility.getManager()));
+        // Check MBedwars
+        try {
+            Class<?> apiClass = Class.forName("de.marcely.bedwars.api.BedwarsAPI");
+            int apiVersion = (int) apiClass.getMethod("getAPIVersion").invoke(null);
 
-        registerEvents(new PlayerBuffListener());
-        registerEvents(new InventoryListener());
-        BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new BuffItem()));
-        new PrivateGamePlaceholder().register();
+            if (apiVersion < MBEDWARS_MIN_API)
+                throw new IllegalStateException();
+        } catch(Exception e) {
+            getLogger().warning("Sorry, your installed version of MBedwars is not supported. Please install at least v" + MBEDWARS_MIN_VERSION);
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
         Common.log("&a----------------------------");
         Common.log("&a    &r");
         Common.log("&aEnabling Private Games Addon");
         Common.log("&a    &r");
         Common.log("&a----------------------------");
-        if (Bukkit.getPluginManager().getPlugin("Parties") == null && Bukkit.getPluginManager().getPlugin("PartyAndFriends") != null){
-            Utility.isPfa = true;
-            Common.log("&a-----------Party and friends found!------------");
-        }else if (Bukkit.getPluginManager().getPlugin("Parties") != null && Bukkit.getPluginManager().getPlugin("PartyAndFriends") == null){
-            Common.log("&a----------Parties plugin found!---------------");
-            Utility.isParty = true;
-        }else if (Bukkit.getPluginManager().getPlugin("Parties") == null && Bukkit.getPluginManager().getPlugin("PartyAndFriends") == null &&
-                Bukkit.getPluginManager().getPlugin("BedwarsParties") != null ) {
-            Common.log("&a----------Bedwars Parties plugin found!---------------");
-            Utility.isBedwarParty = true;
-        }else if (Bukkit.getPluginManager().getPlugin("Parties") != null && Bukkit.getPluginManager().getPlugin("PartyAndFriends") != null &&
-        Bukkit.getPluginManager().getPlugin("BedwarsParties") != null ){
-            switch (Settings.PARTY_PRIORITY.toLowerCase()){
-                case "bp":
-                    Common.log("&a--------- 2 Party plugins found!------------");
-                    Common.log("&a--------- Using BedwarsParty due to priority------------");
-                    Utility.isBedwarParty = true;
-                    break;
-                case "parties":
-                    Common.log("&a--------- 2 Party plugins found!------------");
-                    Common.log("&a--------- Using Parties due to priority------------");
-                    Utility.isParty = true;
-                    break;
-                case "paf":
-                    Common.log("&a--------- 2 Party plugins found!------------");
-                    Common.log("&a--------- Using Party and friends due to priority------------");
-                    Utility.isPfa = true;
-                    break;
 
+        // Wait a second so that other plugins can register their parties hook
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            // Detect hooks
+            final PartiesHook[] hooks = HookAPI.get().getPartiesHooks();
+
+            if (hooks.length == 0) {
+                Common.log("&cNO PARTY PLUGIN FOUND! DISABLING PLUGIN!");
+                Bukkit.getPluginManager().disablePlugin(this);
+                return;
             }
 
-        }
+            for (PartiesHook hook : hooks) {
+                final String name =
+                    (hook.getHookedPlugin() != null ? hook.getHookedPlugin() : hook.getManagingPlugin())
+                        .getName();
 
-        else {
-            Common.log("&cNO PARTY PLUGIN FOUND! DISABLING PLUGIN!");
-            this.getServer().getPluginManager().disablePlugin(this);
-        }
-        ArenaPickerAPI.get().registerConditionVariable(new PrivateArenaConditionVariable());
+                Common.log("&a----------- " + name + " found!------------");
+            }
+
+            // Register everything
+            registerEvents(new PlayerListener(Utility.getManager()));
+
+            registerEvents(new PlayerBuffListener());
+            registerEvents(new InventoryListener());
+            BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new BuffItem()));
+            new PrivateGamePlaceholder().register();
+            ArenaPickerAPI.get().registerConditionVariable(new PrivateArenaConditionVariable());
+        }, 2);
     }
 
     @Override

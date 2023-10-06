@@ -1,18 +1,14 @@
 package me.harsh.privategamesaddon.commands;
 
-import com.alessiodp.parties.api.Parties;
-import com.alessiodp.parties.api.interfaces.Party;
-import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
-import de.simonsator.partyandfriends.api.pafplayers.OnlinePAFPlayer;
-import de.simonsator.partyandfriends.api.pafplayers.PAFPlayerManager;
-import de.simonsator.partyandfriends.api.party.PartyManager;
-import de.simonsator.partyandfriends.api.party.PlayerParty;
-import me.harsh.privategamesaddon.api.events.PrivateGameWarpEvent;
+import de.marcely.bedwars.api.hook.PartiesHook.Member;
+import de.marcely.bedwars.api.remote.RemoteAPI;
+import de.marcely.bedwars.api.remote.RemotePlayer;
+import java.util.Collection;
+import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleCommandGroup;
@@ -34,90 +30,57 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
     @Override
     protected void onCommand() {
         checkConsole();
-        final Player p2 = getPlayer();
-        if (!Utility.hasPermision(p2)){
-            Common.tell(p2,  Settings.NO_PERM_EROR);
+
+        final PrivateGameManager manager = Utility.manager;
+        final Player player = getPlayer();
+
+        if (!Utility.hasPermision(player)) {
+            Common.tell(player, Settings.NO_PERM_EROR);
             return;
         }
-        final Arena arena = GameAPI.get().getArenaByPlayer(p2);
+
+        final Arena arena = GameAPI.get().getArenaByPlayer(player);
+
         if (arena == null) {
-            Common.tell(p2,  " " + Settings.NOT_IN_ARENA);
+            Common.tell(player, " " + Settings.NOT_IN_ARENA);
             return;
+        }
+        if (!manager.privateArenas.contains(arena)) {
+            Common.tell(player, " " + Settings.NOT_PRIVATE_ROOM_WARP);
+            return;
+        }
 
-        }
-        if (!Utility.getManager().getPlayerPrivateMode(p2)){
-            Common.tell(p2,  " " + Settings.NOT_IN_PRIVATE_GAME_MODE);
-            return;
-        }
-        if (!Utility.getManager().privateArenas.contains(arena)){
-            Common.tell(p2,  " " + Settings.NOT_PRIVATE_ROOM_WARP);
-            return;
-        }
-        if (Utility.isParty){
-            final PartyPlayer partyPlayer = Parties.getApi().getPartyPlayer(p2.getUniqueId());
-            if (partyPlayer.isInParty()){
-                final Party party = Parties.getApi().getParty(partyPlayer.getPartyId());
-                if (party.getMembers().size() == 1){
-                    tell( " " + Settings.ONLY_LEADER_IN_PARTY);
-                    return;
-                }
-                party.getMembers().forEach(uuid -> {
-                    final Player p = Utility.getPlayerByUuid(uuid);
-                    if (p == null || p == p2) return;
-                    Common.tell(p2,  "&aWarping " + p.getName());
-                    arena.addPlayer(p);
-                    arena.teleport(p, arena.getLobbyLocation());
-                });
-                Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent(party.getMembers(), arena));
-            }else {
-                Common.tell(p2, " " + Settings.NOT_IN_PARTY);
-            }
-        }else if (Utility.isPfa){
-            final OnlinePAFPlayer pafPlayer = PAFPlayerManager.getInstance().getPlayer(p2);
-            if (pafPlayer.getParty() != null){
-                final PlayerParty party = PartyManager.getInstance().getParty(pafPlayer);
-                if (party.getPlayers().size() == 0){
-                    tell( " " + Settings.ONLY_LEADER_IN_PARTY);
-                    return;
-                }
-                party.getPlayers().forEach(player -> {
-                    Common.tell(p2,  "&aWarping " + player.getName());
-                    arena.addPlayer(player.getPlayer());
-                    arena.teleport(player.getPlayer(), arena.getLobbyLocation());
-                });
+        manager.getPlayerPrivateMode(player, privateMode -> {
+            if (!privateMode) {
+                Common.tell(player, " " + Settings.NOT_IN_PRIVATE_GAME_MODE);
+                return;
             }
 
-        }else if (Utility.isBedwarParty){
-            final me.harsh.bedwarsparties.party.PartyManager manager = me.harsh.bedwarsparties.Utils.Utility.getManager();
-            manager.getPartyByLeader(p2.getUniqueId(), partyData -> {
+            manager.getParty(player, leader -> {
+                if (!leader.isPresent() || !leader.get().isLeader()) {
+                    Common.tell(player, " " + Settings.NOT_IN_PARTY);
+                    return;
+                }
 
+                final Collection<Member> members = leader.get().getParty().getMembers(false);
+                boolean sent = false;
+
+                for (Member member : members) {
+                    final RemotePlayer remote = RemoteAPI.get().getOnlinePlayer(member.getUniqueId());
+
+                    if (remote == null)
+                        continue;
+
+                    Common.tell(player, "&aWarping " + member.getUsername());
+
+                    sent = true;
+                    arena.asRemote().addPlayer(remote);
+                }
+
+                if (!sent)
+                    tell(" " + Settings.ONLY_LEADER_IN_PARTY);
             });
-            manager.isInPartyAsLeader(p2.getUniqueId(), isInParty -> {
-                if (isInParty){
-                    manager.getPartyByLeader(p2.getUniqueId(), partyData -> {
-                        if (partyData.getPlayers().size() == 1){
-                            tell( " " + Settings.ONLY_LEADER_IN_PARTY);
-                            return;
-                        }
-                        partyData.getPlayers().forEach(uuid -> {
-                            final Player p = Utility.getPlayerByUuid(uuid);
-                            if (p == null) {
-                                Common.log("Player is Null!");
-                                return;
-                            }
-                            if (p == p2) return;
-                            Common.tell(p2,  "&aWarping " + p.getName());
-                            arena.addPlayer(p);
-                            arena.teleport(p, arena.getLobbyLocation());
-                        });
-                        Bukkit.getServer().getPluginManager().callEvent(new PrivateGameWarpEvent(convertListToSet(partyData.getPlayers()), arena));
-                    });
-
-                }else
-                    Common.tell(p2, " " + Settings.NOT_IN_PARTY);
-            });
-        }
-
+        });
     }
 
     private Set<UUID> convertListToSet(List<UUID> list){

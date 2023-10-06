@@ -1,12 +1,8 @@
 package me.harsh.privategamesaddon.menu;
 
-import com.alessiodp.parties.api.Parties;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.arena.ArenaStatus;
-import de.simonsator.partyandfriends.api.pafplayers.PAFPlayerManager;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
-import me.harsh.privategamesaddon.party.PafParty;
-import me.harsh.privategamesaddon.party.PartiesIParty;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.entity.Player;
@@ -52,17 +48,23 @@ public class AllPrivateGameControlPanelMenu extends MenuPagged<Arena> {
         }
 
     }
-    private void rightClick(Player player, Arena arena){
-        if (arena.getStatus() != ArenaStatus.LOBBY) return;
+    private void rightClick(Player player, Arena arena) {
+        player.sendMessage("TODO");
+        /*if (arena.getStatus() != ArenaStatus.LOBBY)
+            return;
+
         final PrivateGameManager manager = Utility.getManager();
+
         if (Utility.isParty){
             PartiesIParty party = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
             party.getParty().addMember(Parties.getApi().getPartyPlayer(player.getUniqueId()));
-        }else {
+        } else {
             PafParty party = (PafParty) manager.partyMembersMangingMap.get(arena);
             party.getParty().addPlayer(PAFPlayerManager.getInstance().getPlayer(player));
         }
+
         manager.playerStatsList.add(player.getUniqueId());
-        arena.addPlayer(player);
+
+        arena.addPlayer(player);*/
     }
 }
