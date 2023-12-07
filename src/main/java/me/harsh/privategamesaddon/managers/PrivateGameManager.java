@@ -1,20 +1,22 @@
 package me.harsh.privategamesaddon.managers;
 
+import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.api.arena.ArenaPersistentStorage;
 import de.marcely.bedwars.api.hook.HookAPI;
 import de.marcely.bedwars.api.hook.PartiesHook;
 import de.marcely.bedwars.api.hook.PartiesHook.Member;
 import de.marcely.bedwars.api.hook.PartiesHook.Party;
-import de.marcely.bedwars.api.player.PlayerDataAPI;
 import de.marcely.bedwars.api.player.PlayerProperties;
+import de.marcely.bedwars.api.remote.RemoteAPI;
+import de.marcely.bedwars.api.remote.RemoteArena;
 import de.marcely.bedwars.tools.Helper;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import lombok.Getter;
+import java.util.stream.Collectors;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
-import me.harsh.privategamesaddon.settings.Settings;
+import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.entity.Player;
-import org.mineacademy.fo.Common;
 import org.mineacademy.fo.collection.StrictMap;
 
 import java.util.*;
@@ -23,12 +25,11 @@ public class PrivateGameManager {
 
     private static final String PROP_PRIVATE = "privategames:is_private";
     private static final String PROP_ENFORCE_JOIN = "privategames:enforce_join";
+    private static final String ARENA_KEY_PRIVATE = "privategames:is_private";
 
     public final Map<Arena, Party> partyMembersMangingMap = new HashMap<>();
     public final StrictMap<Arena, ArenaBuff> arenaArenaBuffMap = new StrictMap<>();
     public final List<UUID> playerStatsList = new ArrayList<>();
-    @Getter
-    public final List<Arena> privateArenas = new ArrayList<>();
 
     public boolean getPlayerPrivateMode(PlayerProperties props) {
         return props.getBoolean(PROP_PRIVATE).orElse(false);
@@ -91,5 +92,42 @@ public class PrivateGameManager {
         }
 
         return false;
+    }
+
+    public Collection<Arena> getPrivateArenas() {
+        return GameAPI.get().getArenas().stream()
+            .filter(arena -> isPrivateArena(arena.getPersistentStorage()))
+            .collect(Collectors.toList());
+    }
+
+    public Collection<RemoteArena> getRemotePrivateArenas() {
+        return RemoteAPI.get().getArenas().stream()
+            .filter(arena -> isPrivateArena(arena.getPersistentStorage()))
+            .collect(Collectors.toList());
+    }
+
+    public boolean isPrivateArena(RemoteArena arena) {
+        return isPrivateArena(arena.getPersistentStorage());
+    }
+
+    public boolean isPrivateArena(Arena arena) {
+        return isPrivateArena(arena.getPersistentStorage());
+    }
+
+    public void setPrivateArena(Arena arena, boolean value) {
+        final ArenaPersistentStorage storage = arena.getPersistentStorage();
+
+        storage.setSynchronizedFlag(ARENA_KEY_PRIVATE, true);
+
+        if (value)
+            storage.set(ARENA_KEY_PRIVATE, true);
+        else {
+            storage.remove(ARENA_KEY_PRIVATE);
+            partyMembersMangingMap.remove(arena);
+        }
+    }
+
+    private static boolean isPrivateArena(ArenaPersistentStorage storage) {
+        return storage.getBoolean(ARENA_KEY_PRIVATE).orElse(false);
     }
 }

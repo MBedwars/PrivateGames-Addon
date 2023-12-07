@@ -2,6 +2,9 @@ package me.harsh.privategamesaddon.api;
 
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.player.PlayerDataAPI;
+import de.marcely.bedwars.api.remote.RemoteArena;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.function.Consumer;
 import lombok.experimental.UtilityClass;
 import me.harsh.privategamesaddon.settings.Settings;
@@ -13,16 +16,24 @@ import java.util.List;
 
 @UtilityClass
 public class PrivateGameAPI {
-    public Boolean hasPermision(@NotNull Player player){
+    public boolean hasPermision(@NotNull Player player){
         return player.hasPermission(Settings.GLOBAL_PERM) || player.hasPermission(Settings.CREATE_PERM) || player.hasPermission("*");
     }
 
-    public Boolean isPrivateGame(@NotNull Arena arena){
-        return Utility.getManager().privateArenas.contains(arena);
+    public boolean isPrivateGame(@NotNull Arena arena){
+        return Utility.getManager().isPrivateArena(arena);
     }
 
-    public List<Arena> getPrivateGames(){
+    public boolean isPrivateGame(@NotNull RemoteArena arena){
+        return Utility.getManager().isPrivateArena(arena);
+    }
+
+    public Collection<Arena> getPrivateGames(){
         return Utility.getManager().getPrivateArenas();
+    }
+
+    public Collection<RemoteArena> getRemotePrivateGames(){
+        return Utility.getManager().getRemotePrivateArenas();
     }
 
     public String getPrivateGamePlaceholder(Arena arena){

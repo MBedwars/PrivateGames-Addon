@@ -12,13 +12,13 @@ public class PrivateArenaConditionVariable extends ArenaConditionVariable<ArenaC
     }
 
     public ArenaConditionVariableValueNumber getValue(Arena arena) {
-        if (Utility.getManager().getPrivateArenas().contains(arena))
-        return new ArenaConditionVariableValueNumber(1);
-        else return new ArenaConditionVariableValueNumber(0);
+        return getValue(arena.asRemote());
     }
 
     public ArenaConditionVariableValueNumber getValue(RemoteArena arena) {
-        return new ArenaConditionVariableValueNumber(0); // there is currently no easy api for that
+        if (Utility.getManager().isPrivateArena(arena))
+            return new ArenaConditionVariableValueNumber(1);
+        else
+            return new ArenaConditionVariableValueNumber(0);
     }
-
 }

@@ -19,7 +19,6 @@ public class Utility {
     @Getter
     public PrivateGameManager manager = new PrivateGameManager();
 
-
     public Player getPlayerByUuid(UUID uuid) {
         for (Player p : Remain.getOnlinePlayers())
             if (p.getUniqueId().equals(uuid)) {

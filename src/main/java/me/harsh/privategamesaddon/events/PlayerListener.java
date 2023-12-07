@@ -41,7 +41,7 @@ public class PlayerListener implements Listener {
         final Arena arena = event.getArena();
         final Player player = event.getPlayer();
         final PrivateGameManager manager = Utility.manager;
-        final boolean isPrivateArena = manager.getPrivateArenas().contains(arena);
+        final boolean isPrivateArena = manager.isPrivateArena(arena);
 
         // if (isPrivateArena && event.getCause() == AddPlayerCause.PARTY_SWITCH_ARENA)
         //    event.addIssue(AddPlayerIssue.PLUGIN);
@@ -87,7 +87,7 @@ public class PlayerListener implements Listener {
                     if (!privateMode || !member.get().isLeader())
                         return;
 
-                    manager.getPrivateArenas().add(arena);
+                    manager.setPrivateArena(arena, true);
                     Utility.getManager().partyMembersMangingMap.put(arena, member.get().getParty());
 
                     Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
@@ -153,63 +153,20 @@ public class PlayerListener implements Listener {
         });*/
     }
 
-
-
-
-    @EventHandler
-    public void onArenaEnd(RoundEndEvent event){
-        final Arena arena = event.getArena();
-
-        if (manager.getPrivateArenas().contains(arena)) {
-            Bukkit.getServer().getPluginManager().callEvent(new PrivateGameEndEvent(arena, event.getWinners(), event.getWinnerTeam()));
-        }
-
-        for (Player player : arena.getPlayers()) {
-            if (manager.playerStatsList.contains(player.getUniqueId()))
-                manager.playerStatsList.remove(player.getUniqueId());
-
-            if (PrivateGameAPI.hasPermision(player)) {
-                PlayerDataAPI.get().getProperties(player, props -> {
-                    manager.setPrivateGameMode(props, false);
-                });
-            }
-        }
-
-        manager.getPrivateArenas().remove(arena);
-        if(manager.partyMembersMangingMap.containsKey(arena))
-            manager.partyMembersMangingMap.remove(arena);
-    }
-    @EventHandler
-    public void onRoundEnd(RoundEndEvent event){
-        final Arena arena = event.getArena();
-        if (manager.getPrivateArenas().contains(arena)){
-            manager.getPrivateArenas().remove(arena);
-        }
-        if(manager.partyMembersMangingMap.containsKey(arena))
-            manager.partyMembersMangingMap.remove(arena);
-    }
-    @EventHandler
-    public void onRoundStart(RoundStartEvent event){
-        final Arena arena = event.getArena();
-        if (manager.getPrivateArenas().contains(arena)){
-            Bukkit.getServer().getPluginManager().callEvent(new PrivateGameStartEvent(arena));
-        }
-    }
-
     @EventHandler
     public void onPlayerLEAVE(PlayerQuitArenaEvent event){
         final Player player = event.getPlayer();
         final Arena arena = event.getArena();
         final PrivateGameManager manager = Utility.manager;
 
-        if (arena.getStatus() != ArenaStatus.LOBBY || !manager.getPrivateArenas().contains(arena))
+        if (arena.getStatus() != ArenaStatus.LOBBY || !manager.isPrivateArena(arena))
             return;
 
         manager.getParty(player, member -> {
             if (!member.isPresent() || !member.get().isLeader())
                 return;
 
-            manager.getPrivateArenas().remove(arena);
+            manager.setPrivateArena(arena, false);
         });
     }
     @EventHandler

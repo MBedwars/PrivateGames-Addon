@@ -9,6 +9,7 @@ import de.marcely.bedwars.api.hook.PartiesHook;
 import java.io.File;
 import me.harsh.privategamesaddon.buffs.PlayerBuffListener;
 import me.harsh.privategamesaddon.commands.PrivateCommandGroup;
+import me.harsh.privategamesaddon.events.ArenaListener;
 import me.harsh.privategamesaddon.events.InventoryListener;
 import me.harsh.privategamesaddon.events.PlayerListener;
 import me.harsh.privategamesaddon.lobbyItems.BuffItem;
@@ -78,6 +79,8 @@ public final class PrivateGamesPlugin extends SimplePlugin {
             registerEvents(new PlayerListener(Utility.getManager()));
             registerEvents(new PlayerBuffListener());
             registerEvents(new InventoryListener());
+            registerEvents(new ArenaListener());
+
             new PrivateGamePlaceholder().register();
             ArenaPickerAPI.get().registerConditionVariable(new PrivateArenaConditionVariable());
             new PrivateGamesAddon(this).register();
@@ -100,15 +103,16 @@ public final class PrivateGamesPlugin extends SimplePlugin {
     @Override
     protected void onReloadablesStart() {
         final PrivateGameManager manager = Utility.getManager();
-        for (Arena privateArena : manager.getPrivateArenas()) {
+
+        for (Arena privateArena : manager.getPrivateArenas())
             privateArena.endMatch(null);
-            manager.getPrivateArenas().remove(privateArena);
-        }
+
         manager.partyMembersMangingMap.clear();
         manager.playerStatsList.clear();
         registerCommands( new PrivateCommandGroup());
 
         BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new BuffItem()));
+
         new PrivateGamePlaceholder().register();
     }
 

@@ -2,6 +2,7 @@ package me.harsh.privategamesaddon.placeholders;
 
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.tools.Helper;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
@@ -30,13 +31,19 @@ public class PrivateGamePlaceholder extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         if (params.equalsIgnoreCase("private")){
             final Arena arena = GameAPI.get().getArenaByPlayer((Player) player);
-            if (arena == null) return null;
-            if (Utility.getManager().getPrivateArenas().contains(arena)){
+
+            if (arena == null)
+                return null;
+
+            if (Utility.getManager().isPrivateArena(arena)){
                 return Settings.IS_PRIVATE_GAME;
-            }else return "";
-        }else if (params.equalsIgnoreCase("private_count")){
-            return String.valueOf(Utility.getManager().getPrivateArenas().size());
+            } else
+                return "";
+
+        }else if (params.equalsIgnoreCase("private_count")) {
+            return Helper.get().formatNumber(Utility.getManager().getRemotePrivateArenas().size());
         }
+
         return null;
     }
 }
