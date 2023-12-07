@@ -30,7 +30,7 @@ public class BuffItem extends LobbyItemHandler {
 
     @Override
     public void handleUse(Player player, Arena arena, LobbyItem lobbyItem) {
-        if (Utility.getManager().privateArenas.contains(arena)){
+        if (Utility.getManager().isPrivateArena(arena)){
             final PrivateGameMenu menu = new PrivateGameMenu();
             if (Utility.getManager().arenaArenaBuffMap.containsKey(arena)){
                 menu.displayTo(player);
@@ -43,7 +43,7 @@ public class BuffItem extends LobbyItemHandler {
 
     @Override
     public boolean isVisible(Player player, Arena arena, LobbyItem lobbyItem) {
-        if (!Utility.getManager().privateArenas.contains(arena))
+        if (!Utility.getManager().isPrivateArena(arena))
             return false;
 
         final AtomicReference<Boolean> ref = new AtomicReference<>(false);

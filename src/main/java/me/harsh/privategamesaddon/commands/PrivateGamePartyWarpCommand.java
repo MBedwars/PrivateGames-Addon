@@ -47,7 +47,7 @@ public class PrivateGamePartyWarpCommand extends SimpleSubCommand {
             return;
         }
 
-        if (!manager.privateArenas.contains(arena)) {
+        if (!manager.isPrivateArena(arena)) {
             Common.tell(player, " " + Settings.NOT_PRIVATE_ROOM_WARP);
             return;
         }

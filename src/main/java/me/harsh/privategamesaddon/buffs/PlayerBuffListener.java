@@ -39,18 +39,21 @@ public class PlayerBuffListener implements Listener {
             final Player player = (Player) event.getEntity();
             final Player damager = (Player) event.getDamager();
             final Arena arena = GameAPI.get().getArenaByPlayer(player);
-            if ( arena == null) return;
-            if ( arena.getStatus() != ArenaStatus.RUNNING) return;
-            if (!Utility.getManager().privateArenas.contains(GameAPI.get().getArenaByPlayer(player))){
+
+            if (arena == null)
                 return;
-            }
+            if (arena.getStatus() != ArenaStatus.RUNNING)
+                return;
+            if (!Utility.getManager().isPrivateArena(arena))
+                return;
+
             final ArenaBuff buff = Utility.getBuff(player);
-            if (buff == null){
+
+            if (buff == null)
                 return;
-            }
-            if (buff.isOneHitKill()){
+
+            if (buff.isOneHitKill())
                 player.setHealth(0);
-            }
         }
     }
 
@@ -59,13 +62,19 @@ public class PlayerBuffListener implements Listener {
         if (event.getEntity() instanceof Player){
             final Player player = (Player) event.getEntity();
             final Arena arena = GameAPI.get().getArenaByPlayer(player);
-            if ( arena == null) return;
-            if ( arena.getStatus() != ArenaStatus.RUNNING) return;
-            if (!Utility.getManager().privateArenas.contains(GameAPI.get().getArenaByPlayer(player))){
+
+            if (arena == null)
                 return;
-            }
+            if (arena.getStatus() != ArenaStatus.RUNNING)
+                return;
+            if (!Utility.getManager().isPrivateArena(arena))
+                return;
+
             final ArenaBuff buff = Utility.getBuff(player);
-            if (buff == null)return;
+
+            if (buff == null)
+                return;
+
             if (!buff.isFallDamageEnabled()){
                 if (event.getCause() == EntityDamageEvent.DamageCause.FALL){
                     event.setCancelled(true);
@@ -78,12 +87,15 @@ public class PlayerBuffListener implements Listener {
     public void onPlayerRespawn(PlayerIngameRespawnEvent event){
         final Player player = event.getPlayer();
         final Arena arena = event.getArena();
-        if (!Utility.getManager().privateArenas.contains(arena)){
+
+        if (!Utility.getManager().isPrivateArena(arena))
             return;
-        }
+
         final ArenaBuff buff = Utility.getBuff(arena);
+
         if (buff == null)
             return;
+
         player.setMaxHealth(buff.getHealth());
         player.setHealth(buff.getHealth());
 
@@ -98,11 +110,14 @@ public class PlayerBuffListener implements Listener {
     @EventHandler
     public void onStart(RoundStartEvent event){
         final Arena arena = event.getArena();
-        if (!Utility.getManager().privateArenas.contains(arena)){
+
+        if (!Utility.getManager().isPrivateArena(arena))
             return;
-        }
+
         final ArenaBuff buff = Utility.getBuff(arena);
+
         Valid.checkNotNull(buff);
+
         if (buff.getSpawnRateMultiplier() != 3){
             for (Spawner spawner: arena.getSpawners()){
                 for (Team team: arena.getEnabledTeams()){
@@ -159,9 +174,10 @@ public class PlayerBuffListener implements Listener {
     @EventHandler
     public void onEnd(RoundEndEvent event){
         final Arena arena = event.getArena();
-        if (!Utility.getManager().privateArenas.contains(arena)){
+
+        if (!Utility.getManager().isPrivateArena(arena))
             return;
-        }
+
         for (Player player : arena.getPlayers()){
             player.setMaxHealth(20);
             player.setHealth(20);
@@ -172,18 +188,30 @@ public class PlayerBuffListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerIngameDeathEvent event){
         final Arena arena = event.getArena();
-        if (!Utility.getManager().privateArenas.contains(arena)) return;
+
+        if (!Utility.getManager().isPrivateArena(arena))
+            return;
+
         final ArenaBuff buff = Utility.getBuff(arena);
-        if (buff == null) return;
+
+        if (buff == null)
+            return;
+
         event.setDeathSpectateDuration(buff.getRespawnTime());
     }
 
     @EventHandler
     public void onPlayerBlockBreak(PlayerModifyBlockPermissionEvent event){
         final Arena arena = event.getArena();
-        if (!Utility.getManager().privateArenas.contains(arena)) return;
+
+        if (!Utility.getManager().isPrivateArena(arena))
+            return;
+
         final ArenaBuff buff = Utility.getBuff(arena);
-        if (buff == null) return;
+
+        if (buff == null)
+            return;
+
         if (!buff.isBlocksProtected()){
             event.setIssuePresent(PlayerModifyBlockPermissionEvent.Issue.INSIDE_NON_BUILD_RADIUS, false);
             event.setIssuePresent(PlayerModifyBlockPermissionEvent.Issue.NON_PLAYER_PLACED, false);
@@ -196,8 +224,13 @@ public class PlayerBuffListener implements Listener {
         final Block block = event.getBlock();
         final Player player = event.getPlayer();
         final Arena arena = GameAPI.get().getArenaByPlayer(player);
-        if (arena == null) return;
-        if (!Utility.getManager().privateArenas.contains(arena)) return;
+
+        if (arena == null)
+            return;
+
+        if (!Utility.getManager().isPrivateArena(arena))
+            return;
+
         final ArenaBuff buff = Utility.getBuff(arena);
     }
 }

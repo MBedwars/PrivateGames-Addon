@@ -28,7 +28,7 @@ public class RespawnBuffMenu extends Menu {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
                 final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                if (arena == null || !(Utility.getManager().privateArenas.contains(arena))) {
+                if (arena == null || !(Utility.getManager().isPrivateArena(arena))) {
                     Common.tell(player,  " Sorry, Something went wrong!");
                 }
                 final ArenaBuff buff = Utility.getBuff(arena);
@@ -62,7 +62,7 @@ public class RespawnBuffMenu extends Menu {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
                 final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                if (arena == null || !(Utility.getManager().privateArenas.contains(arena))) {
+                if (arena == null || !(Utility.getManager().isPrivateArena(arena))) {
                     Common.tell(player,  " Sorry, Something went wrong!");
                 }
                 final ArenaBuff buff = Utility.getBuff(arena);
@@ -92,7 +92,7 @@ public class RespawnBuffMenu extends Menu {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
                 final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                if (arena == null || !(Utility.getManager().privateArenas.contains(arena))) {
+                if (arena == null || !(Utility.getManager().isPrivateArena(arena))) {
                     Common.tell(player,  " Sorry, Something went wrong!");
                 }
                 final ArenaBuff buff = Utility.getBuff(arena);
