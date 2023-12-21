@@ -4,6 +4,7 @@ import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.arena.ArenaStatus;
 import de.marcely.bedwars.api.arena.Team;
+import de.marcely.bedwars.api.event.arena.ArenaDeleteEvent;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerIngameDeathEvent;
@@ -12,23 +13,18 @@ import de.marcely.bedwars.api.event.player.PlayerModifyBlockPermissionEvent;
 import de.marcely.bedwars.api.game.spawner.Spawner;
 import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier;
 import de.marcely.bedwars.api.game.upgrade.Upgrade;
-import de.marcely.bedwars.api.game.upgrade.UpgradeLevel;
 import de.marcely.bedwars.api.game.upgrade.UpgradeState;
+import me.harsh.privategamesaddon.PrivateGamesPlugin;
 import me.harsh.privategamesaddon.utils.Utility;
-import org.bukkit.block.Block;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.mineacademy.fo.Common;
-import org.mineacademy.fo.Valid;
-import org.mineacademy.fo.plugin.SimplePlugin;
 
 
 public class PlayerBuffListener implements Listener {
@@ -37,17 +33,14 @@ public class PlayerBuffListener implements Listener {
     public void onPlayerHit(EntityDamageByEntityEvent event){
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Player){
             final Player player = (Player) event.getEntity();
-            final Player damager = (Player) event.getDamager();
             final Arena arena = GameAPI.get().getArenaByPlayer(player);
 
             if (arena == null)
                 return;
             if (arena.getStatus() != ArenaStatus.RUNNING)
                 return;
-            if (!Utility.getManager().isPrivateArena(arena))
-                return;
 
-            final ArenaBuff buff = Utility.getBuff(player);
+            final ArenaBuff buff = Utility.getManager().getBuffState(arena);
 
             if (buff == null)
                 return;
@@ -59,7 +52,7 @@ public class PlayerBuffListener implements Listener {
 
     @EventHandler
     public void onPlayerTakeFallDamage(EntityDamageEvent event){
-        if (event.getEntity() instanceof Player){
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL && event.getEntity() instanceof Player){
             final Player player = (Player) event.getEntity();
             final Arena arena = GameAPI.get().getArenaByPlayer(player);
 
@@ -67,19 +60,14 @@ public class PlayerBuffListener implements Listener {
                 return;
             if (arena.getStatus() != ArenaStatus.RUNNING)
                 return;
-            if (!Utility.getManager().isPrivateArena(arena))
-                return;
 
-            final ArenaBuff buff = Utility.getBuff(player);
+            final ArenaBuff buff = Utility.getManager().getBuffState(arena);
 
             if (buff == null)
                 return;
 
-            if (!buff.isFallDamageEnabled()){
-                if (event.getCause() == EntityDamageEvent.DamageCause.FALL){
-                    event.setCancelled(true);
-                }
-            }
+            if (!buff.isFallDamageEnabled())
+                event.setCancelled(true);
         }
     }
 
@@ -87,11 +75,7 @@ public class PlayerBuffListener implements Listener {
     public void onPlayerRespawn(PlayerIngameRespawnEvent event){
         final Player player = event.getPlayer();
         final Arena arena = event.getArena();
-
-        if (!Utility.getManager().isPrivateArena(arena))
-            return;
-
-        final ArenaBuff buff = Utility.getBuff(arena);
+        final ArenaBuff buff = Utility.getManager().getBuffState(arena);
 
         if (buff == null)
             return;
@@ -99,64 +83,91 @@ public class PlayerBuffListener implements Listener {
         player.setMaxHealth(buff.getHealth());
         player.setHealth(buff.getHealth());
 
-        if (buff.isLowGravity()){
-            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 100000000, 3));
+        if (buff.isLowGravity()) {
+            player.addPotionEffect(new PotionEffect(
+                PotionEffectType.JUMP,
+                Integer.MAX_VALUE,
+                3));
         }
-        if (buff.getSpeedModifier() != 1){
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000000, buff.getSpeedModifier()));
+
+        if (buff.getSpeedModifier() != 1) {
+            player.addPotionEffect(new PotionEffect(
+                PotionEffectType.SPEED,
+                Integer.MAX_VALUE,
+                buff.getSpeedModifier()));
         }
     }
 
     @EventHandler
-    public void onStart(RoundStartEvent event){
+    public void onStart(RoundStartEvent event) {
         final Arena arena = event.getArena();
 
-        if (!Utility.getManager().isPrivateArena(arena))
+        if (!Utility.getManager().isPrivateArena(arena)) {
+            Utility.getManager().removeBuffState(arena);
+            return;
+        }
+
+        final ArenaBuff buff = Utility.getManager().getBuffState(arena);
+
+        if (buff == null)
             return;
 
-        final ArenaBuff buff = Utility.getBuff(arena);
-
-        Valid.checkNotNull(buff);
-
-        if (buff.getSpawnRateMultiplier() != 3){
+        if (buff.getSpawnRateMultiplier() != 3) {
             for (Spawner spawner: arena.getSpawners()){
                 for (Team team: arena.getEnabledTeams()){
                     if (spawner.getLocation().distance(arena.getTeamSpawn(team)) <= 15){
-                        spawner.addDropDurationModifier("privateMultiply", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, buff.getSpawnRateMultiplier());
+                        spawner.addDropDurationModifier(
+                            "private_games:buff_multiplier",
+                            PrivateGamesPlugin.getInstance(),
+                            SpawnerDurationModifier.Operation.SET,
+                            buff.getSpawnRateMultiplier());
                     }
                 }
             }
         }
+
         if (buff.isNoEmeralds()){
             for (Spawner spawner : arena.getSpawners()){
                 for (Team team: arena.getEnabledTeams()){
                     if (spawner.getLocation().distance(arena.getTeamSpawn(team)) >= 20) {
-                        spawner.addDropDurationModifier("privateStop", SimplePlugin.getInstance(), SpawnerDurationModifier.Operation.SET, 9999999999999.9);
+                        spawner.addDropDurationModifier(
+                            "private_games:no_emeralds",
+                            PrivateGamesPlugin.getInstance(),
+                            SpawnerDurationModifier.Operation.SET,
+                            9999999999999.9);
                     }
                 }
             }
         }
+
         arena.getPlayers().forEach(player -> {
-            if (buff.isLowGravity()){
-                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 1000000000, 3));
+            if (buff.isLowGravity()) {
+                player.addPotionEffect(new PotionEffect(
+                    PotionEffectType.JUMP,
+                    Integer.MAX_VALUE,
+                    3));
             }
-            if (buff.getSpeedModifier() != 1){
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000000, buff.getSpeedModifier()));
+
+            if (buff.getSpeedModifier() != 1) {
+                player.addPotionEffect(new PotionEffect(
+                    PotionEffectType.SPEED,
+                    Integer.MAX_VALUE,
+                    buff.getSpeedModifier()));
             }
         });
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                event.getArena().getPlayers().forEach(player -> {
-                    player.setMaxHealth(buff.getHealth());
-                    player.setHealth(buff.getHealth());
 
-                });
-            }
-        }.runTaskLater(SimplePlugin.getInstance(), 10);
+        Bukkit.getScheduler().runTaskLater(PrivateGamesPlugin.getInstance(), () -> {
+            if (event.getArena().getStatus() != ArenaStatus.RUNNING)
+                return;
 
-        if (buff.isMaxUpgrades()){
-            Common.runLater(10, ()-> {
+            // update health
+            event.getArena().getPlayers().forEach(player -> {
+                player.setMaxHealth(buff.getHealth());
+                player.setHealth(buff.getHealth());
+            });
+
+            // autom max upgrade
+            if (buff.isMaxUpgrades()) {
                 for (Team team: arena.getRemainingTeams()){
                     final UpgradeState state = arena.getUpgradeState(team);
                     for (Upgrade upgrade : GameAPI.get().getUpgrades()) {
@@ -167,32 +178,25 @@ public class PlayerBuffListener implements Listener {
                         }
                     }
                 }
-            });
-        }
+            }
+        }, 10);
     }
 
-    @EventHandler
-    public void onEnd(RoundEndEvent event){
-        final Arena arena = event.getArena();
-
-        if (!Utility.getManager().isPrivateArena(arena))
-            return;
-
-        for (Player player : arena.getPlayers()){
-            player.setMaxHealth(20);
-            player.setHealth(20);
-        }
-       Utility.getManager().arenaArenaBuffMap.remove(arena);
-
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onEnd(RoundEndEvent event) {
+        Utility.getManager().removeBuffState(event.getArena());
     }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onDelete(ArenaDeleteEvent event) {
+        Utility.getManager().removeBuffState(event.getArena());
+    }
+
+
     @EventHandler
     public void onPlayerDeath(PlayerIngameDeathEvent event){
         final Arena arena = event.getArena();
-
-        if (!Utility.getManager().isPrivateArena(arena))
-            return;
-
-        final ArenaBuff buff = Utility.getBuff(arena);
+        final ArenaBuff buff = Utility.getManager().getBuffState(arena);
 
         if (buff == null)
             return;
@@ -203,11 +207,7 @@ public class PlayerBuffListener implements Listener {
     @EventHandler
     public void onPlayerBlockBreak(PlayerModifyBlockPermissionEvent event){
         final Arena arena = event.getArena();
-
-        if (!Utility.getManager().isPrivateArena(arena))
-            return;
-
-        final ArenaBuff buff = Utility.getBuff(arena);
+        final ArenaBuff buff = Utility.getManager().getBuffState(arena);
 
         if (buff == null)
             return;
@@ -219,7 +219,7 @@ public class PlayerBuffListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    /*@EventHandler(priority = EventPriority.HIGH)
     public void onPlayerBlockPlace(BlockPlaceEvent event){
         final Block block = event.getBlock();
         final Player player = event.getPlayer();
@@ -232,5 +232,5 @@ public class PlayerBuffListener implements Listener {
             return;
 
         final ArenaBuff buff = Utility.getBuff(arena);
-    }
+    }*/
 }

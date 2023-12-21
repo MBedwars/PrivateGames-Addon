@@ -18,8 +18,6 @@ Features:
 Messages:
   # When player don't have the permission
   No_perm: '&cSorry, you have to buy &6MVP++ to create private games!'
-  # When player don't have permission for /bwp reload
-  No_reload_perm: "&cYou don't have enough permissions to reload!"
   # When they toggle private game creation mode
   Private_game_creation_mode: '&aYou are now in private game creation mode'
   # When they toggle back to normal mode
@@ -57,8 +55,7 @@ Placeholders:
   Is_private_game: '[P]' # Color Codes not supported
 Perms:
   # Dont add spaces here!
-  global_perm: 'privategame.*' # Gives all the perms
-  admin_perm: 'privategame.admin' # Gives all the perms except reload
+  admin_perm: 'privategame.admin' # Gives all the perms except reload and create
   create_perm: 'privategame.create'
   reload_perm: 'privategame.reload'
   auto_warp: 'privategame.autowarp'

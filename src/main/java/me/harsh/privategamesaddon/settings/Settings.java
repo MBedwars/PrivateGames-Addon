@@ -1,10 +1,15 @@
 package me.harsh.privategamesaddon.settings;
 
+import de.marcely.bedwars.tools.Helper;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import me.harsh.privategamesaddon.PrivateGamesAddon;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
-import org.mineacademy.fo.Common;
-import org.mineacademy.fo.settings.SimpleSettings;
-
-public class Settings extends SimpleSettings {
+public class Settings {
 
     // Menu title, Prefix, Booleans
     public static String PREFIX;
@@ -36,7 +41,6 @@ public class Settings extends SimpleSettings {
 
     // Permisions
     public static String CREATE_PERM;
-    public static String GLOBAL_PERM;
     public static String AUTO_WARP_PERM;
     public static String RELOAD_PERM;
     public static String PARTY_BYPASS_PERM;
@@ -65,7 +69,6 @@ public class Settings extends SimpleSettings {
     public static String SUCCESSFUL_RELOAD;
     public static String ILLEGAL_JOIN_MESSAGE;
     public static String NO_PERM_EROR;
-    public static String RELOAD_NO_PERM_EROR;
     public static String NO_AUTO_WARP_PERM_EROR;
     public static String NO_PLAYER_FOUND_IN_PARTY;
     public static String ARENA_IS_PRIVATE;
@@ -81,76 +84,80 @@ public class Settings extends SimpleSettings {
 
     public static String PARTY_PRIORITY;
 
-    @Override
-    protected int getConfigVersion() {
-        return 1;
+    public static void read(PrivateGamesAddon addon) {
+        try {
+            final File file = new File(addon.getDataFolder(), "settings.yml");
+
+            if (!file.exists()) {
+                file.getParentFile().mkdirs();
+
+                try (InputStream is = addon.getPlugin().getResource("settings.yml")) {
+                    try (OutputStream os = Files.newOutputStream(file.toPath())) {
+                        Helper.get().copy(is, os);
+                    }
+                }
+            }
+
+            read(YamlConfiguration.loadConfiguration(file));
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
     }
 
-    private static void init(){
-        PREFIX = getString("Prefix");
-        Common.setTellPrefix(Settings.PREFIX);
-        setPathPrefix("Features");
-        BUNGEE = getBoolean("Bungee");
-        SHOULD_SAVE_STATS = getBoolean("Save_Stats");
-        AUTO_WARP = getBoolean("Auto_warp");
-        PARTY_PRIORITY = getString("Priority");
-        PER_BUFF_PERM = getBoolean("Per_buff_perm");
-        setPathPrefix("Menu");
-        MENU_TITLE = getString("Title");
-        ADMIN_CONTROL_PANEL = getString("Control_panel");
-        setPathPrefix("Menu.Sub_Menu");
-        HEALTH_BUFF_MENU = getString("Health");
-        SPEED_BUFF_MENU = getString("Speed");
-        RESPAWN_BUFF_MENU = getString("Respawn");
-        SPAWN_RATE_BUFF_MENU = getString("Spawn_rate");
-        setPathPrefix("Menu.Buffs");
-        NO_SPAWNERS_BUFF = getString("No_emeralds_and_diamonds");
-        MAX_UPGRADES_BUFF = getString("Max_upgrades_buff");
-        ONE_HIT_BUFF = getString("One_Hit_Buff");
-        HEALTH_BUFF = getString("Health_Buff");
-        LOW_GRAVITY_BUFF = getString("Low_Gravity_Buff");
-        SPEED_BUFF = getString("Speed_Buff");
-        DISABLE_BLOCK_PROTECTION_BUFF = getString("Disable_Block_Protection_Buff");
-        RESPAWN_TIME_BUFF = getString("Respawn_Time_Buff");
-        SPAWN_RATE_MUTIPLIER_BUFF = getString("Spawn_Rate_Mutiplier_Buff");
-        FALL_DAMAGE_BUFF = getString("Fall_damage_buff");
-        setPathPrefix("Perms");
-        CREATE_PERM = getString("create_perm");
-        GLOBAL_PERM = getString("global_perm");
-        AUTO_WARP_PERM = getString("auto_warp");
-        RELOAD_PERM = getString("reload_perm");
-        PARTY_BYPASS_PERM = getString("party_requirement");
-        ADMIN_PERM = getString("admin_perm");
-        setPathPrefix("Perms.Buffs");
-        ONE_HIT_BUFF_PERM = getString("One_hit_buff_perm");
-        CUSTOM_HEALTH_BUFF_PERM = getString("Custom_health_buff_perm");
-        GRAVITY_BUFF_PERM = getString("Gravity_buff_perm");
-        RESPAWN_BUFF_PERM = getString("Respawn_time_buff_perm");
-        NO_SPECIAL_SPAWNER_BUFF_PERM = getString("No_special_spawner_buff_perm");
-        SPEED_BUFF_PERM = getString("Speed_buff_perm");
-        NO_FALL_DAMAGE_BUFF_PERM = getString("No_fall_damage_buff_perm");
-        MAX_UPGRADE_BUFF_PERM = getString("Max_upgrades_buff_perm");
-        BLOCK_PROT_BUFF_PERM = getString("Block_protection_buff_perm");
-        SPAWN_RATE_MUTLIPLER_BUFF_PERM = getString("Spawn_rate_multiplier");
-        setPathPrefix("Placeholders");
-        IS_PRIVATE_GAME = getString("Is_private_game");
-        setPathPrefix("Messages");
-        ADMIN_JOIN_PGA = getString("Admin_join");
-        ILLEGAL_JOIN_MESSAGE = getString("Illegal_join_try");
-        RELOAD_NO_PERM_EROR = getString("No_reload_perm");
-        SUCCESSFUL_RELOAD = getString("Successfully_reload");
-        NO_PLAYER_FOUND_IN_PARTY = getString("No_players_found_in_party");
-        NO_PERM_EROR = getString("No_perm");
-        NO_PARTY_ON_CREATE = getString("No_party_found");
-        ARENA_IS_PRIVATE = getString("Arena_private");
-        NO_AUTO_WARP_PERM_EROR = getString("Auto_warp_noperm");
-        NOT_IN_ARENA = getString("Arena_not_found");
-        NOT_IN_PRIVATE_GAME_MODE = getString("Private_game_wrong_mode");
-        PLAYER_JOIN_PRIVATE_GAME = getString("Private_game_join");
-        NOT_PRIVATE_ROOM_WARP = getString("Private_game_illegal_warp");
-        NOT_IN_PARTY = getString("Not_in_a_party_to_warp");
-        PRIVATE_GAME_MODE = getString("Private_game_creation_mode");
-        NORMAL_MODE = getString("Normal_game_mode");
-        ONLY_LEADER_IN_PARTY = getString("Only_leader_in_party");
+    private static void read(Configuration config) {
+        PREFIX = config.getString("Prefix");
+        BUNGEE = config.getBoolean("Features.Bungee");
+        SHOULD_SAVE_STATS = config.getBoolean("Features.Save_Stats");
+        AUTO_WARP = config.getBoolean("Features.Auto_warp");
+        PARTY_PRIORITY = config.getString("Features.Priority");
+        PER_BUFF_PERM = config.getBoolean("Features.Per_buff_perm");
+        MENU_TITLE = config.getString("Menu.Title");
+        ADMIN_CONTROL_PANEL = config.getString("Menu.Control_panel");
+        HEALTH_BUFF_MENU = config.getString("Menu.Sub_Menu.Health");
+        SPEED_BUFF_MENU = config.getString("Menu.Sub_Menu.Speed");
+        RESPAWN_BUFF_MENU = config.getString("Menu.Sub_Menu.Respawn");
+        SPAWN_RATE_BUFF_MENU = config.getString("Menu.Sub_Menu.Spawn_rate");
+        NO_SPAWNERS_BUFF = config.getString("Menu.Buffs.No_emeralds_and_diamonds");
+        MAX_UPGRADES_BUFF = config.getString("Menu.Buffs.Max_upgrades_buff");
+        ONE_HIT_BUFF = config.getString("Menu.Buffs.One_Hit_Buff");
+        HEALTH_BUFF = config.getString("Menu.Buffs.Health_Buff");
+        LOW_GRAVITY_BUFF = config.getString("Menu.Buffs.Low_Gravity_Buff");
+        SPEED_BUFF = config.getString("Menu.Buffs.Speed_Buff");
+        DISABLE_BLOCK_PROTECTION_BUFF = config.getString("Menu.Buffs.Disable_Block_Protection_Buff");
+        RESPAWN_TIME_BUFF = config.getString("Menu.Buffs.Respawn_Time_Buff");
+        SPAWN_RATE_MUTIPLIER_BUFF = config.getString("Menu.Buffs.Spawn_Rate_Mutiplier_Buff");
+        FALL_DAMAGE_BUFF = config.getString("Menu.Buffs.Fall_damage_buff");
+        CREATE_PERM = config.getString("Perms.create_perm");
+        AUTO_WARP_PERM = config.getString("Perms.auto_warp");
+        RELOAD_PERM = config.getString("Perms.reload_perm");
+        PARTY_BYPASS_PERM = config.getString("Perms.party_requirement");
+        ADMIN_PERM = config.getString("Perms.admin_perm");
+        ONE_HIT_BUFF_PERM = config.getString("Perms.Buffs.One_hit_buff_perm");
+        CUSTOM_HEALTH_BUFF_PERM = config.getString("Perms.Buffs.Custom_health_buff_perm");
+        GRAVITY_BUFF_PERM = config.getString("Perms.Buffs.Gravity_buff_perm");
+        RESPAWN_BUFF_PERM = config.getString("Perms.Buffs.Respawn_time_buff_perm");
+        NO_SPECIAL_SPAWNER_BUFF_PERM = config.getString("Perms.Buffs.No_special_spawner_buff_perm");
+        SPEED_BUFF_PERM = config.getString("Perms.Buffs.Speed_buff_perm");
+        NO_FALL_DAMAGE_BUFF_PERM = config.getString("Perms.Buffs.No_fall_damage_buff_perm");
+        MAX_UPGRADE_BUFF_PERM = config.getString("Perms.Buffs.Max_upgrades_buff_perm");
+        BLOCK_PROT_BUFF_PERM = config.getString("Perms.Buffs.Block_protection_buff_perm");
+        SPAWN_RATE_MUTLIPLER_BUFF_PERM = config.getString("Perms.Buffs.Spawn_rate_multiplier");
+        IS_PRIVATE_GAME = config.getString("Placeholders.Is_private_game");
+        ADMIN_JOIN_PGA = config.getString("Messages.Admin_join");
+        ILLEGAL_JOIN_MESSAGE = config.getString("Messages.Illegal_join_try");
+        SUCCESSFUL_RELOAD = config.getString("Messages.Successfully_reload");
+        NO_PLAYER_FOUND_IN_PARTY = config.getString("Messages.No_players_found_in_party");
+        NO_PERM_EROR = config.getString("Messages.No_perm");
+        NO_PARTY_ON_CREATE = config.getString("Messages.No_party_found");
+        ARENA_IS_PRIVATE = config.getString("Messages.Arena_private");
+        NO_AUTO_WARP_PERM_EROR = config.getString("Messages.Auto_warp_noperm");
+        NOT_IN_ARENA = config.getString("Messages.Arena_not_found");
+        NOT_IN_PRIVATE_GAME_MODE = config.getString("Messages.Private_game_wrong_mode");
+        PLAYER_JOIN_PRIVATE_GAME = config.getString("Messages.Private_game_join");
+        NOT_PRIVATE_ROOM_WARP = config.getString("Messages.Private_game_illegal_warp");
+        NOT_IN_PARTY = config.getString("Messages.Not_in_a_party_to_warp");
+        PRIVATE_GAME_MODE = config.getString("Messages.Private_game_creation_mode");
+        NORMAL_MODE = config.getString("Messages.Normal_game_mode");
+        ONLY_LEADER_IN_PARTY = config.getString("Messages.Only_leader_in_party");
     }
 }

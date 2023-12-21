@@ -1,13 +1,14 @@
 package me.harsh.privategamesaddon.api.events;
 
 import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.api.event.arena.ArenaEvent;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import java.util.Set;
 import java.util.UUID;
 
-public class PrivateGameWarpEvent extends Event {
+public class PrivateGameWarpEvent extends Event implements ArenaEvent {
     private static final HandlerList list = new HandlerList();
     Set<UUID> partyPlayers;
     Arena arena;

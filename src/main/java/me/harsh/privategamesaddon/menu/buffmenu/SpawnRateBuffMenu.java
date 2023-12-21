@@ -1,128 +1,70 @@
 package me.harsh.privategamesaddon.menu.buffmenu;
 
-import de.marcely.bedwars.api.GameAPI;
-import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.api.message.Message;
+import de.marcely.bedwars.tools.Helper;
+import de.marcely.bedwars.tools.NMSHelper;
+import de.marcely.bedwars.tools.gui.AddItemCondition;
+import de.marcely.bedwars.tools.gui.CenterFormat;
+import de.marcely.bedwars.tools.gui.GUIItem;
+import de.marcely.bedwars.tools.gui.type.ChestGUI;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.menu.PrivateGameMenu;
 import me.harsh.privategamesaddon.settings.Settings;
-import me.harsh.privategamesaddon.utils.Utility;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import org.mineacademy.fo.Common;
-import org.mineacademy.fo.menu.Menu;
-import org.mineacademy.fo.menu.button.Button;
-import org.mineacademy.fo.menu.model.ItemCreator;
-import org.mineacademy.fo.remain.CompMaterial;
+import org.bukkit.inventory.meta.ItemMeta;
 
 
-public class SpawnRateBuffMenu extends Menu {
-    private final Button one; // normal
-    private final Button two; // super slow
-    private final Button three; // super fast
-    public SpawnRateBuffMenu(){
-        super(new PrivateGameMenu());
-        setTitle(Settings.SPAWN_RATE_BUFF_MENU);
-        setSize(9*3);
-        this.three = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                if (arena == null || !(Utility.getManager().isPrivateArena(arena))) {
-                    Common.tell(player,  " Sorry, Something went wrong!");
-                }
-                final ArenaBuff buff = Utility.getBuff(arena);
-                if (buff == null) return;
-                if (buff.getSpawnRateMultiplier() == 10){
-                    buff.setSpawnRateMultiplier(3);
-                    restartMenu("&cSet Spawn rate to normal");
-                    return;
-                }
-                buff.setSpawnRateMultiplier(10);
-                restartMenu("&aSet Spawn rate multiplier to SUPER FAST!");
-            }
+public class SpawnRateBuffMenu extends ChestGUI {
 
-            @Override
-            public ItemStack getItem() {
-                final Player player = getViewer();
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                final ArenaBuff buff = Utility.getBuff(arena);
-                return ItemCreator.of(CompMaterial.GOLD_INGOT,
-                        "&aSUPER FAST",
-                        "",
-                        "Set Spawner multiplier rate ",
-                        "to super fast")
-                        .glow(buff.getSpawnRateMultiplier() == 10).build().make();
-            }
-        };
-        this.two = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                if (arena == null || !(Utility.getManager().isPrivateArena(arena))) {
-                    Common.tell(player,  " Sorry, Something went wrong!");
-                }
-                final ArenaBuff buff = Utility.getBuff(arena);
-                if (buff == null) return;
-                if (buff.getSpawnRateMultiplier() == 0.3){
-                    buff.setSpawnRateMultiplier(3);
-                    restartMenu("&cSet Spawn rate multiplier to normal again!");
-                    return;
-                }
-                buff.setSpawnRateMultiplier(0.3);
-                restartMenu("&aSet Spawn rate multiplier to SUPER SLOW!");
-            }
+  private final PrivateGameMenu parentMenu;
 
-            @Override
-            public ItemStack getItem() {
-                final Player player = getViewer();
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                final ArenaBuff buff = Utility.getBuff(arena);
-                return ItemCreator.of(CompMaterial.GOLD_INGOT,
-                                "&aSUPER SLOW",
-                                "",
-                                "Set Spawner multiplier rate ",
-                                "to super slow")
-                        .glow(buff.getSpawnRateMultiplier() == 0.3).build().make();
-            }
-        };
-        this.one = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                if (arena == null || !(Utility.getManager().isPrivateArena(arena))) {
-                    Common.tell(player,  " Sorry, Something went wrong!");
-                }
-                final ArenaBuff buff = Utility.getBuff(arena);
-                if (buff == null) return;
-                buff.setSpawnRateMultiplier(3);
-                restartMenu("&aSet Spawn rate multiplier to normal");
-            }
+  public SpawnRateBuffMenu(PrivateGameMenu parentMenu) {
+    super(3, Message.build(Settings.SPAWN_RATE_BUFF_MENU).done());
+    this.parentMenu = parentMenu;
 
-            @Override
-            public ItemStack getItem() {
-                final Player player = getViewer();
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                final ArenaBuff buff = Utility.getBuff(arena);
-                return ItemCreator.of(CompMaterial.GOLD_INGOT,
-                                "&aNormal",
-                                "",
-                                "Set Spawner multiplier rate ",
-                                "to normal")
-                        .glow(buff.getSpawnRateMultiplier() == 3).build().make();
-            }
-        };
-    }
+    addCloseListener(player -> parentMenu.open(player));
+  }
 
-    @Override
-    public ItemStack getItemAt(int slot) {
-        if (slot == 10){
-            return three.getItem();
-        }else if (slot == 13){
-            return one.getItem();
-        }else if (slot == 16){
-            return two.getItem();
-        }
-        return super.getItemAt(slot);
-    }
+  @Override
+  public void open(Player player) {
+    draw(player);
+
+    super.open(player);
+  }
+
+  private void draw(Player player) {
+    clear();
+
+    final AddItemCondition condition = AddItemCondition.withinY(1, 1);
+
+    addItem(getItem(player, 0.5), condition);
+    addItem(getItem(player, 0.75), condition);
+    addItem(getItem(player, 1), condition);
+    addItem(getItem(player, 1.5), condition);
+    addItem(getItem(player, 2), condition);
+
+    formatRow(1, CenterFormat.CENTRALIZED_EVEN);
+  }
+
+  private GUIItem getItem(Player player, double val) {
+    final ArenaBuff buffState = this.parentMenu.getBuffState();
+    ItemStack is = Helper.get().parseItemStack("GOLD_INGOT");
+    final ItemMeta im = is.getItemMeta();
+    final boolean active = val == buffState.getSpawnRateMultiplier();
+
+    im.setDisplayName((active ? ChatColor.GREEN : ChatColor.GOLD) + Helper.get().formatNumber(val) + "x");
+    is.setItemMeta(im);
+
+    if (active)
+      is = NMSHelper.get().setGlowEffect(is, true);
+
+    return new GUIItem(is, (g0, g1, g2) -> {
+      buffState.setSpawnRateMultiplier(val);
+
+      Message.build(ChatColor.GREEN + "Spawners now spawn " + Helper.get().formatNumber(val) + "x" + " as fast as regularly").send(player);
+      draw(player);
+    });
+  }
 }

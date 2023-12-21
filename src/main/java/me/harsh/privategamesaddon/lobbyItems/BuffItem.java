@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import me.harsh.privategamesaddon.PrivateGamesPlugin;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
+import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.menu.PrivateGameMenu;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.Bukkit;
@@ -30,14 +31,15 @@ public class BuffItem extends LobbyItemHandler {
 
     @Override
     public void handleUse(Player player, Arena arena, LobbyItem lobbyItem) {
-        if (Utility.getManager().isPrivateArena(arena)){
-            final PrivateGameMenu menu = new PrivateGameMenu();
-            if (Utility.getManager().arenaArenaBuffMap.containsKey(arena)){
-                menu.displayTo(player);
-            }
-            if (!Utility.getManager().arenaArenaBuffMap.containsKey(arena)){
-                Utility.getManager().arenaArenaBuffMap.put(arena, new ArenaBuff());
-            }
+        final PrivateGameManager manager = Utility.getManager();
+
+        if (manager.isPrivateArena(arena)){
+            ArenaBuff buffState = manager.getBuffState(arena);
+
+            if (buffState == null)
+                manager.addBuffState(arena, buffState = new ArenaBuff());
+
+            new PrivateGameMenu(buffState).open(player);
         }
     }
 

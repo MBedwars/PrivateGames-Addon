@@ -15,11 +15,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
-import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.entity.Player;
-import org.mineacademy.fo.collection.StrictMap;
 
 import java.util.*;
+import org.jetbrains.annotations.Nullable;
 
 public class PrivateGameManager {
 
@@ -28,8 +27,7 @@ public class PrivateGameManager {
     private static final String ARENA_KEY_PRIVATE = "privategames:is_private";
 
     public final Map<Arena, Party> partyMembersMangingMap = new HashMap<>();
-    public final StrictMap<Arena, ArenaBuff> arenaArenaBuffMap = new StrictMap<>();
-    public final List<UUID> playerStatsList = new ArrayList<>();
+    private final Map<Arena, ArenaBuff> arenaArenaBuffMap = new HashMap<>();
 
     public boolean getPlayerPrivateMode(PlayerProperties props) {
         return props.getBoolean(PROP_PRIVATE).orElse(false);
@@ -129,5 +127,18 @@ public class PrivateGameManager {
 
     private static boolean isPrivateArena(ArenaPersistentStorage storage) {
         return storage.getBoolean(ARENA_KEY_PRIVATE).orElse(false);
+    }
+
+    @Nullable
+    public ArenaBuff getBuffState(Arena arena) {
+        return this.arenaArenaBuffMap.get(arena);
+    }
+
+    public void removeBuffState(Arena arena) {
+        this.arenaArenaBuffMap.remove(arena);
+    }
+
+    public void addBuffState(Arena arena, ArenaBuff buff) {
+        this.arenaArenaBuffMap.put(arena, buff);
     }
 }

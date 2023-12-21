@@ -1,42 +1,38 @@
 package me.harsh.privategamesaddon;
 
-import de.marcely.bedwars.api.BedwarsAPI;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.arena.picker.ArenaPickerAPI;
 import de.marcely.bedwars.api.hook.HookAPI;
 import de.marcely.bedwars.api.hook.PartiesHook;
-import java.io.File;
+import lombok.Getter;
 import me.harsh.privategamesaddon.buffs.PlayerBuffListener;
-import me.harsh.privategamesaddon.commands.PrivateCommandGroup;
+import me.harsh.privategamesaddon.commands.CommandHandler;
 import me.harsh.privategamesaddon.events.ArenaListener;
-import me.harsh.privategamesaddon.events.InventoryListener;
 import me.harsh.privategamesaddon.events.PlayerListener;
 import me.harsh.privategamesaddon.lobbyItems.BuffItem;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.placeholders.PrivateGamePlaceholder;
+import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.Bukkit;
-import org.mineacademy.fo.Common;
-import org.mineacademy.fo.plugin.SimplePlugin;
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public final class PrivateGamesPlugin extends SimplePlugin {
+public final class PrivateGamesPlugin extends JavaPlugin {
 
-    private static final int MBEDWARS_MIN_API = 24;
-    private static final String MBEDWARS_MIN_VERSION = "5.3.2";
+    private static final int MBEDWARS_MIN_API = 25;
+    private static final String MBEDWARS_MIN_VERSION = "5.3.3";
 
-    @Override
-    protected void onPluginLoad() {
-        // Hotfix for trash Foundation library
-        try {
-            new File(getDataFolder().getParentFile().getParentFile(), "server.properties").createNewFile();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    @Getter
+    private static PrivateGamesPlugin instance;
+
+    private PrivateGamesAddon addon;
 
     @Override
-    protected void onPluginStart() {
+    public void onEnable() {
+        instance = this;
+
         // Check MBedwars
         try {
             Class<?> apiClass = Class.forName("de.marcely.bedwars.api.BedwarsAPI");
@@ -50,11 +46,11 @@ public final class PrivateGamesPlugin extends SimplePlugin {
             return;
         }
 
-        Common.log("&a----------------------------");
-        Common.log("&a    &r");
-        Common.log("&aEnabling Private Games Addon");
-        Common.log("&a    &r");
-        Common.log("&a----------------------------");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "----------------------------");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "    ");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Enabling Private Games Addon");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "    ");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "----------------------------");
 
         // Wait a second so that other plugins can register their parties hook
         Bukkit.getScheduler().runTaskLater(this, () -> {
@@ -62,7 +58,7 @@ public final class PrivateGamesPlugin extends SimplePlugin {
             final PartiesHook[] hooks = HookAPI.get().getPartiesHooks();
 
             if (hooks.length == 0) {
-                Common.log("&cNO PARTY PLUGIN FOUND! DISABLING PLUGIN!");
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "NO PARTY PLUGIN FOUND! DISABLING PLUGIN!");
                 Bukkit.getPluginManager().disablePlugin(this);
                 return;
             }
@@ -72,49 +68,49 @@ public final class PrivateGamesPlugin extends SimplePlugin {
                     (hook.getHookedPlugin() != null ? hook.getHookedPlugin() : hook.getManagingPlugin())
                         .getName();
 
-                Common.log("&a----------- " + name + " found!------------");
+                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "----------- " + name + " found!------------");
             }
 
             // Register everything
-            registerEvents(new PlayerListener(Utility.getManager()));
-            registerEvents(new PlayerBuffListener());
-            registerEvents(new InventoryListener());
-            registerEvents(new ArenaListener());
+            Bukkit.getPluginManager().registerEvents(new PlayerListener(Utility.getManager()), this);
+            Bukkit.getPluginManager().registerEvents(new PlayerBuffListener(), this);
+            Bukkit.getPluginManager().registerEvents(new ArenaListener(), this);
 
             new PrivateGamePlaceholder().register();
-            ArenaPickerAPI.get().registerConditionVariable(new PrivateArenaConditionVariable());
-            new PrivateGamesAddon(this).register();
-
-            final BuffItem item = new BuffItem();
+            (this.addon = new PrivateGamesAddon(this)).register();
 
             GameAPI.get().registerLobbyItemHandler(new BuffItem());
-            item.runCacheGCScheduler();
+            ArenaPickerAPI.get().registerConditionVariable(new PrivateArenaConditionVariable());
+
+            {
+                final BuffItem item = new BuffItem();
+
+                GameAPI.get().registerLobbyItemHandler(item);
+                item.runCacheGCScheduler();
+            }
+
+            {
+                final CommandHandler cmd = new CommandHandler();
+
+                cmd.registerDefaultCommands(this);
+                getCommand("bwp").setExecutor(cmd);
+                getCommand("bwp").setTabCompleter(cmd);
+            }
+
+            Settings.read(this.addon);
         }, 2);
 
-
-        // Hotfix for trash Foundation library
-        try {
-            new File(getDataFolder().getParentFile().getParentFile(), "server.properties").delete();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
-    @Override
-    protected void onReloadablesStart() {
+    public void reload() {
         final PrivateGameManager manager = Utility.getManager();
 
         for (Arena privateArena : manager.getPrivateArenas())
             privateArena.endMatch(null);
 
         manager.partyMembersMangingMap.clear();
-        manager.playerStatsList.clear();
-        registerCommands( new PrivateCommandGroup());
 
-        BedwarsAPI.onReady(() -> GameAPI.get().registerLobbyItemHandler(new BuffItem()));
-
-        new PrivateGamePlaceholder().register();
+        reloadConfig();
+        Settings.read(this.addon);
     }
-
-
 }

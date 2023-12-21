@@ -78,10 +78,6 @@
    -->
     <repositories>
         <repository>
-            <id>alessiodp-repo</id>
-            <url>https://repo.alessiodp.com/releases/</url>
-        </repository>
-        <repository>
             <id>marcely-repo</id>
             <url>https://repo.marcely.de/repository/maven-public/</url>
         </repository>
@@ -98,8 +94,8 @@
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>simonsators Repo</id>
-            <url>https://simonsator.de/repo</url>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
 
@@ -132,21 +128,22 @@
             <scope>provided</scope>
         </dependency>
 
-
-        <!--
-           Import the Foundation library to kickstart our plugin development
-       -->
-        <dependency>
-            <groupId>com.github.kangarko</groupId>
-            <artifactId>Foundation</artifactId>
-            <version>${foundation.version}</version>
-            <!-- Include Foundation and its dependencies. There are exceptions, see shade plugin below -->
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>de.marcely.bedwars</groupId>
             <artifactId>API</artifactId>
             <version>5.3.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.11.5</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

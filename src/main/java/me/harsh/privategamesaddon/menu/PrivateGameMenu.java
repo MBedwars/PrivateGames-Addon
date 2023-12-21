@@ -2,285 +2,265 @@ package me.harsh.privategamesaddon.menu;
 
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.api.arena.ArenaStatus;
+import de.marcely.bedwars.api.message.Message;
+import de.marcely.bedwars.tools.Helper;
+import de.marcely.bedwars.tools.NMSHelper;
+import de.marcely.bedwars.tools.gui.AddItemCondition;
+import de.marcely.bedwars.tools.gui.CenterFormat;
+import de.marcely.bedwars.tools.gui.GUIItem;
+import de.marcely.bedwars.tools.gui.type.ChestGUI;
+import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import lombok.Getter;
+import me.harsh.privategamesaddon.PrivateGamesPlugin;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.menu.buffmenu.HealthBuffMenu;
 import me.harsh.privategamesaddon.menu.buffmenu.RespawnBuffMenu;
 import me.harsh.privategamesaddon.menu.buffmenu.SpawnRateBuffMenu;
 import me.harsh.privategamesaddon.menu.buffmenu.SpeedBuffMenu;
 import me.harsh.privategamesaddon.settings.Settings;
-import me.harsh.privategamesaddon.utils.Utility;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import org.mineacademy.fo.menu.Menu;
-import org.mineacademy.fo.menu.button.Button;
-import org.mineacademy.fo.menu.model.ItemCreator;
-import org.mineacademy.fo.remain.CompMaterial;
+import org.bukkit.inventory.meta.ItemMeta;
 
-public class PrivateGameMenu extends Menu {
-    private final Button healthBuff;
-    private final Button oneHitBuff;
-    private final Button gravityBuff;
-    private final Button speedBuff;
-    private final Button blockProtBuff;
-    private final Button respawnTimeBuff;
-    private final Button baseSpawnerBuff;
-    private final Button fallDamageBuff;
-    private final Button maxUpgradesBuff;
-    private final Button noSpawnerBuff;
+public class PrivateGameMenu extends ChestGUI {
 
-    public PrivateGameMenu(){
-        setTitle(Settings.MENU_TITLE);
-        setSize(9*5);
-        this.noSpawnerBuff = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                if (!player.hasPermission(Settings.NO_SPECIAL_SPAWNER_BUFF_PERM)) return;
-                final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (buff.isNoEmeralds()){
-                    buff.setNoEmeralds(false);
-                    restartMenu("&aDisabled No Special Spawners!");
-                    return;
-                }
-                buff.setNoEmeralds(true);
-                restartMenu("&aEnabled Special Spawner!");
-            }
+  @Getter
+  private final ArenaBuff buffState;
 
-            @Override
-            public ItemStack getItem() {
-                final ArenaBuff buff = Utility.getBuffSafe(getViewer());
-                return ItemCreator.of(CompMaterial.EMERALD,
-                        Settings.NO_SPAWNERS_BUFF,
-                        "",
-                        "Enabled you to disable",
-                        "All the special spawners like",
-                        "Emeralds and diamonds!")
-                        .glow(buff.isNoEmeralds()).make();
-            }
-        };
-        this.maxUpgradesBuff = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                if (!player.hasPermission(Settings.MAX_UPGRADE_BUFF_PERM)) return;
-                final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (buff.isMaxUpgrades()){
-                    buff.setMaxUpgrades(false);
-                    restartMenu("&aDisabled Max Upgrades!");
-                    return;
-                }
-                buff.setMaxUpgrades(true);
-                restartMenu("&aEnabled Max Upgrades!");
-            }
+  public PrivateGameMenu(ArenaBuff buffState) {
+    super(5, Message.build(Settings.MENU_TITLE).done());
 
-            @Override
-            public ItemStack getItem() {
-                final ArenaBuff buff = Utility.getBuffSafe(getViewer());
-                return ItemCreator.of(CompMaterial.DIAMOND_CHESTPLATE,
-                                Settings.MAX_UPGRADES_BUFF,
-                        "",
-                        "Enables you to to give",
-                        "max upgrade buffs at start")
-                        .glow(buff.isMaxUpgrades()).make();
-            }
-        };
-        this.fallDamageBuff = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                if (!player.hasPermission(Settings.NO_FALL_DAMAGE_BUFF_PERM)) return;
-                final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (buff.isFallDamageEnabled()){
-                    buff.setFallDamageEnabled(false);
-                    restartMenu("&aDisabled Fall Damage!");
-                    return;
-                }
-                buff.setFallDamageEnabled(true);
-                restartMenu("&aEnabled Fall Damage!");
-            }
+    this.buffState = buffState;
+  }
 
-            @Override
-            public ItemStack getItem() {
-                final Player player = getViewer();
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                final ArenaBuff buff = Utility.getBuff(arena);
-                return ItemCreator.of(CompMaterial.ENDER_PEARL,
-                        Settings.FALL_DAMAGE_BUFF,
-                        "",
-                        "Enables you to disable",
-                        "or enable fall damage")
-                        .glow(buff.isFallDamageEnabled()).make();
-            }
-        };
-        this.respawnTimeBuff = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                if (!player.hasPermission(Settings.RESPAWN_BUFF_PERM)) return;
-                new RespawnBuffMenu().displayTo(player);
-            }
+  @Override
+  public void open(Player player) {
+    draw(player);
 
-            @Override
-            public ItemStack getItem() {
-                return ItemCreator.of(CompMaterial.PAPER,
-                        Settings.RESPAWN_TIME_BUFF,
-                        "",
-                        "Enables you to ",
-                        "Change respawn time").make();
-            }
-        };
-        this.blockProtBuff = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                if (!player.hasPermission(Settings.BLOCK_PROT_BUFF_PERM)) return;
-                final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (!buff.isBlocksProtected()){
-                    buff.setBlocksProtection(true);
-                    restartMenu("&aEnabled Block Protection!");
-                    return;
-                }
-                buff.setBlocksProtection(false);
-                restartMenu("&cDisabled Block Protection!");
-            }
+    Bukkit.getScheduler().runTaskLater(PrivateGamesPlugin.getInstance(), () -> {
+      final Arena arena = GameAPI.get().getArenaByPlayer(player);
 
-            @Override
-            public ItemStack getItem() {
-                final ArenaBuff buff = Utility.getBuffSafe(getViewer());
-                return ItemCreator.of(CompMaterial.GRASS_BLOCK,
-                        Settings.DISABLE_BLOCK_PROTECTION_BUFF,
-                        "",
-                        "Enables you to stop the",
-                        "Block protection in arenas")
-                        .glow(buff.isBlocksProtected())
-                        .make();
-            }
-        };
-        this.baseSpawnerBuff = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                if (!player.hasPermission(Settings.SPAWN_RATE_MUTLIPLER_BUFF_PERM)) return;
-                new SpawnRateBuffMenu().displayTo(player);
-            }
+      if (arena == null || arena.getStatus() != ArenaStatus.LOBBY)
+        return;
 
-            @Override
-            public ItemStack getItem() {
-                return ItemCreator.of(CompMaterial.IRON_INGOT,
-                                Settings.SPAWN_RATE_MUTIPLIER_BUFF,
-                                "",
-                                "Enables people multiply",
-                                "spawn rate of base spawners!")
-                        .make();
-            }
-        };
-        this.speedBuff = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                if (!player.hasPermission(Settings.SPEED_BUFF_PERM)) return;
-                final SpeedBuffMenu speedBuffMenu = new SpeedBuffMenu();
-                speedBuffMenu.displayTo(player);
-            }
+      super.open(player);
+    }, 1);
+  }
 
-            @Override
-            public ItemStack getItem() {
-                return ItemCreator.of(CompMaterial.SUGAR,
-                        Settings.SPEED_BUFF,
-                        "",
-                        "Enables you to play",
-                        "in more speed than normal").make();
-            }
-        };
-        this.gravityBuff = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                if (!player.hasPermission(Settings.GRAVITY_BUFF_PERM)) return;
-                final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (buff.isLowGravity()){
-                    buff.setLowGravity(false);
-                    restartMenu("&cLow Gravity Disabled");
-                    return;
-                }
-                buff.setLowGravity(true);
-                restartMenu("&aLow Gravity Enabled");
-            }
+  private void draw(Player player) {
+    clear();
 
-            @Override
-            public ItemStack getItem() {
-                final ArenaBuff buff = Utility.getBuffSafe(getViewer());
-                return ItemCreator.of(CompMaterial.RABBIT_FOOT,
-                        Settings.LOW_GRAVITY_BUFF,
-                        "",
-                        "Enables you to play in",
-                        "low gravity in bedwars")
-                        .glow(buff.isLowGravity())
-                        .make();
-            }
-        };
-        this.oneHitBuff = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                if (!player.hasPermission(Settings.ONE_HIT_BUFF_PERM)) return;;
-                final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (buff.isOneHitKill()){
-                    buff.setOneHitKill(false);
-                    restartMenu("&cOne Hit Buff Disabled!");
-                    return;
-                }
-                buff.setOneHitKill(true);
-                restartMenu("&aOne Hit Buff Enabled!");
-            }
+    addItem(getNoSpawnerItem(player), AddItemCondition.withinY(1, 1));
+    addItem(getMaxUpgradeItem(player), AddItemCondition.withinY(1, 1));
+    addItem(getFallDamageItem(player), AddItemCondition.withinY(1, 1));
+    addItem(getRespawnTimeItem(player), AddItemCondition.withinY(1, 1));
+    addItem(getBlockProtItem(player), AddItemCondition.withinY(1, 1));
+    addItem(getBaseSpawnerItem(player), AddItemCondition.withinY(3, 3));
+    addItem(getSpeedItem(player), AddItemCondition.withinY(3, 3));
+    addItem(getGravityItem(player), AddItemCondition.withinY(3, 3));
+    addItem(getOneHitItem(player), AddItemCondition.withinY(3, 3));
+    addItem(getHealthItem(player), AddItemCondition.withinY(3, 3));
 
-            @Override
-            public ItemStack getItem() {
-                final ArenaBuff buff = Utility.getBuffSafe(getViewer());
-                return ItemCreator.of(CompMaterial.DIAMOND_SWORD,
-                        Settings.ONE_HIT_BUFF,
-                        "",
-                        "Enables to one hit anyone",
-                        "in the bedwars game")
-                        .glow(buff.isOneHitKill())
-                        .make();
-            }
-        };
-        this.healthBuff = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                if (!player.hasPermission(Settings.CUSTOM_HEALTH_BUFF_PERM)) return;
-                final HealthBuffMenu menu1 = new HealthBuffMenu();
-                menu1.displayTo(player);
-            }
+    formatRow(1, CenterFormat.ALIGNED);
+    formatRow(3, CenterFormat.ALIGNED);
+  }
 
-            @Override
-            public ItemStack getItem() {
-                return ItemCreator.of(CompMaterial.GOLDEN_APPLE, Settings.HEALTH_BUFF,
-                        "",
-                        "Enables you to",
-                        "increase custom health").make();
+  private GUIItem createItem(Player player, String materialName, String permission, Boolean isActive, Runnable onUse, String name, String... lore) {
+    ItemStack is = NMSHelper.get().hideAttributes(Helper.get().parseItemStack(materialName));
+    ChatColor color = ChatColor.YELLOW;
 
-            }
-        };
-
+    if (isActive != null) {
+      if (isActive) {
+        color = ChatColor.GREEN;
+        is = NMSHelper.get().setGlowEffect(is, true);
+      } else
+        color = ChatColor.RED;
     }
 
-    @Override
-    public ItemStack getItemAt(int slot) {
-        if (slot == 10){
-            return oneHitBuff.getItem();
-        }else if (slot == 12){
-            return healthBuff.getItem();
-        }else if (slot == 14){
-            return gravityBuff.getItem();
-        }else if (slot == 16) {
-            return speedBuff.getItem();
-        }else if (slot == 22){
-            return this.maxUpgradesBuff.getItem();
-        }else if (slot == 37) {
-            return this.respawnTimeBuff.getItem();
-        }else if (slot == 43){
-            return this.fallDamageBuff.getItem();
-        }else if (slot == 29){
-            return baseSpawnerBuff.getItem();
-        }else if (slot == 33){
-            return blockProtBuff.getItem();
-        }else if (slot == 40){
-            return this.noSpawnerBuff.getItem();
-        }
-        return ItemCreator.of(CompMaterial.CYAN_STAINED_GLASS_PANE).make();
-    }
+    final ItemMeta im = is.getItemMeta();
+
+    im.setDisplayName(color + ChatColor.stripColor(Message.build(name).done(player)));
+    im.setLore(Arrays.stream(lore)
+        .map(l -> ChatColor.GRAY + Message.build(l).done(player))
+        .collect(Collectors.toList()));
+    is.setItemMeta(im);
+
+    return new GUIItem(is, (g0, g1, g2) -> {
+      if (!player.hasPermission(permission)) {
+        Message.buildByKey("No_Permissions").send(player);
+        return;
+      }
+
+      onUse.run();
+    });
+  }
+
+  private GUIItem createToggleItem(Player player, String materialName, String permission, boolean isActive, Consumer<Boolean> toggle, String name, String... lore) {
+    return createItem(
+        player,
+        materialName,
+        permission,
+        isActive,
+        () -> {
+          final boolean newState = !isActive;
+
+          toggle.accept(newState);
+
+          if (newState)
+            Message.build(ChatColor.GREEN + "Enabled " + name).send(player);
+          else
+            Message.build(ChatColor.GREEN + "Disabled " + name).send(player);
+
+          draw(player);
+        },
+        name,
+        lore
+    );
+  }
+
+  private GUIItem getNoSpawnerItem(Player player) {
+    return createToggleItem(
+        player,
+        "EMERALD",
+        Settings.NO_SPECIAL_SPAWNER_BUFF_PERM,
+        this.buffState.isNoEmeralds(),
+        newState -> this.buffState.setNoEmeralds(newState),
+        Settings.NO_SPAWNERS_BUFF,
+        "",
+        "Enabled you to disable",
+        "All the special spawners like",
+        "Emeralds and diamonds!"
+    );
+  }
+
+  private GUIItem getMaxUpgradeItem(Player player) {
+    return createToggleItem(
+        player,
+        "DIAMOND_CHESTPLATE",
+        Settings.MAX_UPGRADE_BUFF_PERM,
+        this.buffState.isMaxUpgrades(),
+        newState -> this.buffState.setMaxUpgrades(newState),
+        Settings.MAX_UPGRADES_BUFF,
+        "",
+        "Enables you to to give",
+        "max upgrade buffs at start"
+    );
+  }
+
+  private GUIItem getFallDamageItem(Player player) {
+    return createToggleItem(
+        player,
+        "ENDER_PEARL",
+        Settings.NO_FALL_DAMAGE_BUFF_PERM,
+        this.buffState.isFallDamageEnabled(),
+        newState -> this.buffState.setFallDamageEnabled(newState),
+        Settings.FALL_DAMAGE_BUFF,
+        "",
+        "Enables you to disable",
+        "or enable fall damage"
+    );
+  }
+
+  private GUIItem getRespawnTimeItem(Player player) {
+    return createItem(
+        player,
+        "PAPER",
+        Settings.RESPAWN_BUFF_PERM,
+        null,
+        () -> new RespawnBuffMenu(this).open(player),
+        Settings.RESPAWN_TIME_BUFF,
+        "",
+        "Enables you to ",
+        "Change respawn time"
+    );
+  }
+
+  private GUIItem getBlockProtItem(Player player) {
+    return createToggleItem(
+        player,
+        "GRASS_BLOCK",
+        Settings.DISABLE_BLOCK_PROTECTION_BUFF,
+        this.buffState.isBlocksProtected(),
+        newState -> this.buffState.setBlocksProtected(newState),
+        Settings.DISABLE_BLOCK_PROTECTION_BUFF,
+        "",
+        "Enables you to stop the",
+        "Block protection in arenas"
+    );
+  }
+
+  private GUIItem getBaseSpawnerItem(Player player) {
+    return createItem(
+        player,
+        "IRON_INGOT",
+        Settings.SPAWN_RATE_MUTLIPLER_BUFF_PERM,
+        null,
+        () -> new SpawnRateBuffMenu(this).open(player),
+        Settings.SPAWN_RATE_MUTIPLIER_BUFF,
+        "",
+        "Enables people multiply",
+        "spawn rate of base spawners!"
+    );
+  }
+
+  private GUIItem getSpeedItem(Player player) {
+    return createItem(
+        player,
+        "SUGAR",
+        Settings.SPEED_BUFF_PERM,
+        null,
+        () -> new SpeedBuffMenu(this).open(player),
+        Settings.SPEED_BUFF,
+        "",
+        "Enables you to play",
+        "in more speed than normal"
+    );
+  }
+
+  private GUIItem getGravityItem(Player player) {
+    return createToggleItem(
+        player,
+        "RABBIT_FOOT",
+        Settings.GRAVITY_BUFF_PERM,
+        this.buffState.isLowGravity(),
+        newState -> this.buffState.setLowGravity(newState),
+        Settings.LOW_GRAVITY_BUFF,
+        "",
+        "Enables you to play in",
+        "low gravity in bedwars"
+    );
+  }
+
+  private GUIItem getOneHitItem(Player player) {
+    return createToggleItem(
+        player,
+        "DIAMOND_SWORD",
+        Settings.ONE_HIT_BUFF_PERM,
+        this.buffState.isOneHitKill(),
+        newState -> this.buffState.setOneHitKill(newState),
+        Settings.ONE_HIT_BUFF,
+        "",
+        "Enables to one hit anyone",
+        "in the bedwars game"
+    );
+  }
+
+  private GUIItem getHealthItem(Player player) {
+    return createItem(
+        player,
+        "GOLDEN_APPLE",
+        Settings.CUSTOM_HEALTH_BUFF_PERM,
+        null,
+        () -> new HealthBuffMenu(this).open(player),
+        Settings.HEALTH_BUFF,
+        "",
+        "Enables you to",
+        "increase custom health"
+    );
+  }
 }

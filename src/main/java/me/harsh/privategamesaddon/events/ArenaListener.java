@@ -60,8 +60,6 @@ public class ArenaListener implements Listener {
       Bukkit.getServer().getPluginManager().callEvent(new PrivateGameEndEvent(arena, event.getWinners(), event.getWinnerTeam()));
 
     final Consumer<UUID> applyPlayer = uuid -> {
-      manager.playerStatsList.remove(uuid);
-
       PlayerDataAPI.get().getProperties(uuid, props -> {
         manager.setPrivateGameMode(props, false);
       });

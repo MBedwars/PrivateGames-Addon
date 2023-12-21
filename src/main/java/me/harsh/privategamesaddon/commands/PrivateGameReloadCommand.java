@@ -1,31 +1,26 @@
 package me.harsh.privategamesaddon.commands;
 
+import de.marcely.bedwars.api.message.Message;
+import java.util.Collections;
+import java.util.List;
+import me.harsh.privategamesaddon.PrivateGamesPlugin;
 import me.harsh.privategamesaddon.settings.Settings;
-import org.bukkit.entity.Player;
-import org.mineacademy.fo.Common;
-import org.mineacademy.fo.command.SimpleCommandGroup;
-import org.mineacademy.fo.command.SimpleSubCommand;
-import org.mineacademy.fo.plugin.SimplePlugin;
+import org.bukkit.command.CommandSender;
 
-public class PrivateGameReloadCommand extends SimpleSubCommand {
+public class PrivateGameReloadCommand extends Command.Executor {
 
-    protected PrivateGameReloadCommand(SimpleCommandGroup parent) {
-        super(parent, "rl|reload");
-        setPermission(null);
+    public PrivateGameReloadCommand(PrivateGamesPlugin plugin) {
+        super(plugin);
     }
 
     @Override
-    protected void onCommand() {
-        if (!isPlayer()){
-            SimplePlugin.getInstance().reload();
-            Common.log(Settings.SUCCESSFUL_RELOAD);
-        }
-        final Player player = getPlayer();
-        if (player.hasPermission(Settings.RELOAD_PERM)){
-            SimplePlugin.getInstance().reload();
-            Common.tell(player,  " " +  Settings.SUCCESSFUL_RELOAD);
-        }else {
-            Common.tell(player,  " " + Settings.RELOAD_NO_PERM_EROR);
-        }
+    public void onExecute(CommandSender sender, String[] args) {
+        PrivateGamesPlugin.getInstance().reload();
+        Message.buildByKey(Settings.SUCCESSFUL_RELOAD).send(sender);
+    }
+
+    @Override
+    public List<String> onTab(CommandSender sender, String[] args) {
+        return Collections.emptyList();
     }
 }

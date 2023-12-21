@@ -3,7 +3,6 @@ package me.harsh.privategamesaddon.api;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.player.PlayerDataAPI;
 import de.marcely.bedwars.api.remote.RemoteArena;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 import lombok.experimental.UtilityClass;
@@ -12,12 +11,12 @@ import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 @UtilityClass
 public class PrivateGameAPI {
+
+    @Deprecated
     public boolean hasPermision(@NotNull Player player){
-        return player.hasPermission(Settings.GLOBAL_PERM) || player.hasPermission(Settings.CREATE_PERM) || player.hasPermission("*");
+        return player.hasPermission(Settings.ADMIN_PERM) || player.hasPermission(Settings.CREATE_PERM) || player.hasPermission("*");
     }
 
     public boolean isPrivateGame(@NotNull Arena arena){

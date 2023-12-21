@@ -1,139 +1,70 @@
 package me.harsh.privategamesaddon.menu.buffmenu;
 
-import de.marcely.bedwars.api.GameAPI;
-import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.api.message.Message;
+import de.marcely.bedwars.tools.Helper;
+import de.marcely.bedwars.tools.NMSHelper;
+import de.marcely.bedwars.tools.gui.AddItemCondition;
+import de.marcely.bedwars.tools.gui.CenterFormat;
+import de.marcely.bedwars.tools.gui.GUIItem;
+import de.marcely.bedwars.tools.gui.type.ChestGUI;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.menu.PrivateGameMenu;
 import me.harsh.privategamesaddon.settings.Settings;
-import me.harsh.privategamesaddon.utils.Utility;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import org.mineacademy.fo.Common;
-import org.mineacademy.fo.menu.Menu;
-import org.mineacademy.fo.menu.button.Button;
-import org.mineacademy.fo.menu.model.ItemCreator;
-import org.mineacademy.fo.remain.CompMaterial;
+import org.bukkit.inventory.meta.ItemMeta;
 
 
-public class RespawnBuffMenu extends Menu {
-    private final Button oneSecond;
-    private final Button fiveSecond;
-    private final Button tenSecond;
-    public RespawnBuffMenu(){
-        super(new PrivateGameMenu());
-        setTitle(Settings.RESPAWN_BUFF_MENU);
-        setSize(9*3);
-        this.tenSecond = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                if (arena == null || !(Utility.getManager().isPrivateArena(arena))) {
-                    Common.tell(player,  " Sorry, Something went wrong!");
-                }
-                final ArenaBuff buff = Utility.getBuff(arena);
-                if (buff == null) return;
-                if (buff.getRespawnTime() == 10){
-                    buff.setRespawnTime(5);
-                    restartMenu("&cSet Respawn Time to 5 seconds again!");
-                    return;
-                }
-                buff.setRespawnTime(10);
-                restartMenu("&aSet Respawn Time to 10 seconds!");
-            }
+public class RespawnBuffMenu extends ChestGUI {
 
-            @Override
-            public ItemStack getItem() {
-                final Player player = getViewer();
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                if (arena == null){
-                    player.sendMessage("Something went wrong!");
-                }
-                final ArenaBuff buff = Utility.getBuff(arena);
-                return ItemCreator.of(CompMaterial.PAPER,
-                        "&a10 Second",
-                        "",
-                        "Set 10 second ",
-                        "respawn time")
-                        .glow(buff.getRespawnTime() == 10).build().make();
-            }
-        };
-        this.fiveSecond = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                if (arena == null || !(Utility.getManager().isPrivateArena(arena))) {
-                    Common.tell(player,  " Sorry, Something went wrong!");
-                }
-                final ArenaBuff buff = Utility.getBuff(arena);
-                if (buff == null) return;
-                buff.setRespawnTime(5);
-                restartMenu("&aSet Respawn Time to 5 seconds!");
-            }
+  private final PrivateGameMenu parentMenu;
 
-            @Override
-            public ItemStack getItem() {
-                final Player player = getViewer();
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                if (arena == null){
-                    player.sendMessage("Something went wrong!");
-                }
-                assert arena != null;
-                final ArenaBuff buff = Utility.getBuff(arena);
-                return ItemCreator.of(CompMaterial.PAPER,
-                        "&a5 Second",
-                        "",
-                        "Set 5 second ",
-                        "respawn time")
-                        .glow(buff.getRespawnTime() == 5).build().make();
-            }
-        };
-        this.oneSecond = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                if (arena == null || !(Utility.getManager().isPrivateArena(arena))) {
-                    Common.tell(player,  " Sorry, Something went wrong!");
-                }
-                final ArenaBuff buff = Utility.getBuff(arena);
-                if (buff == null) return;
-                if (buff.getRespawnTime() == 1){
-                    buff.setRespawnTime(5);
-                    restartMenu("&cSet Respawn Time to 5 seconds again!");
-                    return;
-                }
-                buff.setRespawnTime(1);
-                restartMenu("&aSet Respawn Time to 1 seconds!");
-            }
+  public RespawnBuffMenu(PrivateGameMenu parentMenu) {
+    super(3, Message.build(Settings.RESPAWN_BUFF_MENU).done());
+    this.parentMenu = parentMenu;
 
-            @Override
-            public ItemStack getItem() {
-                final Player player = getViewer();
-                final Arena arena = GameAPI.get().getArenaByPlayer(player);
-                if (arena == null){
-                    player.sendMessage("Something went wrong!");
-                }
-                assert arena != null;
-                final ArenaBuff buff = Utility.getBuff(arena);
-                return ItemCreator.of(CompMaterial.PAPER,
-                        "&a1 Second",
-                        "",
-                        "Set 1 second ",
-                        "respawn time")
-                        .glow(buff.getRespawnTime() == 1).build().make();
-            }
-        };
-    }
+    addCloseListener(player -> parentMenu.open(player));
+  }
 
-    @Override
-    public ItemStack getItemAt(int slot) {
-        if (slot == 10){
-            return oneSecond.getItem();
-        }else if (slot == 13){
-            return fiveSecond.getItem();
-        }else if (slot == 16){
-            return tenSecond.getItem();
-        }
-        return super.getItemAt(slot);
-    }
+  @Override
+  public void open(Player player) {
+    draw(player);
+
+    super.open(player);
+  }
+
+  private void draw(Player player) {
+    clear();
+
+    final AddItemCondition condition = AddItemCondition.withinY(1, 1);
+
+    addItem(getItem(player, 0), condition);
+    addItem(getItem(player, 2), condition);
+    addItem(getItem(player, 5), condition);
+    addItem(getItem(player, 10), condition);
+    addItem(getItem(player, 15), condition);
+
+    formatRow(1, CenterFormat.CENTRALIZED_EVEN);
+  }
+
+  private GUIItem getItem(Player player, int sec) {
+    final ArenaBuff buffState = this.parentMenu.getBuffState();
+    ItemStack is = Helper.get().parseItemStack("PAPER");
+    final ItemMeta im = is.getItemMeta();
+    final boolean active = sec == buffState.getRespawnTime();
+
+    im.setDisplayName("" + (active ? ChatColor.GREEN : ChatColor.GOLD) + sec + " second" + (sec != 1 ? "s" : ""));
+    is.setItemMeta(im);
+
+    if (active)
+      is = NMSHelper.get().setGlowEffect(is, true);
+
+    return new GUIItem(is, (g0, g1, g2) -> {
+      buffState.setRespawnTime(sec);
+
+      Message.build(ChatColor.GREEN + "Players will need " + sec + " second" + (sec != 1 ? "s" : "") + " to respawn").send(player);
+      draw(player);
+    });
+  }
 }

@@ -4,3 +4,7 @@ main: me.harsh.privategamesaddon.PrivateGamesPlugin
 api-version: 1.13
 depend:
   - MBedwars
+commands:
+  bwp:
+    description: Create private matches
+    usage: /bwp [args...]

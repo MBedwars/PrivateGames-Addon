@@ -1,123 +1,69 @@
 package me.harsh.privategamesaddon.menu.buffmenu;
 
+import de.marcely.bedwars.api.message.Message;
+import de.marcely.bedwars.tools.Helper;
+import de.marcely.bedwars.tools.NMSHelper;
+import de.marcely.bedwars.tools.gui.AddItemCondition;
+import de.marcely.bedwars.tools.gui.CenterFormat;
+import de.marcely.bedwars.tools.gui.GUIItem;
+import de.marcely.bedwars.tools.gui.type.ChestGUI;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.menu.PrivateGameMenu;
 import me.harsh.privategamesaddon.settings.Settings;
-import me.harsh.privategamesaddon.utils.Utility;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import org.mineacademy.fo.menu.Menu;
-import org.mineacademy.fo.menu.button.Button;
-import org.mineacademy.fo.menu.model.ItemCreator;
-import org.mineacademy.fo.remain.CompMaterial;
+import org.bukkit.inventory.meta.ItemMeta;
 
-public class HealthBuffMenu extends Menu {
+public class HealthBuffMenu extends ChestGUI {
 
-    private final Button twentyHearts;
-    private final Button thrityHearts;
-    private final Button fourtyHearts;
+  private final PrivateGameMenu parentMenu;
 
-    public HealthBuffMenu(){
-        super(new PrivateGameMenu());
-        setTitle(Settings.HEALTH_BUFF_MENU);
-        setSize(9*3);
-        this.twentyHearts = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (getHealthBolean(20, buff)){
-                    buff.setHealth(20);
-                    restartMenu("&aSet the Health back to normal");
-                    return;
-                }
-                buff.setHealth(20*2);
-                restartMenu("&aCustom hearts are now 20!");
-            }
+  public HealthBuffMenu(PrivateGameMenu parentMenu) {
+    super(3, Message.build(Settings.HEALTH_BUFF_MENU).done());
+    this.parentMenu = parentMenu;
 
-            @Override
-            public ItemStack getItem() {
-                final ArenaBuff buff = Utility.getBuffSafe(getViewer());
-                return ItemCreator.of(CompMaterial.GOLDEN_APPLE,
-                        "&620 hearts",
-                        "",
-                        "Click to set custom",
-                        "Hearts to twenty")
-                        .glow(getHealthBolean(20, buff)).build().make();
-            }
-        };
-        this.thrityHearts = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (getHealthBolean(30, buff)){
-                    buff.setHealth(20);
-                    restartMenu("&aSet the Health back to normal");
-                    return;
-                }
-                buff.setHealth(30*2);
-                restartMenu("&aCustom hearts are now 30!");
-            }
+    addCloseListener(player -> parentMenu.open(player));
+  }
 
-            @Override
-            public ItemStack getItem() {
-                final ArenaBuff buff = Utility.getBuffSafe(getViewer());
-                return ItemCreator.of(CompMaterial.GOLDEN_APPLE,
-                        "&630 hearts",
-                        "",
-                        "Click to set custom",
-                        "Hearts to thirty")
-                        .glow(getHealthBolean( 30, buff)).build().make();
-            }
-        };
-        this.fourtyHearts = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-                final ArenaBuff buff = Utility.getBuffSafe(player);
-                if (getHealthBolean(40, buff)){
-                    buff.setHealth(20);
-                    restartMenu("&aSet the Health back to normal");
-                    return;
-                }
-                buff.setHealth(40*2);
-                restartMenu("&aCustom hearts are now 40!");
-            }
+  @Override
+  public void open(Player player) {
+    draw(player);
 
-            @Override
-            public ItemStack getItem() {
-                final ArenaBuff buff = Utility.getBuffSafe(getViewer());
-                return ItemCreator.of(CompMaterial.GOLDEN_APPLE,
-                        "&640 hearts",
-                        "",
-                        "Click to set custom",
-                        "Hearts to forty")
-                        .glow(getHealthBolean(40, buff)).build().make();
-            }
-        };
-    }
-    @Override
-    public ItemStack getItemAt(int slot) {
-        if (slot == 10){
-            return twentyHearts.getItem();
-        }
-        if (slot == 13){
-            return thrityHearts.getItem();
-        }
-        if (slot == 16){
-            return fourtyHearts.getItem();
-        }
-        return super.getItemAt(slot);
-    }
+    super.open(player);
+  }
 
-    @Override
-    protected String[] getInfo() {
-        return new String[]{
-          "Allows to set Health",
-          "Buffs in private games."
-        };
-    }
-    
-    private Boolean getHealthBolean(Integer youWant, ArenaBuff buff){
-        return buff.getHealth() == youWant;
-    }
+  public void draw(Player player) {
+    clear();
+
+    final AddItemCondition condition = AddItemCondition.withinY(1, 1);
+
+    addItem(getItem(player, 5), condition);
+
+    for (int i = 10; i <= 40; i += 10)
+      addItem(getItem(player, i), condition);
+
+    formatRow(1, CenterFormat.CENTRALIZED_EVEN);
+  }
+
+  private GUIItem getItem(Player player, int hearts) {
+    final int health = hearts * 2;
+    final ArenaBuff buffState = this.parentMenu.getBuffState();
+    ItemStack is = NMSHelper.get().hideAttributes(Helper.get().parseItemStack("GOLDEN_APPLE"));
+    final ItemMeta im = is.getItemMeta();
+    final boolean active = health == buffState.getHealth();
+
+    im.setDisplayName("" + (active ? ChatColor.GREEN : ChatColor.GOLD) + hearts + " hearts");
+    is.setItemMeta(im);
+
+    if (active)
+      is = NMSHelper.get().setGlowEffect(is, true);
+
+    return new GUIItem(is, (g0, g1, g2) -> {
+      buffState.setHealth(health);
+
+      Message.build(ChatColor.GREEN + "Players will spawn with " + hearts + " hearts").send(player);
+      draw(player);
+    });
+  }
 }

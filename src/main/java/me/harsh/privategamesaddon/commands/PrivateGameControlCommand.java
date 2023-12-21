@@ -1,30 +1,27 @@
 package me.harsh.privategamesaddon.commands;
 
-import de.marcely.bedwars.api.GameAPI;
-import de.marcely.bedwars.api.arena.Arena;
-import de.marcely.bedwars.api.arena.ArenaStatus;
+import java.util.Collections;
+import java.util.List;
+import me.harsh.privategamesaddon.PrivateGamesPlugin;
 import me.harsh.privategamesaddon.menu.AllPrivateGameControlPanelMenu;
-import me.harsh.privategamesaddon.utils.Utility;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.mineacademy.fo.command.SimpleCommandGroup;
-import org.mineacademy.fo.command.SimpleSubCommand;
 
-public class PrivateGameControlCommand extends SimpleSubCommand {
+public class PrivateGameControlCommand extends Command.Executor {
 
-    protected PrivateGameControlCommand(SimpleCommandGroup parent) {
-        super(parent, "control");
-        setPermission(null);
+    public PrivateGameControlCommand(PrivateGamesPlugin plugin) {
+        super(plugin);
     }
 
     @Override
-    protected void onCommand() {
-        checkConsole();
-        final Player player = getPlayer();
-        if (Utility.hasPermision(player)){
-            final Arena arena = GameAPI.get().getArenaByPlayer(player);
-            if (arena == null || arena.getStatus() == ArenaStatus.LOBBY){
-                new AllPrivateGameControlPanelMenu().displayTo(player);
-            }
-        } else  tell( " &cSorry you're not allowed to use that!");
+    public void onExecute(CommandSender sender, String[] args) {
+        final Player player = (Player) sender;
+
+        new AllPrivateGameControlPanelMenu().open(player);
+    }
+
+    @Override
+    public List<String> onTab(CommandSender sender, String[] args) {
+        return Collections.emptyList();
     }
 }

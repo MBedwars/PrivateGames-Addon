@@ -2,13 +2,14 @@ package me.harsh.privategamesaddon.api.events;
 
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.arena.Team;
+import de.marcely.bedwars.api.event.arena.ArenaEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import java.util.Collection;
 
-public class PrivateGameEndEvent extends Event {
+public class PrivateGameEndEvent extends Event implements ArenaEvent {
     private static final HandlerList list = new HandlerList();
     Arena arena;
     Collection<Player> winners;
