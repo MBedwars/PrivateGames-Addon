@@ -7,6 +7,7 @@ import de.marcely.bedwars.api.hook.HookAPI;
 import de.marcely.bedwars.api.hook.PartiesHook;
 import lombok.Getter;
 import me.harsh.privategamesaddon.buffs.PlayerBuffListener;
+import me.harsh.privategamesaddon.commands.Command;
 import me.harsh.privategamesaddon.commands.CommandHandler;
 import me.harsh.privategamesaddon.events.ArenaListener;
 import me.harsh.privategamesaddon.events.PlayerListener;
@@ -17,6 +18,7 @@ import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PrivateGamesPlugin extends JavaPlugin {
@@ -90,11 +92,13 @@ public final class PrivateGamesPlugin extends JavaPlugin {
             }
 
             {
-                final CommandHandler cmd = new CommandHandler();
+                final CommandHandler cmdHandler = new CommandHandler();
+                final PluginCommand cmd = getCommand("bwp");
 
-                cmd.registerDefaultCommands(this);
-                getCommand("bwp").setExecutor(cmd);
-                getCommand("bwp").setTabCompleter(cmd);
+                cmdHandler.registerDefaultCommands(this);
+                cmd.setExecutor(cmdHandler);
+                cmd.setTabCompleter(cmdHandler);
+                cmd.setAliases(Settings.COMMAND_ALIASES);
             }
 
             Settings.read(this.addon);

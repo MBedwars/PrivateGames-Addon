@@ -58,14 +58,17 @@ public class BuffItem extends LobbyItemHandler {
         };
 
         final CacheState cached = this.cachedParties.get(player);
+        final boolean cacheLegit = cached != null && cached.arena == arena;
 
-        if (cached != null) {
-            cached.lastRequest = System.currentTimeMillis();
-
+        if (cacheLegit)
             handle.accept(cached.member);
-        } else {
+
+        if (!cacheLegit || System.currentTimeMillis() - cached.creationTime > 5_000) {
+            this.cachedParties.putIfAbsent(player, new CacheState(Optional.empty(), arena)); // no need to request a million times
+
             Utility.getManager().getParty(player, member -> {
-                this.cachedParties.put(player, new CacheState(member));
+                handle.accept(member);
+                this.cachedParties.put(player, new CacheState(member, arena));
             });
         }
 
@@ -78,25 +81,27 @@ public class BuffItem extends LobbyItemHandler {
                 return;
 
             final Iterator<Entry<Player, CacheState>> it = this.cachedParties.entrySet().iterator();
-            final long maxAge = System.currentTimeMillis() - 5_000;
+            final long maxAge = System.currentTimeMillis() - 10_000;
 
             while (it.hasNext()) {
                 final Entry<Player, CacheState> e = it.next();
 
-                if (!e.getKey().isOnline() || e.getValue().lastRequest < maxAge)
+                if (!e.getKey().isOnline() || e.getValue().creationTime < maxAge)
                     it.remove();
             }
-        }, 20*5, 20*5);
+        }, 20*10, 20*10);
     }
 
 
     private static class CacheState {
 
         final Optional<Member> member;
-        long lastRequest = System.currentTimeMillis();
+        final long creationTime = System.currentTimeMillis();
+        final Arena arena;
 
-        CacheState(Optional<Member> member) {
+        CacheState(Optional<Member> member, Arena arena) {
             this.member = member;
+            this.arena = arena;
         }
     }
 }

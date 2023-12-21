@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.List;
 import me.harsh.privategamesaddon.PrivateGamesAddon;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -16,7 +17,7 @@ public class Settings {
     public static String MENU_TITLE;
     public static Boolean SHOULD_SAVE_STATS;
     public static Boolean AUTO_WARP;
-    public static Boolean BUNGEE;
+    public static List<String> COMMAND_ALIASES;
 
     public static Boolean PER_BUFF_PERM;
 
@@ -106,7 +107,6 @@ public class Settings {
 
     private static void read(Configuration config) {
         PREFIX = config.getString("Prefix");
-        BUNGEE = config.getBoolean("Features.Bungee");
         SHOULD_SAVE_STATS = config.getBoolean("Features.Save_Stats");
         AUTO_WARP = config.getBoolean("Features.Auto_warp");
         PARTY_PRIORITY = config.getString("Features.Priority");
@@ -159,5 +159,6 @@ public class Settings {
         PRIVATE_GAME_MODE = config.getString("Messages.Private_game_creation_mode");
         NORMAL_MODE = config.getString("Messages.Normal_game_mode");
         ONLY_LEADER_IN_PARTY = config.getString("Messages.Only_leader_in_party");
+        COMMAND_ALIASES = config.getStringList("Command_Aliases");
     }
 }
