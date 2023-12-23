@@ -96,7 +96,7 @@ public final class PrivateGamesPlugin extends JavaPlugin {
 
             {
                 final CommandHandler cmdHandler = new CommandHandler();
-                final PluginCommand cmd = getCommand("bwp");
+                final PluginCommand cmd = getCommand("privategames");
 
                 cmdHandler.registerDefaultCommands(this);
                 cmd.setExecutor(cmdHandler);

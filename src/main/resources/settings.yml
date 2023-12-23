@@ -97,7 +97,7 @@ Menu:
 #         COMMAND ALIASES (/bwp is always included by default)
 # -------------------------------------------
 
-Command_Aliases: ["privategames"]
+Command_Aliases: ["bwp"]
 
 
 # -------------------------------------------

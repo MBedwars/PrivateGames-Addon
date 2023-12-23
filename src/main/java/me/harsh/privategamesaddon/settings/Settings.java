@@ -158,6 +158,6 @@ public class Settings {
         PRIVATE_GAME_MODE = config.getString("Messages.Private_game_creation_mode");
         NORMAL_MODE = config.getString("Messages.Normal_game_mode");
         ONLY_LEADER_IN_PARTY = config.getString("Messages.Only_leader_in_party");
-        Bukkit.getPluginCommand("bwp").setAliases(config.getStringList("Command_Aliases"));
+        Bukkit.getPluginCommand("privategames").setAliases(config.getStringList("Command_Aliases"));
     }
 }
