@@ -158,7 +158,7 @@ public class AllPrivateGameControlPanelMenu extends ChestGUI {
 
     localArena.broadcast(Message.build("&cTHE ARENA IS FORCED STOPPED BY ADMIN.."));
 
-    manager.setPrivateArena(localArena, false);
+    manager.unsetPrivateArena(localArena);
     localArena.kickAllPlayers();
   }
 

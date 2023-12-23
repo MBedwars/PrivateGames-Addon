@@ -16,11 +16,10 @@ import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
-import java.util.UUID;
 
 public class PlayerListener implements Listener {
 
@@ -74,15 +73,22 @@ public class PlayerListener implements Listener {
                 }
 
                 // he is not managing the arena
-                Party managingParty = manager.partyMembersMangingMap.get(arena);
+                Party managingParty = manager.getManagingParty(arena);
 
                 if (managingParty == null) {
                     // nobody is managing the arena yet, take it over
                     if (!privateMode || !member.get().isLeader())
                         return;
 
-                    manager.setPrivateArena(arena, true);
-                    Utility.getManager().partyMembersMangingMap.put(arena, managingParty = member.get().getParty());
+                    for (Player arenaPlayer : arena.getPlayers()) {
+                        if (member.get().getParty().getMember(arenaPlayer.getUniqueId()) != null)
+                            continue;
+
+                        player.sendMessage(ChatColor.RED + "Can't turn arena private, as non-members of your party are a part of it");
+                        return;
+                    }
+
+                    manager.setPrivateArena(arena, managingParty = member.get().getParty());
 
                     Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
 
@@ -155,11 +161,16 @@ public class PlayerListener implements Listener {
         if (arena.getStatus() != ArenaStatus.LOBBY || !manager.isPrivateArena(arena))
             return;
 
+        if (arena.getPlayers().isEmpty()) {
+            manager.unsetPrivateArena(arena);
+            return;
+        }
+
         manager.getParty(player, member -> {
             if (!member.isPresent() || !member.get().isLeader())
                 return;
 
-            manager.setPrivateArena(arena, false);
+            manager.unsetPrivateArena(arena);
         });
     }
     @EventHandler(ignoreCancelled = true)

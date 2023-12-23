@@ -34,13 +34,13 @@ public class ArenaListener implements Listener {
 
     final Arena arena = event.getArena();
 
-    Utility.getManager().setPrivateArena(arena, false);
+    Utility.getManager().unsetPrivateArena(arena);
   }
 
   @EventHandler
   public void onConfigsLoadEvent(ConfigsLoadEvent event) {
     for (Arena arena : GameAPI.get().getArenas())
-      Utility.getManager().setPrivateArena(arena, false);
+      Utility.getManager().unsetPrivateArena(arena);
   }
 
   @EventHandler

@@ -37,7 +37,7 @@ public class BuffItem extends LobbyItemHandler {
             ArenaBuff buffState = manager.getBuffState(arena);
 
             if (buffState == null)
-                manager.addBuffState(arena, buffState = new ArenaBuff());
+                manager.setBuffState(arena, buffState = new ArenaBuff());
 
             new PrivateGameMenu(buffState).open(player);
         }
@@ -55,6 +55,7 @@ public class BuffItem extends LobbyItemHandler {
                 return;
 
             ref.set(true);
+            Utility.getManager().updatePrivateArena(arena, member.get().getParty()); // keep its state up-to-date
         };
 
         final CacheState cached = this.cachedParties.get(player);

@@ -26,7 +26,7 @@ public class PrivateGameManager {
     private static final String PROP_ENFORCE_JOIN = "privategames:enforce_join";
     private static final String ARENA_KEY_PRIVATE = "privategames:is_private";
 
-    public final Map<Arena, Party> partyMembersMangingMap = new HashMap<>();
+    private final Map<Arena, Party> partyMembersMangingMap = new HashMap<>();
     private final Map<Arena, ArenaBuff> arenaArenaBuffMap = new HashMap<>();
 
     public boolean getPlayerPrivateMode(PlayerProperties props) {
@@ -112,17 +112,24 @@ public class PrivateGameManager {
         return isPrivateArena(arena.getPersistentStorage());
     }
 
-    public void setPrivateArena(Arena arena, boolean value) {
-        final ArenaPersistentStorage storage = arena.getPersistentStorage();
+    public void setPrivateArena(Arena arena, Party party) {
+        arena.getPersistentStorage().set(ARENA_KEY_PRIVATE, true);
+        this.partyMembersMangingMap.put(arena, party);
+    }
 
-        storage.setSynchronizedFlag(ARENA_KEY_PRIVATE, true);
+    public void updatePrivateArena(Arena arena, Party party) {
+        this.partyMembersMangingMap.replace(arena, party);
+    }
 
-        if (value)
-            storage.set(ARENA_KEY_PRIVATE, true);
-        else {
-            storage.remove(ARENA_KEY_PRIVATE);
-            partyMembersMangingMap.remove(arena);
-        }
+    public void unsetPrivateArena(Arena arena) {
+        arena.getPersistentStorage().remove(ARENA_KEY_PRIVATE);
+        this.partyMembersMangingMap.remove(arena);
+        this.arenaArenaBuffMap.remove(arena);
+    }
+
+    public void clearPrivateArenas() {
+        for (Arena arena : new ArrayList<>(this.partyMembersMangingMap.keySet()))
+            unsetPrivateArena(arena);
     }
 
     private static boolean isPrivateArena(ArenaPersistentStorage storage) {
@@ -138,7 +145,12 @@ public class PrivateGameManager {
         this.arenaArenaBuffMap.remove(arena);
     }
 
-    public void addBuffState(Arena arena, ArenaBuff buff) {
+    public void setBuffState(Arena arena, ArenaBuff buff) {
         this.arenaArenaBuffMap.put(arena, buff);
+    }
+
+    @Nullable
+    public Party getManagingParty(Arena arena) {
+        return this.partyMembersMangingMap.get(arena);
     }
 }

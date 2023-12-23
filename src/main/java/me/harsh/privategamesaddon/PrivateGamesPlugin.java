@@ -7,7 +7,6 @@ import de.marcely.bedwars.api.hook.HookAPI;
 import de.marcely.bedwars.api.hook.PartiesHook;
 import lombok.Getter;
 import me.harsh.privategamesaddon.buffs.PlayerBuffListener;
-import me.harsh.privategamesaddon.commands.Command;
 import me.harsh.privategamesaddon.commands.CommandHandler;
 import me.harsh.privategamesaddon.events.ArenaListener;
 import me.harsh.privategamesaddon.events.PlayerListener;
@@ -78,7 +77,9 @@ public final class PrivateGamesPlugin extends JavaPlugin {
             Bukkit.getPluginManager().registerEvents(new PlayerBuffListener(), this);
             Bukkit.getPluginManager().registerEvents(new ArenaListener(), this);
 
-            new PrivateGamePlaceholder().register();
+            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
+                new PrivateGamePlaceholder().register();
+
             (this.addon = new PrivateGamesAddon(this)).register();
 
             GameAPI.get().registerLobbyItemHandler(new BuffItem());
@@ -91,6 +92,8 @@ public final class PrivateGamesPlugin extends JavaPlugin {
                 item.runCacheGCScheduler();
             }
 
+            Settings.read(this.addon);
+
             {
                 final CommandHandler cmdHandler = new CommandHandler();
                 final PluginCommand cmd = getCommand("bwp");
@@ -98,10 +101,7 @@ public final class PrivateGamesPlugin extends JavaPlugin {
                 cmdHandler.registerDefaultCommands(this);
                 cmd.setExecutor(cmdHandler);
                 cmd.setTabCompleter(cmdHandler);
-                cmd.setAliases(Settings.COMMAND_ALIASES);
             }
-
-            Settings.read(this.addon);
         }, 2);
 
     }
@@ -112,7 +112,7 @@ public final class PrivateGamesPlugin extends JavaPlugin {
         for (Arena privateArena : manager.getPrivateArenas())
             privateArena.endMatch(null);
 
-        manager.partyMembersMangingMap.clear();
+        manager.clearPrivateArenas();
 
         reloadConfig();
         Settings.read(this.addon);

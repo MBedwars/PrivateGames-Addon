@@ -189,7 +189,7 @@ public class PlayerBuffListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDelete(ArenaDeleteEvent event) {
-        Utility.getManager().removeBuffState(event.getArena());
+        Utility.getManager().unsetPrivateArena(event.getArena());
     }
 
 
