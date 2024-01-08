@@ -23,6 +23,10 @@ import org.bukkit.event.Listener;
 
 public class PlayerListener implements Listener {
 
+    private static final AddPlayerIssue JOIN_ISSUE_PRIVATE_ARENA = AddPlayerIssue.construct(
+        "privategames:private_arena",
+        Message.build(Settings.ARENA_IS_PRIVATE));
+
     private final PrivateGameManager manager;
 
     public PlayerListener(PrivateGameManager manager){
@@ -48,12 +52,11 @@ public class PlayerListener implements Listener {
                     return;
 
                 // not allowed, send him back where he belongs to
-                Message.build(Settings.ARENA_IS_PRIVATE).send(player);
-
-                if (methodFinished.get())
+                if (methodFinished.get()) {
+                    JOIN_ISSUE_PRIVATE_ARENA.getHintMessage(arena).send(player);
                     GameAPI.get().sendToHub(player);
-                else
-                    event.addIssue(AddPlayerIssue.PLUGIN);
+                } else
+                    event.addIssue(JOIN_ISSUE_PRIVATE_ARENA);
             };
 
             // no need to check, just add him

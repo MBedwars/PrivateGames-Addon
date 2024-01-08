@@ -168,14 +168,12 @@ public class PlayerBuffListener implements Listener {
 
             // autom max upgrade
             if (buff.isMaxUpgrades()) {
-                for (Team team: arena.getRemainingTeams()){
+                for (Team team: arena.getTeamsWithPlayers()) {
                     final UpgradeState state = arena.getUpgradeState(team);
+
                     for (Upgrade upgrade : GameAPI.get().getUpgrades()) {
-                        if (state.isMaxLevel(upgrade)){
-                            continue;
-                        }else {
+                        if (!state.isMaxLevel(upgrade))
                             state.doUpgrade(upgrade.getMaxLevel(), null);
-                        }
                     }
                 }
             }
