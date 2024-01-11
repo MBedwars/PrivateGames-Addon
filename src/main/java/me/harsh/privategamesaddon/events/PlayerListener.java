@@ -112,7 +112,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerLEAVE(PlayerQuitArenaEvent event){
+    public void onArenaLeave(PlayerQuitArenaEvent event){
         final Player player = event.getPlayer();
         final Arena arena = event.getArena();
         final PrivateGameManager manager = Utility.getManager();
