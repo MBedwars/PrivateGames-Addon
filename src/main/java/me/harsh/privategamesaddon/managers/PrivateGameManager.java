@@ -115,6 +115,7 @@ public class PrivateGameManager {
     public void setPrivateArena(Arena arena, Party party) {
         arena.getPersistentStorage().set(ARENA_KEY_PRIVATE, true);
         this.partyMembersMangingMap.put(arena, party);
+        arena.broadcastCustomPropertyChange(); // Fixes ArenasGUI using arena picker variable not dynamically updating
     }
 
     public void updatePrivateArena(Arena arena, Party party) {
