@@ -1,0 +1,46 @@
+PrivateGames_NoPermCreatePrivate: '&cSorry, you have to buy &6MVP++ to create private games!'
+PrivateGames_Commands: "Commands"
+PrivateGames_SetModeCreation: '&aYou are now in private game creation mode'
+PrivateGames_SetModeNormal: '&aYou are now in normal bedwars mode!'
+PrivateGames_JoinArenaPrivate: '&cThe arena you are trying to join has been made private by a party'
+PrivateGames_GameCreationInactive: "&cThe private game creation mode isn't active"
+PrivateGames_JoinPrivateMatch: '&aYou have joined {name}s private game'
+PrivateGames_UnableTurnPrivateContainsNonMembers: "&cCan't turn arena private, as non-members of your party are a part of the match"
+PrivateGames_WarpButNotPrivate: '&cYou may not warp players in a non-private game room'
+PrivateGames_WarpButNotParty: '&cYou must be a part of a party to warp players'
+PrivateGames_WarpButNotPartyLeader: '&cYou must be the leader of a party to warp players'
+PrivateGames_WarpAllMembersPlaying: "&eAll of your members are already playing in the same arena"
+PrivateGames_WarpNoMembers: "&cThere are no online members in your party to warp"
+PrivateGames_Warp: "&eWarping &6{name} &eto this arena"
+PrivateGames_Reload: "&aSuccessfully reloaded Private Games Addon!"
+PrivateGames_AdminJoinMatch: "&aJoining {player}'s private game..."
+PrivateGames_AdminForceStop: "&cTHIS MATCH IS BEING FORCEFULLY STOPPED BY AN ADMIN.."
+PrivateGames_AdminNotSameServer: "&cThis only works if you are on the same server (&4{server}&c)"
+PrivateGames_AdminMenuTitle: "&c&lADMIN PANEL"
+PrivateGames_BuffOneHit: "One Hit"
+PrivateGames_BuffHealth: "Health"
+PrivateGames_BuffLowGravity: "Low Gravity"
+PrivateGames_BuffSpeed: "Movement Speed"
+PrivateGames_BuffDisabledBlockProtection: "Disabled Block Protection"
+PrivateGames_BuffRespawnTime: "Respawn Time"
+PrivateGames_BuffSpawnRate: "Spawn Rate (Team Base Only)"
+PrivateGames_BuffFallDamage: "Fall Damage"
+PrivateGames_BuffMaxUpgrades: "Max Upgrades"
+PrivateGames_BuffNoSpecialSpawners: "No Special Spawners"
+PrivateGames_ModifyBuff_MenuTitle: "&bPrivate Games Setup"
+PrivateGames_ModifyBuffSpawnRate: "&aSpawners now spawn {amount}x as fast as regularly"
+PrivateGames_ModifyBuffSpawnRate_MenuTitle: "&bSpawn Rate (Team Base Only)"
+PrivateGames_ModifyBuffSpeed: "&aPlayers now spawn with {effect}"
+PrivateGames_ModifyBuffSpeed_MenuTitle: "&bMovement Speed"
+PrivateGames_ModifyBuffHealth: "&aPlayers will spawn with {hearts} hearts"
+PrivateGames_ModifyBuffHealth_Name: "{amount} hearts"
+PrivateGames_ModifyBuffHealth_MenuTitle: "&bHealth"
+PrivateGames_ModifyBuffRespawnTime: "&aPlayers will now need {time} to respawn"
+PrivateGames_ModifyBuffRespawnTime_Instant: "&aPlayers will now won't have to wait to respawn"
+PrivateGames_ModifyBuffRespawnTime_MenuTitle: "&bRespawn Time"
+PrivateGames_ModifyBuffSpeed_NameNone: "No speed effect"
+PrivateGames_ModifyBuffSpeed_NameTier: "Speed {tier}"
+PrivateGames_ModifyBuff_ToggleOn: "&aEnabled {buff}"
+PrivateGames_ModifyBuff_ToggleOff: "&Disabled {buff}"
+PrivateGames_Seconds_Singular: "{amount} second"
+PrivateGames_Seconds_Plural: "{amount} seconds"

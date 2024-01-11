@@ -32,44 +32,58 @@ public class PrivateGamePartyWarpCommand extends Command.Executor {
         final Arena arena = GameAPI.get().getArenaByPlayer(player);
 
         if (arena == null) {
-            Message.build(Settings.NOT_IN_ARENA).send(sender);
+            Message.buildByKey("Not_Ingame").send(sender);
             return;
         }
 
         if (!manager.isPrivateArena(arena)) {
-            Message.build(Settings.NOT_PRIVATE_ROOM_WARP).send(sender);
+            Message.buildByKey("PrivateGames_WarpButNotPrivate").send(sender);
             return;
         }
 
         PlayerDataAPI.get().getProperties(player, props -> {
             if (!manager.getPlayerPrivateMode(props)) {
-                Message.build(Settings.NOT_IN_PRIVATE_GAME_MODE).send(sender);
+                Message.buildByKey("PrivateGames_GameCreationInactive").send(sender);
                 return;
             }
 
             manager.getParty(player, leader -> {
-                if (!leader.isPresent() || !leader.get().isLeader()) {
-                    Message.build(Settings.NOT_IN_PARTY).send(sender);
+                if (!leader.isPresent()) {
+                    Message.buildByKey("PrivateGames_WarpButNotParty").send(sender);
+                    return;
+                }
+                if (!leader.get().isLeader()) {
+                    Message.buildByKey("PrivateGames_WarpButNotPartyLeader").send(sender);
                     return;
                 }
 
                 final Collection<Member> members = leader.get().getParty().getMembers(false);
-                boolean sent = false;
+                boolean sentSent = false, hasPlaying = false;
 
                 for (Member member : members) {
                     final RemotePlayer remote = RemoteAPI.get().getOnlinePlayer(member.getUniqueId());
 
                     if (remote == null)
                         continue;
+                    if (remote.isLocal() && GameAPI.get().getArenaByPlayer(remote.asBukkit()) == arena) {
+                        hasPlaying = true;
+                        continue;
+                    }
 
-                    Message.build("&aWarping " + member.getUsername()).send(sender);
+                    Message.buildByKey("PrivateGames_Warp")
+                        .placeholder("name", member.getUsername())
+                        .send(sender);
 
-                    sent = true;
+                    sentSent = true;
                     arena.asRemote().addPlayer(remote);
                 }
 
-                if (!sent)
-                    Message.build(Settings.ONLY_LEADER_IN_PARTY).send(sender);
+                if (!sentSent) {
+                    if (hasPlaying)
+                        Message.buildByKey("PrivateGames_WarpAllMembersPlaying").send(sender);
+                    else
+                        Message.buildByKey("PrivateGames_WarpNoMembers").send(sender);
+                }
             });
         });
     }

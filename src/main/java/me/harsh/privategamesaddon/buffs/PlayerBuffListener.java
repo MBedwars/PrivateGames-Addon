@@ -12,6 +12,7 @@ import de.marcely.bedwars.api.event.player.PlayerIngameRespawnEvent;
 import de.marcely.bedwars.api.event.player.PlayerModifyBlockPermissionEvent;
 import de.marcely.bedwars.api.game.spawner.Spawner;
 import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier;
+import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier.Operation;
 import de.marcely.bedwars.api.game.upgrade.Upgrade;
 import de.marcely.bedwars.api.game.upgrade.UpgradeState;
 import me.harsh.privategamesaddon.PrivateGamesPlugin;
@@ -112,18 +113,17 @@ public class PlayerBuffListener implements Listener {
         if (buff == null)
             return;
 
-        if (buff.getSpawnRateMultiplier() != 3) {
-            for (Spawner spawner: arena.getSpawners()){
-                for (Team team: arena.getEnabledTeams()){
-                    if (spawner.getLocation().distance(arena.getTeamSpawn(team)) <= 15){
-                        spawner.addDropDurationModifier(
-                            "private_games:buff_multiplier",
-                            PrivateGamesPlugin.getInstance(),
-                            SpawnerDurationModifier.Operation.SET,
-                            buff.getSpawnRateMultiplier());
-                    }
-                }
-            }
+        for (Spawner spawner : arena.getSpawners()) {
+            final Team team = arena.getTeamByBaseLocation(spawner.getLocation());
+
+            if (team == null)
+                continue;
+
+            spawner.addDropDurationModifier(
+                "private_games:buff_multiplier",
+                PrivateGamesPlugin.getInstance(),
+                Operation.MULTIPLY,
+                buff.getSpawnRateMultiplier());
         }
 
         if (buff.isNoEmeralds()){

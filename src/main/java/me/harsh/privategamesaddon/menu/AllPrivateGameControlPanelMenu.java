@@ -30,7 +30,7 @@ public class AllPrivateGameControlPanelMenu extends ChestGUI {
   private int page = 1;
 
   public AllPrivateGameControlPanelMenu() {
-    super(3, Message.build(Settings.ADMIN_CONTROL_PANEL).done());
+    super(3, Message.buildByKey("PrivateGames_AdminMenuTitle").done());
   }
 
   @Override
@@ -149,14 +149,16 @@ public class AllPrivateGameControlPanelMenu extends ChestGUI {
     }*/
 
     if (!arena.isLocal()) {
-      player.sendMessage(ChatColor.RED + "This only works if you are on the same server (" + arena.getRemoteServer().getBungeeChannelName() + ")");
+      Message.buildByKey("PrivateGames_AdminNotSameServer")
+          .placeholder("server", arena.getRemoteServer().getBungeeChannelName())
+          .send(player);
       return;
     }
 
     final PrivateGameManager manager = Utility.getManager();
     final Arena localArena = arena.getLocal();
 
-    localArena.broadcast(Message.build("&cTHE ARENA IS FORCED STOPPED BY ADMIN.."));
+    localArena.broadcast(Message.buildByKey("PrivateGames_AdminForceStop"));
 
     manager.unsetPrivateArena(localArena);
     localArena.kickAllPlayers();
@@ -166,8 +168,8 @@ public class AllPrivateGameControlPanelMenu extends ChestGUI {
     if (arena.getStatus() != ArenaStatus.LOBBY)
       return;
 
-    Message.build(Settings.ADMIN_JOIN_PGA)
-        .placeholder("p", player.getDisplayName())
+    Message.buildByKey("PrivateGames_AdminJoinMatch")
+        .placeholder("player", player.getDisplayName())
         .send(player);
 
     PlayerDataAPI.get().getProperties(player, props -> {

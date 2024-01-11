@@ -7,22 +7,22 @@ import de.marcely.bedwars.tools.gui.AddItemCondition;
 import de.marcely.bedwars.tools.gui.CenterFormat;
 import de.marcely.bedwars.tools.gui.GUIItem;
 import de.marcely.bedwars.tools.gui.type.ChestGUI;
-import java.util.Locale;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.menu.PrivateGameMenu;
-import me.harsh.privategamesaddon.settings.Settings;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
 public class SpeedBuffMenu extends ChestGUI {
 
 
   private final PrivateGameMenu parentMenu;
 
-  public SpeedBuffMenu(PrivateGameMenu parentMenu) {
-    super(3, Message.build(Settings.SPEED_BUFF_MENU).done());
+  public SpeedBuffMenu(PrivateGameMenu parentMenu, @Nullable CommandSender sender) {
+    super(3, Message.buildByKey("PrivateGames_ModifyBuffSpeed_MenuTitle").done(sender));
     this.parentMenu = parentMenu;
 
     addCloseListener(player -> parentMenu.open(player));
@@ -40,16 +40,19 @@ public class SpeedBuffMenu extends ChestGUI {
 
     final AddItemCondition condition = AddItemCondition.withinY(1, 1);
 
-    addItem(getItem(player, "No speed effect", 1), condition);
-    addItem(getItem(player, "Speed I", 2), condition);
-    addItem(getItem(player, "Speed II", 3), condition);
-    addItem(getItem(player, "Speed III", 4), condition);
-    addItem(getItem(player, "Speed VI", 5), condition);
+    addItem(getItem(player, null, 1), condition);
+    addItem(getItem(player, "I", 2), condition);
+    addItem(getItem(player, "II", 3), condition);
+    addItem(getItem(player, "III", 4), condition);
+    addItem(getItem(player, "VI", 5), condition);
 
     formatRow(1, CenterFormat.CENTRALIZED_EVEN);
   }
 
-  private GUIItem getItem(Player player, String name, int val) {
+  private GUIItem getItem(Player player, @Nullable String tier, int val) {
+    final String name = Message.buildByKey(tier != null ? "PrivateGames_ModifyBuffSpeed_NameTier" : "PrivateGames_ModifyBuffSpeed_NameNone")
+        .placeholder("tier", tier != null ? tier : "")
+        .done(player);
     final ArenaBuff buffState = this.parentMenu.getBuffState();
     ItemStack is = Helper.get().parseItemStack("SUGAR");
     final ItemMeta im = is.getItemMeta();
@@ -64,7 +67,9 @@ public class SpeedBuffMenu extends ChestGUI {
     return new GUIItem(is, (g0, g1, g2) -> {
       buffState.setSpeedModifier(val);
 
-      Message.build(ChatColor.GREEN + "Players now spawn with " + name.toLowerCase(Locale.ROOT)).send(player);
+      Message.buildByKey("PrivateGames_ModifyBuffSpeed")
+          .placeholder("effect", name.toLowerCase())
+          .send(player);
       draw(player);
     });
   }

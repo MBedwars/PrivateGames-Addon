@@ -16,7 +16,6 @@ import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,7 +24,7 @@ public class PlayerListener implements Listener {
 
     private static final AddPlayerIssue JOIN_ISSUE_PRIVATE_ARENA = AddPlayerIssue.construct(
         "privategames:private_arena",
-        Message.build(Settings.ARENA_IS_PRIVATE));
+        Message.buildByKey("PrivateGames_JoinArenaPrivate"));
 
     private final PrivateGameManager manager;
 
@@ -87,7 +86,7 @@ public class PlayerListener implements Listener {
                         if (member.get().getParty().getMember(arenaPlayer.getUniqueId()) != null)
                             continue;
 
-                        player.sendMessage(ChatColor.RED + "Can't turn arena private, as non-members of your party are a part of it");
+                        Message.buildByKey("PrivateGames_UnableTurnPrivateContainsNonMembers").send(player);
                         return;
                     }
 
@@ -101,7 +100,7 @@ public class PlayerListener implements Listener {
                 }
 
                 // private game
-                Message.build(Settings.PLAYER_JOIN_PRIVATE_GAME)
+                Message.buildByKey("PrivateGames_JoinPrivateMatch")
                     .placeholder("name", managingParty.getLeaders().stream()
                         .map(Member::getUsername)
                         .collect(Collectors.joining(", ")))

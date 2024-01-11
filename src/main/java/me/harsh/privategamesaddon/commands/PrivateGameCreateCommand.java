@@ -28,9 +28,9 @@ public class PrivateGameCreateCommand extends Command.Executor {
             manager.setPrivateGameMode(props, !mode);
 
             if (!mode)
-                Message.build(Settings.PRIVATE_GAME_MODE).send(player);
+                Message.buildByKey("PrivateGames_SetModeNormal").send(player);
             else
-                Message.build(Settings.NORMAL_MODE).send(player);
+                Message.buildByKey("PrivateGames_SetModeCreation").send(player);
         });
     }
 

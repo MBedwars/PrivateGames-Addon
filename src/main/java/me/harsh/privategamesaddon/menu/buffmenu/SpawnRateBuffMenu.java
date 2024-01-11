@@ -9,19 +9,20 @@ import de.marcely.bedwars.tools.gui.GUIItem;
 import de.marcely.bedwars.tools.gui.type.ChestGUI;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
 import me.harsh.privategamesaddon.menu.PrivateGameMenu;
-import me.harsh.privategamesaddon.settings.Settings;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
 
 public class SpawnRateBuffMenu extends ChestGUI {
 
   private final PrivateGameMenu parentMenu;
 
-  public SpawnRateBuffMenu(PrivateGameMenu parentMenu) {
-    super(3, Message.build(Settings.SPAWN_RATE_BUFF_MENU).done());
+  public SpawnRateBuffMenu(PrivateGameMenu parentMenu, @Nullable CommandSender sender) {
+    super(3, Message.buildByKey("PrivateGames_ModifyBuffSpawnRate_MenuTitle").done(sender));
     this.parentMenu = parentMenu;
 
     addCloseListener(player -> parentMenu.open(player));
@@ -63,7 +64,9 @@ public class SpawnRateBuffMenu extends ChestGUI {
     return new GUIItem(is, (g0, g1, g2) -> {
       buffState.setSpawnRateMultiplier(val);
 
-      Message.build(ChatColor.GREEN + "Spawners now spawn " + Helper.get().formatNumber(val) + "x" + " as fast as regularly").send(player);
+      Message.buildByKey("PrivateGames_ModifyBuffSpawnRate")
+          .placeholder("amount", Helper.get().formatNumber(val))
+          .send(player);
       draw(player);
     });
   }

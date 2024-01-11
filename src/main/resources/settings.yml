@@ -13,41 +13,6 @@ Features:
   Priority: BP
   # If set to true the perms set in the Perms section of that buff will be used..
   Per_buff_perm: false
-Messages:
-  # When player don't have the permission
-  No_perm: '&cSorry, you have to buy &6MVP++ to create private games!'
-  # When they toggle private game creation mode
-  Private_game_creation_mode: '&aYou are now in private game creation mode'
-  # When they toggle back to normal mode
-  Normal_game_mode: '&aYou are now in normal bedwars mode!'
-  # When player don't have permission for auto warping party members
-  Auto_warp_noperm: '&cYou dont have enough permissions to auto warp party members'
-  # When player is not in a party and creates a private game arena
-  No_party_found: "You must create a party first before you join arena"
-  # When no player is found in party (when player joins the arena in private game creation mode)
-  No_players_found_in_party: '&c Could not Find Anyone in your party please invite some friend and warp them using /bwp warp :-)'
-  # When a Non-Party member tries to join arena
-  Arena_private: '&cArena is private!'
-  # When player is not in the arena and used /bwp warp
-  Arena_not_found: '&cYou are not in an arena!'
-  # When player tries to warp player with non PG creation mode
-  Private_game_wrong_mode: '&cYou are not in private game creation mode!'
-  # When party member joins the PG arena
-  # {name} will return owners name!
-  Private_game_join: '&aYou have joined {name}s private game!'
-  # When someone tries to warp their team inside a non-private arena
-  Private_game_illegal_warp: '&cYou cannot warp players in a non-private game room!'
-  # When no party is found while warping
-  Not_in_a_party_to_warp: '&cSorry you are not in a party to warp players'
-  Only_leader_in_party: "&cSorry, please invite some players then warp <3"
-  # 90 Seconds timer runs when leader creates the PG once it's 90 it's gonna kick everyone!
-  Afk_limit_reached: "&cSorry AFKing with PGA mode and locking the arena isn't allowed!"
-  # When player uses /bwp reload
-  Successfully_reload: "&aSuccessfully Reloaded Private Games Addon!!"
-  # When the arena is running and you try to join using the control panel
-  Illegal_join_try: "&cSorry, the arena is running cannot join as a player, &aAdding as a spectator!"
-  # When Admin joins the arena using the control panel
-  Admin_join: "&aJoining {p}'s private game!"
 Placeholders:
   # This placeholder can be used inside Scoreboard to present if the game is private or not! [P] on hypixel
   Is_private_game: '[P]' # Color Codes not supported
@@ -80,17 +45,6 @@ Menu:
     Respawn: 'Respawn Buff Menu'
     Health: 'Custom Health Buff'
     Spawn_rate: 'Spawn rate Buff'
-  Buffs:
-    One_Hit_Buff: '&aOne Hit Buff'
-    Health_Buff: '&aHealth Buff'
-    Low_Gravity_Buff: '&aLow Gravity'
-    Speed_Buff: '&aSpeed Buff'
-    Disable_Block_Protection_Buff: '&aDisable Block Protection'
-    Respawn_Time_Buff: '&aRespawn Time Buff'
-    Spawn_Rate_Mutiplier_Buff: '&aSpawn Rate Multiplier'
-    Fall_damage_buff: "&aFall Damage Buff"
-    Max_upgrades_buff: "&aMax upgrades Buff"
-    No_emeralds_and_diamonds: "&aNo Special Spawners"
 
 
 # -------------------------------------------
@@ -98,14 +52,6 @@ Menu:
 # -------------------------------------------
 
 Command_Aliases: ["bwp"]
-
-
-# -------------------------------------------
-#          MESSAGE PREFIX
-# -------------------------------------------
-
-# Every Message will start with this
-Prefix: '&cPrivate Games Addon&7>>'
 
 
 # -----------------------------

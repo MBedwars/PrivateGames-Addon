@@ -61,7 +61,7 @@ public class CommandHandler implements CommandExecutor, TabExecutor {
 
     // help
     if (args.length == 0) {
-      sender.sendMessage("" + ChatColor.GOLD + ChatColor.BOLD + "Commands:");
+      sender.sendMessage("" + ChatColor.GOLD + ChatColor.BOLD + Message.buildByKey("PrivateGames_Commands").done(sender) + ":");
 
       for (Command cmd : this.registeredCommands.values()) {
         if (!cmd.hasPermission(sender))
@@ -74,9 +74,9 @@ public class CommandHandler implements CommandExecutor, TabExecutor {
         final List<String> message = new ArrayList<>();
 
         message.add("&f");
-        message.add(" " + Settings.PREFIX + "&8\u2122");
+        message.add(" &cPrivate Games Addon&7&8\u2122");
         message.add("&f");
-        message.add(" &7Made By WhoTech &7\u00a9 ");
+        message.add(" &7Made By WhoTech and MrEAlderson &7\u00a9 ");
         message.add("&7 Type &f/bwp" + " private &7to go into private game creation room!");
         message.add("&f");
 
@@ -97,7 +97,11 @@ public class CommandHandler implements CommandExecutor, TabExecutor {
     }
 
     if (!cmd.hasPermission(sender)) {
-      Message.build(Settings.NO_PERM_EROR).send(sender);
+      if (Settings.CREATE_PERM.equals(cmd.getPermission()))
+        Message.buildByKey("PrivateGames_NoPermCreatePrivate").send(sender);
+      else
+        Message.buildByKey("No_Permissions").send(sender);
+
       return true;
     }
 

@@ -81,6 +81,7 @@ public final class PrivateGamesPlugin extends JavaPlugin {
                 new PrivateGamePlaceholder().register();
 
             (this.addon = new PrivateGamesAddon(this)).register();
+            this.addon.registerMessageMappings();
 
             GameAPI.get().registerLobbyItemHandler(new BuffItem());
             ArenaPickerAPI.get().registerConditionVariable(new PrivateArenaConditionVariable());
