@@ -216,19 +216,4 @@ public class PlayerBuffListener implements Listener {
             event.setIssuePresent(PlayerModifyBlockPermissionEvent.Issue.BLACKLISTED_MATERIAL, false);
         }
     }
-
-    /*@EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerBlockPlace(BlockPlaceEvent event){
-        final Block block = event.getBlock();
-        final Player player = event.getPlayer();
-        final Arena arena = GameAPI.get().getArenaByPlayer(player);
-
-        if (arena == null)
-            return;
-
-        if (!Utility.getManager().isPrivateArena(arena))
-            return;
-
-        final ArenaBuff buff = Utility.getBuff(arena);
-    }*/
 }

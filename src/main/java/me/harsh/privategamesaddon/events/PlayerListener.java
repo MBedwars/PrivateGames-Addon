@@ -109,49 +109,6 @@ public class PlayerListener implements Listener {
         });
 
         methodFinished.set(true);
-
-        /*manager.getPlayerPrivateMode(player, mode -> {
-            if (!mode)
-                return;
-
-            manager.getParty(player, member -> {
-                if (!member.isPresent())
-                    return;
-
-                manager.getPrivateArenas().add(arena);
-                setupParty(player, arena);
-
-                Utility.doStatsThing(player.getUniqueId());
-                Bukkit.getServer().getPluginManager().callEvent(new PrivateGameCreateEvent(player, arena));
-
-                PartiesIParty party = (PartiesIParty) manager.partyMembersMangingMap.get(arena);
-
-                if (party.getParty().getMembers().size() == 1) {
-                    Common.tell(player,  " " + Settings.NO_PLAYER_FOUND_IN_PARTY);
-                }else {
-                    new BukkitRunnable(){
-
-                        @Override
-                        public void run() {
-                            if (Settings.AUTO_WARP && player.hasPermission(Settings.AUTO_WARP_PERM)){
-                                Common.tell(player,  "&a Auto Warping party members...");
-                                player.performCommand("bwp warp");
-                            }else if (!player.hasPermission(Settings.AUTO_WARP_PERM)){
-                                Common.tell(player, Settings.NO_AUTO_WARP_PERM_EROR);
-                            }
-                        }
-                    }.runTaskLater(SimplePlugin.getInstance(), 5);
-                }
-
-
-                if (pafPlayer.getParty().getPlayers().size() == 0){
-                    if (!pafPlayer.getPlayer().hasPermission(Settings.PARTY_BYPASS_PERM)){
-                        Common.tell(player, Settings.NO_PARTY_ON_CREATE);
-                        arena.kickPlayer(player, KickReason.PLUGIN);
-                    }
-                }
-            });
-        });*/
     }
 
     @EventHandler

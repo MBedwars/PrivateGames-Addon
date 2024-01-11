@@ -18,7 +18,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
-import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -143,11 +142,6 @@ public class AllPrivateGameControlPanelMenu extends ChestGUI {
   }
 
   private void onStopClick(RemoteArena arena, Player player) {
-    /*if (arena.getStatus() == ArenaStatus.RUNNING) {
-      Message.build(Settings.ILLEGAL_JOIN_MESSAGE).send(player);
-      arena.addSpectator(RemoteAPI.get().getOnlinePlayer(player));
-    }*/
-
     if (!arena.isLocal()) {
       Message.buildByKey("PrivateGames_AdminNotSameServer")
           .placeholder("server", arena.getRemoteServer().getBungeeChannelName())
