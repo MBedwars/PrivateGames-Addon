@@ -10,7 +10,9 @@ import de.marcely.bedwars.tools.gui.AddItemCondition;
 import de.marcely.bedwars.tools.gui.CenterFormat;
 import de.marcely.bedwars.tools.gui.GUIItem;
 import de.marcely.bedwars.tools.gui.type.ChestGUI;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -72,7 +74,7 @@ public class PrivateGameMenu extends ChestGUI {
     formatRow(3, CenterFormat.ALIGNED);
   }
 
-  private GUIItem createItem(Player player, String materialName, String permission, Boolean isActive, Runnable onUse, Message name, String... lore) {
+  private GUIItem createItem(Player player, String materialName, String permission, Boolean isActive, Runnable onUse, Message name, Message lore) {
     ItemStack is = NMSHelper.get().hideAttributes(Helper.get().parseItemStack(materialName));
     ChatColor color = ChatColor.YELLOW;
 
@@ -85,11 +87,15 @@ public class PrivateGameMenu extends ChestGUI {
     }
 
     final ItemMeta im = is.getItemMeta();
+    final List<String> loreList = new ArrayList<>();
 
-    im.setDisplayName(color + ChatColor.stripColor(name.done(player)));
-    im.setLore(Arrays.stream(lore)
-        .map(l -> ChatColor.GRAY + Message.build(l).done(player))
+    loreList.add("");
+    loreList.addAll(Arrays.stream(lore.done(player).split("\\\\n"))
+        .map(l -> ChatColor.GRAY + l)
         .collect(Collectors.toList()));
+
+    im.setDisplayName(color + ChatColor.stripColor(name.done(player, false)));
+    im.setLore(loreList);
     is.setItemMeta(im);
 
     return new GUIItem(is, (g0, g1, g2) -> {
@@ -102,7 +108,7 @@ public class PrivateGameMenu extends ChestGUI {
     });
   }
 
-  private GUIItem createToggleItem(Player player, String materialName, String permission, boolean isActive, Consumer<Boolean> toggle, Message name, String... lore) {
+  private GUIItem createToggleItem(Player player, String materialName, String permission, boolean isActive, Consumer<Boolean> toggle, Message name, Message lore) {
     return createItem(
         player,
         materialName,
@@ -114,7 +120,7 @@ public class PrivateGameMenu extends ChestGUI {
           toggle.accept(newState);
 
           Message.buildByKey(newState ? "PrivateGames_ModifyBuff_ToggleOn" : "PrivateGames_ModifyBuff_ToggleOff")
-              .placeholder("buff", name)
+              .placeholder("buff", name.done(player, false))
               .send(player);
 
           draw(player);
@@ -132,10 +138,7 @@ public class PrivateGameMenu extends ChestGUI {
         this.buffState.isNoEmeralds(),
         newState -> this.buffState.setNoEmeralds(newState),
         Message.buildByKey("PrivateGames_BuffNoSpecialSpawners"),
-        "",
-        "Enabled you to disable",
-        "All the special spawners like",
-        "Emeralds and diamonds!"
+        Message.buildByKey("PrivateGames_ModifyBuffNoSpecialSpawners_Info")
     );
   }
 
@@ -147,9 +150,7 @@ public class PrivateGameMenu extends ChestGUI {
         this.buffState.isMaxUpgrades(),
         newState -> this.buffState.setMaxUpgrades(newState),
         Message.buildByKey("PrivateGames_BuffMaxUpgrades"),
-        "",
-        "Enables you to to give",
-        "max upgrade buffs at start"
+        Message.buildByKey("PrivateGames_ModifyBuffMaxUpgrades_Info")
     );
   }
 
@@ -161,9 +162,7 @@ public class PrivateGameMenu extends ChestGUI {
         this.buffState.isFallDamageEnabled(),
         newState -> this.buffState.setFallDamageEnabled(newState),
         Message.buildByKey("PrivateGames_BuffFallDamage"),
-        "",
-        "Enables you to disable",
-        "or enable fall damage"
+        Message.buildByKey("PrivateGames_ModifyBuffFallDamage_Info")
     );
   }
 
@@ -175,9 +174,7 @@ public class PrivateGameMenu extends ChestGUI {
         null,
         () -> new RespawnBuffMenu(this, player).open(player),
         Message.buildByKey("PrivateGames_BuffRespawnTime"),
-        "",
-        "Enables you to ",
-        "Change respawn time"
+        Message.buildByKey("PrivateGames_ModifyBuffRespawnTime_Info")
     );
   }
 
@@ -189,9 +186,7 @@ public class PrivateGameMenu extends ChestGUI {
         this.buffState.isBlocksProtected(),
         newState -> this.buffState.setBlocksProtected(newState),
         Message.buildByKey("PrivateGames_BuffDisabledBlockProtection"),
-        "",
-        "Enables you to stop the",
-        "Block protection in arenas"
+        Message.buildByKey("PrivateGames_ModifyBuffBlockProtection_Info")
     );
   }
 
@@ -203,9 +198,7 @@ public class PrivateGameMenu extends ChestGUI {
         null,
         () -> new SpawnRateBuffMenu(this, player).open(player),
         Message.buildByKey("PrivateGames_BuffSpawnRate"),
-        "",
-        "Enables people multiply",
-        "spawn rate of base spawners!"
+        Message.buildByKey("PrivateGames_ModifyBuffSpawnRate_Info")
     );
   }
 
@@ -217,9 +210,7 @@ public class PrivateGameMenu extends ChestGUI {
         null,
         () -> new SpeedBuffMenu(this, player).open(player),
         Message.buildByKey("PrivateGames_BuffSpeed"),
-        "",
-        "Enables you to play",
-        "in more speed than normal"
+        Message.buildByKey("PrivateGames_ModifyBuffSpeed_Info")
     );
   }
 
@@ -231,9 +222,7 @@ public class PrivateGameMenu extends ChestGUI {
         this.buffState.isLowGravity(),
         newState -> this.buffState.setLowGravity(newState),
         Message.buildByKey("PrivateGames_BuffLowGravity"),
-        "",
-        "Enables you to play in",
-        "low gravity in bedwars"
+        Message.buildByKey("PrivateGames_ModfyBuffGravity_Info")
     );
   }
 
@@ -245,9 +234,7 @@ public class PrivateGameMenu extends ChestGUI {
         this.buffState.isOneHitKill(),
         newState -> this.buffState.setOneHitKill(newState),
         Message.buildByKey("PrivateGames_BuffOneHit"),
-        "",
-        "Enables to one hit anyone",
-        "in the bedwars game"
+        Message.buildByKey("PrivateGames_ModifyBuffOneHit_Info")
     );
   }
 
@@ -259,9 +246,7 @@ public class PrivateGameMenu extends ChestGUI {
         null,
         () -> new HealthBuffMenu(this, player).open(player),
         Message.buildByKey("PrivateGames_BuffHealth"),
-        "",
-        "Enables you to",
-        "increase custom health"
+        Message.buildByKey("PrivateGames_ModifyBuffHealth_Info")
     );
   }
 }

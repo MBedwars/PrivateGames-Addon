@@ -126,17 +126,18 @@ public class PlayerBuffListener implements Listener {
                 buff.getSpawnRateMultiplier());
         }
 
-        if (buff.isNoEmeralds()){
+        if (buff.isNoEmeralds()) {
             for (Spawner spawner : arena.getSpawners()){
-                for (Team team: arena.getEnabledTeams()){
-                    if (spawner.getLocation().distance(arena.getTeamSpawn(team)) >= 20) {
-                        spawner.addDropDurationModifier(
-                            "private_games:no_emeralds",
-                            PrivateGamesPlugin.getInstance(),
-                            SpawnerDurationModifier.Operation.SET,
-                            9999999999999.9);
-                    }
-                }
+                final Team team = arena.getTeamByBaseLocation(spawner.getLocation());
+
+                if (team != null)
+                    continue;
+
+                spawner.addDropDurationModifier(
+                    "private_games:buff_only_team_spawners",
+                    PrivateGamesPlugin.getInstance(),
+                    SpawnerDurationModifier.Operation.SET,
+                    9999999999999.9);
             }
         }
 

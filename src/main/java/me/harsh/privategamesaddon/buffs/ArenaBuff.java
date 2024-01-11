@@ -16,5 +16,5 @@ public class ArenaBuff {
     private boolean fallDamageEnabled = true;
     private boolean isCraftingAllowed = false;
     private boolean blocksProtected = true;
-    private double spawnRateMultiplier = 3;
+    private double spawnRateMultiplier = 1;
 }
