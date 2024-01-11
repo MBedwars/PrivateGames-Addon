@@ -14,10 +14,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class Settings {
 
     // Menu title, Prefix, Booleans
-    public static Boolean SHOULD_SAVE_STATS;
-    public static Boolean AUTO_WARP;
+    public static boolean SHOULD_SAVE_STATS;
+    public static boolean AUTO_WARP;
 
-    public static Boolean PER_BUFF_PERM;
+    public static boolean PER_BUFF_PERM;
 
     // Permisions
     public static String CREATE_PERM;
