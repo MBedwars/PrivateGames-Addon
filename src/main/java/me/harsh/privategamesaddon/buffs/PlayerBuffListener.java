@@ -126,7 +126,7 @@ public class PlayerBuffListener implements Listener {
                 buff.getSpawnRateMultiplier());
         }
 
-        if (buff.isNoEmeralds()) {
+        if (buff.isBaseSpawnersOnly()) {
             for (Spawner spawner : arena.getSpawners()){
                 final Team team = arena.getTeamByBaseLocation(spawner.getLocation());
 
@@ -137,7 +137,10 @@ public class PlayerBuffListener implements Listener {
                     "private_games:buff_only_team_spawners",
                     PrivateGamesPlugin.getInstance(),
                     SpawnerDurationModifier.Operation.SET,
-                    9999999999999.9);
+                    31622400);
+
+                if (spawner.getHologram() != null) // hide the hologram
+                    spawner.getHologram().setMinVisibilityRadius(Integer.MAX_VALUE);
             }
         }
 

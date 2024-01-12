@@ -59,7 +59,7 @@ public class PrivateGameMenu extends ChestGUI {
   private void draw(Player player) {
     clear();
 
-    addItem(getNoSpecialSpawnersItem(player), AddItemCondition.withinY(1, 1));
+    addItem(getBaseSpawnersOnlyItem(player), AddItemCondition.withinY(1, 1));
     addItem(getMaxUpgradeItem(player), AddItemCondition.withinY(1, 1));
     addItem(getFallDamageItem(player), AddItemCondition.withinY(1, 1));
     addItem(getRespawnTimeItem(player), AddItemCondition.withinY(1, 1));
@@ -130,13 +130,13 @@ public class PrivateGameMenu extends ChestGUI {
     );
   }
 
-  private GUIItem getNoSpecialSpawnersItem(Player player) {
+  private GUIItem getBaseSpawnersOnlyItem(Player player) {
     return createToggleItem(
         player,
         "EMERALD",
         Settings.NO_SPECIAL_SPAWNER_BUFF_PERM,
-        this.buffState.isNoEmeralds(),
-        newState -> this.buffState.setNoEmeralds(newState),
+        this.buffState.isBaseSpawnersOnly(),
+        newState -> this.buffState.setBaseSpawnersOnly(newState),
         Message.buildByKey("PrivateGames_BuffNoSpecialSpawners"),
         Message.buildByKey("PrivateGames_ModifyBuffNoSpecialSpawners_Info")
     );
