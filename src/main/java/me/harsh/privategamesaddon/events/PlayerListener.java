@@ -53,7 +53,7 @@ public class PlayerListener implements Listener {
                 // not allowed, send him back where he belongs to
                 if (methodFinished.get()) {
                     JOIN_ISSUE_PRIVATE_ARENA.getHintMessage(arena).send(player);
-                    GameAPI.get().sendToHub(player);
+                    arena.kickPlayer(player);
                 } else
                     event.addIssue(JOIN_ISSUE_PRIVATE_ARENA);
             };
@@ -100,7 +100,7 @@ public class PlayerListener implements Listener {
                 }
 
                 // private game
-                Message.buildByKey("PrivateGames_JoinPrivateMatch")
+                Message.buildByKey("PrivateGames_JoinPrivateMatch") // success message
                     .placeholder("name", managingParty.getLeaders().stream()
                         .map(Member::getUsername)
                         .collect(Collectors.joining(", ")))

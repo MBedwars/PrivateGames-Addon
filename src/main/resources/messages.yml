@@ -4,7 +4,7 @@ PrivateGames_SetModeCreation: '&aYou are now in private game creation mode'
 PrivateGames_SetModeNormal: '&aYou are now in normal bedwars mode!'
 PrivateGames_JoinArenaPrivate: '&cThe arena you are trying to join has been made private by a party'
 PrivateGames_GameCreationInactive: "&cThe private game creation mode isn't active"
-PrivateGames_JoinPrivateMatch: '&aYou have joined {name}s private game'
+PrivateGames_JoinPrivateMatch: "&aYou have joined {name}'s private game"
 PrivateGames_UnableTurnPrivateContainsNonMembers: "&cCan't turn arena private, as non-members of your party are a part of the match"
 PrivateGames_WarpButNotPrivate: '&cYou may not warp players in a non-private game room'
 PrivateGames_WarpButNotParty: '&cYou must be a part of a party to warp players'
