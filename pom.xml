@@ -35,7 +35,7 @@
     <groupId>me.harsh</groupId>
     <artifactId>PrivateGamesAddon</artifactId>
     <name>PrivateGamesAddon</name>
-    <version>2.3.8</version>
+    <version>3.0.0</version>
 
     <!-- ############################################################################### -->
 
@@ -131,7 +131,7 @@
         <dependency>
             <groupId>de.marcely.bedwars</groupId>
             <artifactId>API</artifactId>
-            <version>5.3.3</version>
+            <version>5.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
