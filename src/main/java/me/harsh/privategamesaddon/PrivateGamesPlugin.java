@@ -3,6 +3,8 @@ package me.harsh.privategamesaddon;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.arena.picker.ArenaPickerAPI;
+import de.marcely.bedwars.api.game.lobby.LobbyItemHandler;
+import de.marcely.bedwars.api.game.lobby.LobbyItemHandlerType;
 import de.marcely.bedwars.api.hook.HookAPI;
 import de.marcely.bedwars.api.hook.PartiesHook;
 import lombok.Getter;
@@ -10,7 +12,9 @@ import me.harsh.privategamesaddon.buffs.PlayerBuffListener;
 import me.harsh.privategamesaddon.commands.CommandHandler;
 import me.harsh.privategamesaddon.events.ArenaListener;
 import me.harsh.privategamesaddon.events.PlayerListener;
-import me.harsh.privategamesaddon.lobbyItems.BuffItem;
+import me.harsh.privategamesaddon.lobbyitems.BuffItem;
+import me.harsh.privategamesaddon.lobbyitems.ForceStartItem;
+import me.harsh.privategamesaddon.lobbyitems.LobbyItemCache;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.placeholders.PrivateGamePlaceholder;
 import me.harsh.privategamesaddon.settings.Settings;
@@ -83,14 +87,20 @@ public final class PrivateGamesPlugin extends JavaPlugin {
             (this.addon = new PrivateGamesAddon(this)).register();
             this.addon.registerMessageMappings();
 
-            GameAPI.get().registerLobbyItemHandler(new BuffItem());
             ArenaPickerAPI.get().registerConditionVariable(new PrivateArenaConditionVariable());
 
             {
-                final BuffItem item = new BuffItem();
+                final LobbyItemCache cache = new LobbyItemCache();
+                final LobbyItemHandler forceStartItem = GameAPI.get().getLobbyItemHandler(LobbyItemHandlerType.FORCE_START.getId());
 
-                GameAPI.get().registerLobbyItemHandler(item);
-                item.runCacheGCScheduler();
+                GameAPI.get().registerLobbyItemHandler(new BuffItem(this, cache));
+
+                if (forceStartItem != null)
+                    GameAPI.get().registerLobbyItemHandler(new ForceStartItem(this, cache, forceStartItem));
+                else
+                    getLogger().warning("Unable to wrap force-start item as it has been removed");
+
+                cache.runCacheGCScheduler();
             }
 
             Settings.read(this.addon);
