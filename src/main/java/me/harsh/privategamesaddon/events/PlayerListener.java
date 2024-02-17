@@ -65,7 +65,7 @@ public class PlayerListener implements Listener {
             }
 
             manager.getParty(player, member -> {
-                if (!player.isOnline())
+                if (!player.isOnline() || !arena.getPlayers().contains(player))
                     return;
 
                 // not a member
