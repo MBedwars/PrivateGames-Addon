@@ -15,8 +15,14 @@ import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier;
 import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier.Operation;
 import de.marcely.bedwars.api.game.upgrade.Upgrade;
 import de.marcely.bedwars.api.game.upgrade.UpgradeState;
+import java.util.Map;
 import me.harsh.privategamesaddon.PrivateGamesPlugin;
 import me.harsh.privategamesaddon.utils.Utility;
+import me.metallicgoat.tweaksaddon.config.GenTiersConfig;
+import me.metallicgoat.tweaksaddon.gentiers.GenTierLevel;
+import me.metallicgoat.tweaksaddon.gentiers.GenTiers;
+import me.metallicgoat.tweaksaddon.gentiers.GenTiers.GenTierState;
+import me.metallicgoat.tweaksaddon.gentiers.TierAction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -99,7 +105,7 @@ public class PlayerBuffListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH /* Must be HIGH, as tweaks' GenTiers is on NORMAL */)
     public void onStart(RoundStartEvent event) {
         final Arena arena = event.getArena();
 
@@ -141,6 +147,37 @@ public class PlayerBuffListener implements Listener {
 
                 if (spawner.getHologram() != null) // hide the hologram
                     spawner.getHologram().setMinVisibilityRadius(Integer.MAX_VALUE);
+
+                // tweaks: remove gen tiers
+                if (Bukkit.getPluginManager().getPlugin("MBedwarsTweaks") != null) {
+                    final Map<Integer, GenTierLevel> levels = GenTiersConfig.gen_tier_levels;
+                    final GenTierState state = GenTiers.getState(arena);
+
+                    if (state != null) {
+                        // can we just skip to a certain level?
+                        int maxLevel = 0;
+
+                        while (levels.containsKey(maxLevel+1))
+                            maxLevel++;
+
+                        GenTierLevel level = null;
+
+                        while (maxLevel >= 1 && levels.get(maxLevel).getAction() != TierAction.GEN_UPGRADE)
+                            level = levels.get(maxLevel--);
+
+                        // handle calculations
+                        if (level == null)
+                            GenTiers.removeArena(arena);
+                        else {
+                            double addTime = 0;
+
+                            for (int l=1; l<=maxLevel+1; l++)
+                                addTime += levels.get(l).getTime();
+
+                            GenTiers.scheduleNextTier(arena, level, addTime);
+                        }
+                    }
+                }
             }
         }
 

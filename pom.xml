@@ -146,6 +146,13 @@
             <version>2.11.5</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>me.metallicgoat</groupId>
+            <artifactId>MBedwarsTweaks</artifactId>
+            <version>4.0.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/MBedwarsTweaks.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <!--
