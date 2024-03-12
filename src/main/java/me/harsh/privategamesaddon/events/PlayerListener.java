@@ -45,7 +45,7 @@ public class PlayerListener implements Listener {
         final AtomicBoolean methodFinished = new AtomicBoolean(false);
 
         PlayerDataAPI.get().getProperties(player, props -> {
-            final boolean privateMode = manager.getPlayerPrivateMode(props);
+            final boolean privateMode = manager.getPlayerPrivateMode(props, player);
             final Runnable forbidJoin = () -> {
                 if (!isPrivateArena)
                     return;

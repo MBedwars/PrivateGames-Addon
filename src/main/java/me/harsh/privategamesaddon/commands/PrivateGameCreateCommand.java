@@ -23,7 +23,7 @@ public class PrivateGameCreateCommand extends Command.Executor {
 
         PlayerDataAPI.get().getProperties(player, props -> {
             final PrivateGameManager manager = Utility.getManager();
-            final boolean newMode = !manager.getPlayerPrivateMode(props);
+            final boolean newMode = !manager.getPlayerPrivateMode(props, player);
 
             manager.setPrivateGameMode(props, newMode);
 

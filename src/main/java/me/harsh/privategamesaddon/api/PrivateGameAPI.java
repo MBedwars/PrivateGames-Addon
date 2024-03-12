@@ -50,7 +50,7 @@ public class PrivateGameAPI {
 
     public void getPrivateGameMode(Player player, Consumer<Boolean> callback) {
         PlayerDataAPI.get().getProperties(player, props -> {
-            callback.accept(Utility.getManager().getPlayerPrivateMode(props));
+            callback.accept(Utility.getManager().getPlayerPrivateMode(props, player));
         });
     }
 }

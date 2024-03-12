@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import me.harsh.privategamesaddon.buffs.ArenaBuff;
+import me.harsh.privategamesaddon.settings.Settings;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -29,8 +30,8 @@ public class PrivateGameManager {
     private final Map<Arena, Party> partyMembersMangingMap = new HashMap<>();
     private final Map<Arena, ArenaBuff> arenaArenaBuffMap = new HashMap<>();
 
-    public boolean getPlayerPrivateMode(PlayerProperties props) {
-        return props.getBoolean(PROP_PRIVATE).orElse(false);
+    public boolean getPlayerPrivateMode(PlayerProperties props, Player player) {
+        return props.getBoolean(PROP_PRIVATE).orElse(false) && player.hasPermission(Settings.CREATE_PERM) /* Otherwise he may get stuck */;
     }
 
     public void setPrivateGameMode(PlayerProperties props, boolean mode) {

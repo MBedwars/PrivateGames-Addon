@@ -42,7 +42,7 @@ public class PrivateGamePartyWarpCommand extends Command.Executor {
         }
 
         PlayerDataAPI.get().getProperties(player, props -> {
-            if (!manager.getPlayerPrivateMode(props)) {
+            if (!manager.getPlayerPrivateMode(props, player)) {
                 Message.buildByKey("PrivateGames_GameCreationInactive").send(sender);
                 return;
             }
