@@ -8,7 +8,7 @@ import me.harsh.privategamesaddon.utils.Utility;
 
 public class PrivateArenaConditionVariable extends ArenaConditionVariable<ArenaConditionVariableValueNumber> {
     public PrivateArenaConditionVariable() {
-        super(PrivateGamesPlugin.getInstance(), "is_private_arena", ArenaConditionVariableValueNumber.class);
+        super(PrivateGamesPlugin.getInstance(), "is_private", ArenaConditionVariableValueNumber.class);
     }
 
     public ArenaConditionVariableValueNumber getValue(Arena arena) {
