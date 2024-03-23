@@ -22,8 +22,6 @@ Perms:
   create_perm: 'privategame.create'
   reload_perm: 'privategame.reload'
   auto_warp: 'privategame.autowarp'
-  # Bypasses the requirement of party at start!
-  party_requirement: 'privategame.bypass.create'
   # Per buff permissions
   Buffs:
     One_hit_buff_perm: "privategame.buffs.onehit"

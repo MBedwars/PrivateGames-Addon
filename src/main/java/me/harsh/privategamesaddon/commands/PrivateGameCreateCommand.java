@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import me.harsh.privategamesaddon.PrivateGamesPlugin;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
-import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

@@ -15,7 +15,7 @@ public class PrivateGamePlaceholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "bw";
+        return "privategames";
     }
     @Override
     public @NotNull String getAuthor() {
@@ -24,7 +24,7 @@ public class PrivateGamePlaceholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0.0";
+        return PrivateGamesPlugin.getInstance().getDescription().getVersion();
     }
 
     @Override

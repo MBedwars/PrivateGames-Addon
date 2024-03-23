@@ -21,9 +21,7 @@ public class Settings {
 
     // Permisions
     public static String CREATE_PERM;
-    public static String AUTO_WARP_PERM;
     public static String RELOAD_PERM;
-    public static String PARTY_BYPASS_PERM;
     public static String ADMIN_PERM;
 
     // Buff perms
@@ -76,9 +74,7 @@ public class Settings {
         PARTY_PRIORITY = config.getString("Features.Priority", PARTY_PRIORITY);
         PER_BUFF_PERM = config.getBoolean("Features.Per_buff_perm", PER_BUFF_PERM);
         CREATE_PERM = config.getString("Perms.create_perm", CREATE_PERM);
-        AUTO_WARP_PERM = config.getString("Perms.auto_warp", AUTO_WARP_PERM);
         RELOAD_PERM = config.getString("Perms.reload_perm", RELOAD_PERM);
-        PARTY_BYPASS_PERM = config.getString("Perms.party_requirement", PARTY_BYPASS_PERM);
         ADMIN_PERM = config.getString("Perms.admin_perm", ADMIN_PERM);
         ONE_HIT_BUFF_PERM = config.getString("Perms.Buffs.One_hit_buff_perm", ONE_HIT_BUFF_PERM);
         CUSTOM_HEALTH_BUFF_PERM = config.getString("Perms.Buffs.Custom_health_buff_perm", CUSTOM_HEALTH_BUFF_PERM);
