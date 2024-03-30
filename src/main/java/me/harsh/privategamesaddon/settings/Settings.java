@@ -66,7 +66,7 @@ public class Settings {
 
         // auto update file if newer version
         {
-            final int currentVersion = config.getInt("file-version", -1);
+            final int currentVersion = config.getInt("File_Version", -1);
 
             if (currentVersion != VERSION)
                 save(plugin);
@@ -82,7 +82,7 @@ public class Settings {
         config.addComment("");
         config.addComment("============================================");
 
-        config.set("Version", VERSION);
+        config.set("File_Version", VERSION);
         config.addEmptyLine();
         config.addEmptyLine();
 
