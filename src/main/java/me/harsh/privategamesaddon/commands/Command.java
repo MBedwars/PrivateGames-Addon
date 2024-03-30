@@ -30,7 +30,7 @@ public class Command {
   }
 
   public boolean hasPermission(CommandSender sender) {
-    return this.permission == null || sender.hasPermission(Settings.ADMIN_PERM) || sender.hasPermission(this.permission);
+    return this.permission == null || sender.hasPermission("privategame.admin") || sender.hasPermission(this.permission);
   }
 
 

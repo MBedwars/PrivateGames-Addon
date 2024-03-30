@@ -134,7 +134,7 @@ public class PrivateGameMenu extends ChestGUI {
     return createToggleItem(
         player,
         "EMERALD",
-        Settings.NO_SPECIAL_SPAWNER_BUFF_PERM,
+        "privategame.buffs.nospawner",
         this.buffState.isBaseSpawnersOnly(),
         newState -> this.buffState.setBaseSpawnersOnly(newState),
         Message.buildByKey("PrivateGames_BuffNoSpecialSpawners"),
@@ -146,7 +146,7 @@ public class PrivateGameMenu extends ChestGUI {
     return createToggleItem(
         player,
         "DIAMOND_CHESTPLATE",
-        Settings.MAX_UPGRADE_BUFF_PERM,
+        "privategame.buffs.maxupgrade",
         this.buffState.isMaxUpgrades(),
         newState -> this.buffState.setMaxUpgrades(newState),
         Message.buildByKey("PrivateGames_BuffMaxUpgrades"),
@@ -158,7 +158,7 @@ public class PrivateGameMenu extends ChestGUI {
     return createToggleItem(
         player,
         "ENDER_PEARL",
-        Settings.NO_FALL_DAMAGE_BUFF_PERM,
+        "privategame.buffs.falldamage",
         this.buffState.isFallDamageEnabled(),
         newState -> this.buffState.setFallDamageEnabled(newState),
         Message.buildByKey("PrivateGames_BuffFallDamage"),
@@ -170,7 +170,7 @@ public class PrivateGameMenu extends ChestGUI {
     return createItem(
         player,
         "PAPER",
-        Settings.RESPAWN_BUFF_PERM,
+        "privategame.buffs.respawn",
         null,
         () -> new RespawnBuffMenu(this, player).open(player),
         Message.buildByKey("PrivateGames_BuffRespawnTime"),
@@ -182,7 +182,7 @@ public class PrivateGameMenu extends ChestGUI {
     return createToggleItem(
         player,
         "GRASS_BLOCK",
-        Settings.BLOCK_PROT_BUFF_PERM,
+        "privategame.buffs.blockprot",
         this.buffState.isBlocksProtected(),
         newState -> this.buffState.setBlocksProtected(newState),
         Message.buildByKey("PrivateGames_BuffDisabledBlockProtection"),
@@ -194,7 +194,7 @@ public class PrivateGameMenu extends ChestGUI {
     return createItem(
         player,
         "IRON_INGOT",
-        Settings.SPAWN_RATE_MUTLIPLER_BUFF_PERM,
+        "privategame.buffs.spawnrate",
         null,
         () -> new SpawnRateBuffMenu(this, player).open(player),
         Message.buildByKey("PrivateGames_BuffSpawnRate"),
@@ -206,7 +206,7 @@ public class PrivateGameMenu extends ChestGUI {
     return createItem(
         player,
         "SUGAR",
-        Settings.SPEED_BUFF_PERM,
+        "privategame.buffs.speed",
         null,
         () -> new SpeedBuffMenu(this, player).open(player),
         Message.buildByKey("PrivateGames_BuffSpeed"),
@@ -218,7 +218,7 @@ public class PrivateGameMenu extends ChestGUI {
     return createToggleItem(
         player,
         "RABBIT_FOOT",
-        Settings.GRAVITY_BUFF_PERM,
+        "privategame.buffs.gravity",
         this.buffState.isLowGravity(),
         newState -> this.buffState.setLowGravity(newState),
         Message.buildByKey("PrivateGames_BuffLowGravity"),
@@ -230,7 +230,7 @@ public class PrivateGameMenu extends ChestGUI {
     return createToggleItem(
         player,
         "DIAMOND_SWORD",
-        Settings.ONE_HIT_BUFF_PERM,
+        "privategame.buffs.onehit",
         this.buffState.isOneHitKill(),
         newState -> this.buffState.setOneHitKill(newState),
         Message.buildByKey("PrivateGames_BuffOneHit"),
@@ -242,7 +242,7 @@ public class PrivateGameMenu extends ChestGUI {
     return createItem(
         player,
         "GOLDEN_APPLE",
-        Settings.CUSTOM_HEALTH_BUFF_PERM,
+        "privategame.buffs.health",
         null,
         () -> new HealthBuffMenu(this, player).open(player),
         Message.buildByKey("PrivateGames_BuffHealth"),

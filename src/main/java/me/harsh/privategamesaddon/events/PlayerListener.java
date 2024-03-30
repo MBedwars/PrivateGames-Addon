@@ -1,10 +1,8 @@
 package me.harsh.privategamesaddon.events;
 
-import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.*;
 import de.marcely.bedwars.api.event.player.PlayerJoinArenaEvent;
 import de.marcely.bedwars.api.event.player.PlayerQuitArenaEvent;
-import de.marcely.bedwars.api.event.player.PlayerStatChangeEvent;
 import de.marcely.bedwars.api.hook.PartiesHook.Member;
 import de.marcely.bedwars.api.hook.PartiesHook.Party;
 import de.marcely.bedwars.api.message.Message;
@@ -13,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import me.harsh.privategamesaddon.api.events.PrivateGameCreateEvent;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
-import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -131,24 +128,5 @@ public class PlayerListener implements Listener {
 
             manager.unsetPrivateArena(arena);
         });
-    }
-    @EventHandler(ignoreCancelled = true)
-    public void onPlayerStatGain(PlayerStatChangeEvent event){
-        if (!Settings.SHOULD_SAVE_STATS)
-            return;
-
-        final Player player = Bukkit.getPlayer(event.getStats().getPlayerUUID());
-
-        if (player == null)
-            return;
-
-        final Arena arena = GameAPI.get().getArenaByPlayer(player);
-
-        if (arena == null)
-            return;
-        if (!Utility.getManager().isPrivateArena(arena))
-            return;
-
-        event.setCancelled(true);
     }
 }

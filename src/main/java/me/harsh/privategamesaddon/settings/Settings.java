@@ -1,94 +1,108 @@
 package me.harsh.privategamesaddon.settings;
 
-import de.marcely.bedwars.tools.Helper;
+import de.marcely.bedwars.tools.YamlConfigurationDescriptor;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import me.harsh.privategamesaddon.PrivateGamesAddon;
+import me.harsh.privategamesaddon.PrivateGamesPlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Settings {
 
-    // Menu title, Prefix, Booleans
-    public static boolean SHOULD_SAVE_STATS;
-    public static boolean AUTO_WARP;
+    private static final byte VERSION = 2;
 
+    public static boolean DISABLE_PRIZES;
     public static boolean PER_BUFF_PERM;
-
-    // Permisions
-    public static String CREATE_PERM;
-    public static String RELOAD_PERM;
-    public static String ADMIN_PERM;
-
-    // Buff perms
-    public static String ONE_HIT_BUFF_PERM;
-    public static String CUSTOM_HEALTH_BUFF_PERM;
-    public static String GRAVITY_BUFF_PERM;
-    public static String RESPAWN_BUFF_PERM;
-    public static String NO_SPECIAL_SPAWNER_BUFF_PERM;
-    public static String SPEED_BUFF_PERM;
-    public static String NO_FALL_DAMAGE_BUFF_PERM;
-    public static String MAX_UPGRADE_BUFF_PERM;
-    public static String BLOCK_PROT_BUFF_PERM;
-    public static String SPAWN_RATE_MUTLIPLER_BUFF_PERM;
-
-    // Placeholders
     public static String IS_PRIVATE_GAME;
 
-    public static String PARTY_PRIORITY;
+    private static File getFile(PrivateGamesPlugin plugin) {
+        return new File(plugin.getAddon().getDataFolder(), "settings.yml");
+    }
 
-    public static void read(PrivateGamesAddon addon) {
-        try {
-            final File file = new File(addon.getDataFolder(), "settings.yml");
-
-            // first try to read the default values, in case new ones were added
-            try (InputStream is = addon.getPlugin().getResource("settings.yml")) {
-                read(YamlConfiguration.loadConfiguration(new InputStreamReader(is)));
+    public static void load(PrivateGamesPlugin plugin) {
+        synchronized (Settings.class) {
+            try {
+                loadUnchecked(plugin);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            // create the default file if it doesn't exist
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-
-                try (InputStream is = addon.getPlugin().getResource("settings.yml")) {
-                    try (OutputStream os = Files.newOutputStream(file.toPath())) {
-                        Helper.get().copy(is, os);
-                    }
-                }
-            }
-
-            // read their values
-            read(YamlConfiguration.loadConfiguration(file));
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
         }
     }
 
-    private static void read(Configuration config) {
-        SHOULD_SAVE_STATS = config.getBoolean("Features.Save_Stats", SHOULD_SAVE_STATS);
-        AUTO_WARP = config.getBoolean("Features.Auto_warp", AUTO_WARP);
-        PARTY_PRIORITY = config.getString("Features.Priority", PARTY_PRIORITY);
-        PER_BUFF_PERM = config.getBoolean("Features.Per_buff_perm", PER_BUFF_PERM);
-        CREATE_PERM = config.getString("Perms.create_perm", CREATE_PERM);
-        RELOAD_PERM = config.getString("Perms.reload_perm", RELOAD_PERM);
-        ADMIN_PERM = config.getString("Perms.admin_perm", ADMIN_PERM);
-        ONE_HIT_BUFF_PERM = config.getString("Perms.Buffs.One_hit_buff_perm", ONE_HIT_BUFF_PERM);
-        CUSTOM_HEALTH_BUFF_PERM = config.getString("Perms.Buffs.Custom_health_buff_perm", CUSTOM_HEALTH_BUFF_PERM);
-        GRAVITY_BUFF_PERM = config.getString("Perms.Buffs.Gravity_buff_perm", GRAVITY_BUFF_PERM);
-        RESPAWN_BUFF_PERM = config.getString("Perms.Buffs.Respawn_time_buff_perm", RESPAWN_BUFF_PERM);
-        NO_SPECIAL_SPAWNER_BUFF_PERM = config.getString("Perms.Buffs.No_special_spawner_buff_perm", NO_SPECIAL_SPAWNER_BUFF_PERM);
-        SPEED_BUFF_PERM = config.getString("Perms.Buffs.Speed_buff_perm", SPEED_BUFF_PERM);
-        NO_FALL_DAMAGE_BUFF_PERM = config.getString("Perms.Buffs.No_fall_damage_buff_perm", NO_FALL_DAMAGE_BUFF_PERM);
-        MAX_UPGRADE_BUFF_PERM = config.getString("Perms.Buffs.Max_upgrades_buff_perm", MAX_UPGRADE_BUFF_PERM);
-        BLOCK_PROT_BUFF_PERM = config.getString("Perms.Buffs.Block_protection_buff_perm", BLOCK_PROT_BUFF_PERM);
-        SPAWN_RATE_MUTLIPLER_BUFF_PERM = config.getString("Perms.Buffs.Spawn_rate_multiplier", SPAWN_RATE_MUTLIPLER_BUFF_PERM);
-        IS_PRIVATE_GAME = config.getString("Placeholders.Is_private_game", IS_PRIVATE_GAME);
+    private static void loadUnchecked(PrivateGamesPlugin plugin) throws Exception {
+        final File file = getFile(plugin);
+
+        if (!file.exists())
+            save(plugin);
+
+        // load it
+        final FileConfiguration config = new YamlConfiguration();
+
+        try (Reader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+            config.load(reader);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // read it
+        {
+            // Legacy support
+            DISABLE_PRIZES = config.getBoolean("Features.Disable_Prizes", DISABLE_PRIZES);
+            PER_BUFF_PERM = config.getBoolean("Features.Per_buff_perm", PER_BUFF_PERM);
+            IS_PRIVATE_GAME = config.getString("Placeholders.Is_private_game", IS_PRIVATE_GAME);
+
+            // New ones
+            DISABLE_PRIZES = config.getBoolean("Features_Disable_Prizes", DISABLE_PRIZES);
+            PER_BUFF_PERM = config.getBoolean("Features_Per_buff_perm", PER_BUFF_PERM);
+            IS_PRIVATE_GAME = config.getString("Placeholders_Is_private_game", IS_PRIVATE_GAME);
+
+            if (config.getStringList("Command_Aliases") != null)
+                Bukkit.getPluginCommand("privategames").setAliases(config.getStringList("Command_Aliases"));
+        }
+
+        // auto update file if newer version
+        {
+            final int currentVersion = config.getInt("file-version", -1);
+
+            if (currentVersion != VERSION)
+                save(plugin);
+        }
+    }
+
+    private static void save(PrivateGamesPlugin plugin) throws Exception {
+        final YamlConfigurationDescriptor config = new YamlConfigurationDescriptor();
+
+        config.addComment("============================================");
+        config.addComment("");
+        config.addComment("    P R I V A T E  G A M E S  A D D O N");
+        config.addComment("");
+        config.addComment("============================================");
+
+        config.set("Version", VERSION);
+        config.addEmptyLine();
+        config.addEmptyLine();
+
+        config.addComment("If set to true: Players won't receive coins, achievements, stats etc.");
+        config.set("Features_Disable_Prizes", DISABLE_PRIZES);
+
+        config.addComment("If set to true the perms set in the Perms section of that buff will be used");
+        config.set("Features_Per_buff_perm", PER_BUFF_PERM);
+
+        config.addEmptyLine();
+
+        config.addComment("# This placeholder can be used inside Scoreboard to present if the game is private or not! [P] on hypixel");
+        config.set("Placeholders_Is_private_game", IS_PRIVATE_GAME);
 
         if (config.getStringList("Command_Aliases") != null)
             Bukkit.getPluginCommand("privategames").setAliases(config.getStringList("Command_Aliases"));
+
+        // save
+        try (Writer writer = Files.newBufferedWriter(getFile(plugin).toPath(), StandardCharsets.UTF_8)) {
+            writer.write(config.saveToString());
+        }
     }
 }

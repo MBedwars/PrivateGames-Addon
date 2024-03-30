@@ -27,7 +27,7 @@ public class CommandHandler implements CommandExecutor, TabExecutor {
         "",
         0,
         true,
-        Settings.CREATE_PERM
+        "privategame.create"
     );
     registerCommand(
         "warp",
@@ -35,7 +35,7 @@ public class CommandHandler implements CommandExecutor, TabExecutor {
         "",
         0,
         true,
-        Settings.ADMIN_PERM
+        "privategame.admin"
     );
     registerCommand(
         "reload",
@@ -43,7 +43,7 @@ public class CommandHandler implements CommandExecutor, TabExecutor {
         "",
         0,
         false,
-        Settings.RELOAD_PERM
+        "privategame.reload"
     );
     registerCommand(
         "control",
@@ -51,7 +51,7 @@ public class CommandHandler implements CommandExecutor, TabExecutor {
         "",
         0,
         true,
-        Settings.ADMIN_PERM
+        "privategame.admin"
     );
   }
 
@@ -97,7 +97,7 @@ public class CommandHandler implements CommandExecutor, TabExecutor {
     }
 
     if (!cmd.hasPermission(sender)) {
-      if (Settings.CREATE_PERM.equals(cmd.getPermission()))
+      if ("privategame.create".equals(cmd.getPermission()))
         Message.buildByKey("PrivateGames_NoPermCreatePrivate").send(sender);
       else
         Message.buildByKey("No_Permissions").send(sender);

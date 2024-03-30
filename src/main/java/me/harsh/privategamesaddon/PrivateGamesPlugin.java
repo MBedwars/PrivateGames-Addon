@@ -32,6 +32,7 @@ public final class PrivateGamesPlugin extends JavaPlugin {
     @Getter
     private static PrivateGamesPlugin instance;
 
+    @Getter
     private PrivateGamesAddon addon;
 
     @Override
@@ -103,7 +104,7 @@ public final class PrivateGamesPlugin extends JavaPlugin {
                 cache.runCacheGCScheduler();
             }
 
-            Settings.read(this.addon);
+            Settings.load(this);
 
             {
                 final CommandHandler cmdHandler = new CommandHandler();
@@ -126,6 +127,6 @@ public final class PrivateGamesPlugin extends JavaPlugin {
         manager.clearPrivateArenas();
 
         reloadConfig();
-        Settings.read(this.addon);
+        Settings.load(this);
     }
 }

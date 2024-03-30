@@ -26,12 +26,13 @@ public class PrivateGameManager {
     private static final String PROP_PRIVATE = "privategames:is_private";
     private static final String PROP_ENFORCE_JOIN = "privategames:enforce_join";
     private static final String ARENA_KEY_PRIVATE = "privategames:is_private";
+    private static final String ARENA_DISABLE_PRIZE_TICKET = "privategames:is_private";
 
     private final Map<Arena, Party> partyMembersMangingMap = new HashMap<>();
     private final Map<Arena, ArenaBuff> arenaArenaBuffMap = new HashMap<>();
 
     public boolean getPlayerPrivateMode(PlayerProperties props, Player player) {
-        return props.getBoolean(PROP_PRIVATE).orElse(false) && player.hasPermission(Settings.CREATE_PERM) /* Otherwise he may get stuck */;
+        return props.getBoolean(PROP_PRIVATE).orElse(false) && player.hasPermission("privategame.create") /* Otherwise he may get stuck */;
     }
 
     public void setPrivateGameMode(PlayerProperties props, boolean mode) {
@@ -117,7 +118,9 @@ public class PrivateGameManager {
         arena.getPersistentStorage().set(ARENA_KEY_PRIVATE, true);
         this.partyMembersMangingMap.put(arena, party);
         arena.broadcastCustomPropertyChange(); // Fixes ArenasGUI using arena picker variable not dynamically updating
-        arena.setPrizeForMatchEnabled(false);
+
+        if (Settings.DISABLE_PRIZES)
+            arena.addPrizeForMatchDisabledTicket(ARENA_DISABLE_PRIZE_TICKET);
     }
 
     public void updatePrivateArena(Arena arena, Party party) {
@@ -128,7 +131,7 @@ public class PrivateGameManager {
         arena.getPersistentStorage().remove(ARENA_KEY_PRIVATE);
         this.partyMembersMangingMap.remove(arena);
         this.arenaArenaBuffMap.remove(arena);
-        arena.setPrizeForMatchEnabled(true);
+        arena.removePrizeForMatchDisabledTicket(ARENA_DISABLE_PRIZE_TICKET);
     }
 
     public void clearPrivateArenas() {

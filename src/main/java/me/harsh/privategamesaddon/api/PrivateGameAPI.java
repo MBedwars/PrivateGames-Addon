@@ -16,7 +16,7 @@ public class PrivateGameAPI {
 
     @Deprecated
     public boolean hasPermision(@NotNull Player player){
-        return player.hasPermission(Settings.ADMIN_PERM) || player.hasPermission(Settings.CREATE_PERM) || player.hasPermission("*");
+        return player.hasPermission("privategame.admin") || player.hasPermission("privategame.create") || player.hasPermission("*");
     }
 
     public boolean isPrivateGame(@NotNull Arena arena){
