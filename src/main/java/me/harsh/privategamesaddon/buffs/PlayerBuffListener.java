@@ -53,7 +53,7 @@ public class PlayerBuffListener implements Listener {
                 return;
 
             if (buff.isOneHitKill())
-                player.setHealth(0);
+                event.setDamage(1000);
         }
     }
 
