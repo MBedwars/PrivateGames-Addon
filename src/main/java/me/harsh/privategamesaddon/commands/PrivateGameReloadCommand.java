@@ -14,7 +14,7 @@ public class PrivateGameReloadCommand extends Command.Executor {
     }
 
     @Override
-    public void onExecute(CommandSender sender, String[] args) {
+    public void onExecute(CommandSender sender, String[] args, String fullUsage) {
         PrivateGamesPlugin.getInstance().reload();
         Message.buildByKey("PrivateGames_Reload").send(sender);
     }

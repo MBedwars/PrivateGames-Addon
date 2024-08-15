@@ -42,7 +42,7 @@ public class Command {
       this.plugin = plugin;
     }
 
-    public abstract void onExecute(CommandSender sender, String[] args);
+    public abstract void onExecute(CommandSender sender, String[] args, String usedCommand);
 
     public abstract List<String> onTab(CommandSender sender, String[] args);
 

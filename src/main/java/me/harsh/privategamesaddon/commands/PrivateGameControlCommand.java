@@ -14,7 +14,7 @@ public class PrivateGameControlCommand extends Command.Executor {
     }
 
     @Override
-    public void onExecute(CommandSender sender, String[] args) {
+    public void onExecute(CommandSender sender, String[] args, String fullUsage) {
         final Player player = (Player) sender;
 
         new AllPrivateGameControlPanelMenu().open(player);

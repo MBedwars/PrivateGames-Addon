@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import me.harsh.privategamesaddon.PrivateGamesPlugin;
-import me.harsh.privategamesaddon.settings.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,7 +23,7 @@ public class CommandHandler implements CommandExecutor, TabExecutor {
     registerCommand(
         "private",
         new PrivateGameCreateCommand(plugin),
-        "",
+        "[on/off]",
         0,
         true,
         "privategame.create"
@@ -120,7 +119,7 @@ public class CommandHandler implements CommandExecutor, TabExecutor {
     }
 
     // yay :)
-    cmd.getExecutor().onExecute(sender, args);
+    cmd.getExecutor().onExecute(sender, args, cmd.getUsage(label, isPlayer));
 
     return true;
   }

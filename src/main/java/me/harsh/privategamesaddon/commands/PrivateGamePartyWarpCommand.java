@@ -26,7 +26,7 @@ public class PrivateGamePartyWarpCommand extends Command.Executor {
     }
 
     @Override
-    public void onExecute(CommandSender sender, String[] args) {
+    public void onExecute(CommandSender sender, String[] args, String fullUsage) {
         final PrivateGameManager manager = Utility.getManager();
         final Player player = (Player) sender;
         final Arena arena = GameAPI.get().getArenaByPlayer(player);
