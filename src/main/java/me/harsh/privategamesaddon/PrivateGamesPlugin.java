@@ -26,8 +26,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PrivateGamesPlugin extends JavaPlugin {
 
-    private static final int MBEDWARS_MIN_API = 108;
-    private static final String MBEDWARS_MIN_VERSION = "5.4.8";
+    private static final int MBEDWARS_MIN_API = 110;
+    private static final String MBEDWARS_MIN_VERSION = "5.4.11";
 
     @Getter
     private static PrivateGamesPlugin instance;
