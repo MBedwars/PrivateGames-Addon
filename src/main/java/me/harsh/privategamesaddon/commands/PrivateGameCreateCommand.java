@@ -1,5 +1,6 @@
 package me.harsh.privategamesaddon.commands;
 
+import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.message.Message;
 import de.marcely.bedwars.api.player.PlayerDataAPI;
 import java.util.Collections;
@@ -55,6 +56,10 @@ public class PrivateGameCreateCommand extends Command.Executor {
                 Message.buildByKey("PrivateGames_SetModeCreation").send(player);
             else
                 Message.buildByKey("PrivateGames_SetModeNormal").send(player);
+
+            // note if already inside an arena
+            if (GameAPI.get().getArenaByPlayer(player) != null)
+                Message.buildByKey("PrivateGames_SetMode_NoteInside").send(player);
         });
     }
 

@@ -1,6 +1,7 @@
 PrivateGames_NoPermCreatePrivate: '&cSorry, you have to buy &6MVP++ to create private games!'
 PrivateGames_Commands: "Commands"
 PrivateGames_SetModeCreation: '&aYou are now in private game creation mode'
+PrivateGames_SetMode_NoteInside: '&6Note: &eThe mode of this match gets only applied after you rejoin'
 PrivateGames_SetModeNormal: '&aYou are now in normal bedwars mode!'
 PrivateGames_JoinArenaPrivate: '&cThe arena you are trying to join has been made private by a party'
 PrivateGames_GameCreationInactive: "&cThe private game creation mode isn't active"
