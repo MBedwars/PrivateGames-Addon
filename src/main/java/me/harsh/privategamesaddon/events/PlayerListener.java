@@ -49,8 +49,10 @@ public class PlayerListener implements Listener {
 
                 // not allowed, send him back where he belongs to
                 if (methodFinished.get()) {
-                    JOIN_ISSUE_PRIVATE_ARENA.getHintMessage(arena).send(player);
-                    arena.kickPlayer(player);
+                    if (arena.getPlayers().contains(player)) {
+                        JOIN_ISSUE_PRIVATE_ARENA.getHintMessage(arena).send(player);
+                        arena.kickPlayer(player);
+                    }
                 } else
                     event.addIssue(JOIN_ISSUE_PRIVATE_ARENA);
             };
@@ -62,7 +64,7 @@ public class PlayerListener implements Listener {
             }
 
             manager.getParty(player, member -> {
-                if (!player.isOnline() || !arena.getPlayers().contains(player))
+                if (!player.isOnline())
                     return;
 
                 // not a member
