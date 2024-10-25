@@ -99,7 +99,7 @@ public class PrivateGameMenu extends ChestGUI {
     is.setItemMeta(im);
 
     return new GUIItem(is, (g0, g1, g2) -> {
-      if (!player.hasPermission(permission)) {
+      if (Settings.PER_BUFF_PERM && !player.hasPermission(permission)) {
         Message.buildByKey("No_Permissions").send(player);
         return;
       }

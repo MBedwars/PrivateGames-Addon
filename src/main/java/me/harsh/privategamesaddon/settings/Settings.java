@@ -13,11 +13,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Settings {
 
-    private static final byte VERSION = 2;
+    private static final byte VERSION = 3;
 
-    public static boolean DISABLE_PRIZES;
-    public static boolean PER_BUFF_PERM;
-    public static String IS_PRIVATE_GAME;
+    public static boolean DISABLE_PRIZES = false;
+    public static boolean PER_BUFF_PERM = false;
+    public static String IS_PRIVATE_GAME = "[PRIVATE]";
 
     private static File getFile(PrivateGamesPlugin plugin) {
         return new File(plugin.getAddon().getDataFolder(), "settings.yml");
@@ -51,8 +51,8 @@ public class Settings {
         // read it
         {
             // Legacy support
-            DISABLE_PRIZES = config.getBoolean("Features.Disable_Prizes", DISABLE_PRIZES);
-            PER_BUFF_PERM = config.getBoolean("Features.Per_buff_perm", PER_BUFF_PERM);
+            DISABLE_PRIZES = config.getBoolean("Features_Disable_Prizes", DISABLE_PRIZES);
+            PER_BUFF_PERM = config.getBoolean("Features_Per_buff_perm", PER_BUFF_PERM);
             IS_PRIVATE_GAME = config.getString("Placeholders.Is_private_game", IS_PRIVATE_GAME);
 
             // New ones
@@ -89,18 +89,38 @@ public class Settings {
         config.addComment("If set to true: Players won't receive coins, achievements, stats etc.");
         config.set("Features_Disable_Prizes", DISABLE_PRIZES);
 
-        config.addComment("If set to true the perms set in the Perms section of that buff will be used");
+        config.addEmptyLine();
+
+        config.addComment("If set to true, players must have either of these permissions to use buffs:");
+        config.addComment("- privategame.buffs.onehit");
+        config.addComment("- privategame.buffs.health");
+        config.addComment("- privategame.buffs.gravity");
+        config.addComment("- privategame.buffs.respawn");
+        config.addComment("- privategame.buffs.nospawner");
+        config.addComment("- privategame.buffs.speed");
+        config.addComment("- privategame.buffs.falldamage");
+        config.addComment("- privategame.buffs.maxupgrade");
+        config.addComment("- privategame.buffs.blockprot");
+        config.addComment("- privategame.buffs.spawnrate");
         config.set("Features_Per_buff_perm", PER_BUFF_PERM);
 
         config.addEmptyLine();
 
-        config.addComment("# This placeholder can be used inside Scoreboard to present if the game is private or not! [P] on hypixel");
+        config.addComment("This placeholder can be used inside Scoreboard to present if the game is private or not! [P] on hypixel");
+        config.addComment("Placeholder: %privategamesaddon_private%");
         config.set("Placeholders_Is_private_game", IS_PRIVATE_GAME);
 
+        config.addEmptyLine();
+
+        config.addComment("The alternative commands that can be used besides /privategames");
+        config.addComment("The / prefix is not needed");
+
         if (config.getStringList("Command_Aliases") != null)
-            Bukkit.getPluginCommand("privategames").setAliases(config.getStringList("Command_Aliases"));
+            config.set("Command_Aliases", Bukkit.getPluginCommand("privategames").getAliases());
 
         // save
+        getFile(plugin).getParentFile().mkdirs();
+
         try (Writer writer = Files.newBufferedWriter(getFile(plugin).toPath(), StandardCharsets.UTF_8)) {
             writer.write(config.saveToString());
         }
