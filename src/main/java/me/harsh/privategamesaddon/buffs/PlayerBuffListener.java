@@ -129,7 +129,7 @@ public class PlayerBuffListener implements Listener {
                 "private_games:buff_multiplier",
                 PrivateGamesPlugin.getInstance(),
                 Operation.MULTIPLY,
-                buff.getSpawnRateMultiplier());
+                1D/buff.getSpawnRateMultiplier());
         }
 
         if (buff.isBaseSpawnersOnly()) {
