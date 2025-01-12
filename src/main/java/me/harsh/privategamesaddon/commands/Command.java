@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import me.harsh.privategamesaddon.PrivateGamesPlugin;
-import me.harsh.privategamesaddon.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

@@ -10,10 +10,8 @@
     <version>3.0.4</version>
 
     <properties>
-        <main.class>me.harsh.privategamesaddon.PrivateGamesPlugin</main.class>
-        <foundation.version>6.4.3</foundation.version>
-        <java.version>8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
     <repositories>
@@ -22,16 +20,8 @@
             <url>https://repo.marcely.de/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>papermc-repo</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
             <id>placeholderapi</id>
@@ -41,16 +31,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.github.paperspigot</groupId>
-            <artifactId>paperspigot-api</artifactId>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>de.marcely.bedwars</groupId>
             <artifactId>API</artifactId>
-            <version>5.4.14</version>
+            <version>5.4.15</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -62,7 +51,7 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.11.5</version>
+            <version>2.11.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -73,108 +62,4 @@
             <systemPath>${basedir}/libs/MBedwarsTweaks.jar</systemPath>
         </dependency>
     </dependencies>
-
-    <!--
-       Configure what happens when we are building this project (Maven compiles our code into bytecode
-       for us automatically).
-   -->
-    <build>
-
-        <!--
-           When we are building your plugins, what plugins should we use during this process?
-
-           The plugins here extend the functionality of Maven, just like your plugin enhances Minecraft
-           These are not Minecraft plugins, but only Maven plugins!
-       -->
-        <plugins>
-
-            <!--
-               The first and the most essential plugin is the compiler, that translates your
-               human readable code into bytecode.
-           -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <!--
-                   You want to check and update the latest version periodically from
-                   https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin
-               -->
-                <version>3.10.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
-
-            <!--
-               The second plugin is the shade plugin, packaging every library with
-               the "compile" scope (see dependencies)
-           -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <!--
-                   You want to check and update the latest version periodically from
-                   https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin
-               -->
-                <version>3.4.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <!--
-                            By default we configure the Foundation to include itself and all classes when
-                            we set the scope to compile (see above).
-
-                            There are many libraries from Foundation we will not need to use, and here
-                            can you specify which ones to exclude. Please leave the default ones as they are.
-                       -->
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <finalName>${project.name}-${project.version}</finalName>
-                            <artifactSet>
-                                <includes>
-                                    <include>org.mineacademy:Game*</include>
-                                    <include>com.github.kangarko:Foundation*</include>
-                                </includes>
-                                <excludes>
-                                    <exclude>org.mineacademy:GameAPI*</exclude>
-                                </excludes>
-                            </artifactSet>
-                            <relocations>
-                                <relocation>
-                                    <pattern>org.mineacademy</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
-                                    <excludes>
-                                        <exclude>org.mineacademy.${project.artifactId}.*</exclude>
-                                        <exclude>org.mineacademy.gameapi.*</exclude>
-                                        <exclude>org.mineacademy.boss.*</exclude>
-                                        <exclude>org.mineacademy.worldeditbridge.*</exclude>
-                                    </excludes>
-                                </relocation>
-                            </relocations>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-
-        <!--
-           During the build, we are going to scan all files in src/main/resources
-           folder such as plugin.yml and your settings files and replace all variables
-           such as ${main.class} with their proper values.
-
-           You can use native variables such as ${project.X} or the ones you defined above
-           in the properties section.
-       -->
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
-
 </project>
