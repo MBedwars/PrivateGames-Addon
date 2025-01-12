@@ -9,19 +9,19 @@ import org.bukkit.entity.Player;
 
 public class PrivateGameControlCommand extends Command.Executor {
 
-    public PrivateGameControlCommand(PrivateGamesPlugin plugin) {
-        super(plugin);
-    }
+  public PrivateGameControlCommand(PrivateGamesPlugin plugin) {
+    super(plugin);
+  }
 
-    @Override
-    public void onExecute(CommandSender sender, String[] args, String fullUsage) {
-        final Player player = (Player) sender;
+  @Override
+  public void onExecute(CommandSender sender, String[] args, String fullUsage) {
+    final Player player = (Player) sender;
 
-        new AllPrivateGameControlPanelMenu().open(player);
-    }
+    new AllPrivateGameControlPanelMenu().open(player);
+  }
 
-    @Override
-    public List<String> onTab(CommandSender sender, String[] args) {
-        return Collections.emptyList();
-    }
+  @Override
+  public List<String> onTab(CommandSender sender, String[] args) {
+    return Collections.emptyList();
+  }
 }

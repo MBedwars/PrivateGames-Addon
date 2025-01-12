@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import me.harsh.privategamesaddon.PrivateGamesPlugin;
-import me.harsh.privategamesaddon.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,7 +23,7 @@ public class Command {
   private final String permission;
 
   public String getUsage(String label, boolean isPlayer) {
-    return "/" + label+ " " +
+    return "/" + label + " " +
         this.name + " " +
         (isPlayer ? this.playerUsage : this.consoleUsage);
   }
@@ -42,11 +41,6 @@ public class Command {
       this.plugin = plugin;
     }
 
-    public abstract void onExecute(CommandSender sender, String[] args, String usedCommand);
-
-    public abstract List<String> onTab(CommandSender sender, String[] args);
-
-
     // helpers for tab
     public static List<String> getCommands(Collection<Command> cmds, String written, CommandSender sender) {
       return cmds.stream()
@@ -55,6 +49,10 @@ public class Command {
           .filter(cmd -> cmd.toLowerCase().startsWith(written.toLowerCase()))
           .collect(Collectors.toList());
     }
+
+    public abstract void onExecute(CommandSender sender, String[] args, String usedCommand);
+
+    public abstract List<String> onTab(CommandSender sender, String[] args);
 
     protected List<String> getPlayers(String written) {
       return Bukkit.getOnlinePlayers().stream()

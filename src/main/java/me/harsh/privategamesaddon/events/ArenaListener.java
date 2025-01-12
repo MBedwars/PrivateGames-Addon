@@ -44,7 +44,7 @@ public class ArenaListener implements Listener {
   }
 
   @EventHandler
-  public void onRoundStart(RoundStartEvent event){
+  public void onRoundStart(RoundStartEvent event) {
     final Arena arena = event.getArena();
 
     if (Utility.getManager().isPrivateArena(arena))
@@ -52,7 +52,7 @@ public class ArenaListener implements Listener {
   }
 
   @EventHandler
-  public void onArenaEnd(RoundEndEvent event){
+  public void onArenaEnd(RoundEndEvent event) {
     final Arena arena = event.getArena();
     final PrivateGameManager manager = Utility.getManager();
 

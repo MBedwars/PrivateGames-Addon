@@ -14,43 +14,43 @@ import org.jetbrains.annotations.NotNull;
 @UtilityClass
 public class PrivateGameAPI {
 
-    @Deprecated
-    public boolean hasPermision(@NotNull Player player){
-        return player.hasPermission("privategame.admin") || player.hasPermission("privategame.create") || player.hasPermission("*");
-    }
+  @Deprecated
+  public boolean hasPermision(@NotNull Player player) {
+    return player.hasPermission("privategame.admin") || player.hasPermission("privategame.create") || player.hasPermission("*");
+  }
 
-    public boolean isPrivateGame(@NotNull Arena arena){
-        return Utility.getManager().isPrivateArena(arena);
-    }
+  public boolean isPrivateGame(@NotNull Arena arena) {
+    return Utility.getManager().isPrivateArena(arena);
+  }
 
-    public boolean isPrivateGame(@NotNull RemoteArena arena){
-        return Utility.getManager().isPrivateArena(arena);
-    }
+  public boolean isPrivateGame(@NotNull RemoteArena arena) {
+    return Utility.getManager().isPrivateArena(arena);
+  }
 
-    public Collection<Arena> getPrivateGames(){
-        return Utility.getManager().getPrivateArenas();
-    }
+  public Collection<Arena> getPrivateGames() {
+    return Utility.getManager().getPrivateArenas();
+  }
 
-    public Collection<RemoteArena> getRemotePrivateGames(){
-        return Utility.getManager().getRemotePrivateArenas();
-    }
+  public Collection<RemoteArena> getRemotePrivateGames() {
+    return Utility.getManager().getRemotePrivateArenas();
+  }
 
-    public String getPrivateGamePlaceholder(Arena arena){
-        if (isPrivateGame(arena))
-            return Settings.IS_PRIVATE_GAME;
+  public String getPrivateGamePlaceholder(Arena arena) {
+    if (isPrivateGame(arena))
+      return Settings.IS_PRIVATE_GAME;
 
-        return null;
-    }
+    return null;
+  }
 
-    public void setPrivateGameMode(Player player, boolean value){
-        PlayerDataAPI.get().getProperties(player, props -> {
-            Utility.getManager().setPrivateGameMode(props, value);
-        });
-    }
+  public void setPrivateGameMode(Player player, boolean value) {
+    PlayerDataAPI.get().getProperties(player, props -> {
+      Utility.getManager().setPrivateGameMode(props, value);
+    });
+  }
 
-    public void getPrivateGameMode(Player player, Consumer<Boolean> callback) {
-        PlayerDataAPI.get().getProperties(player, props -> {
-            callback.accept(Utility.getManager().getPlayerPrivateMode(props, player));
-        });
-    }
+  public void getPrivateGameMode(Player player, Consumer<Boolean> callback) {
+    PlayerDataAPI.get().getProperties(player, props -> {
+      callback.accept(Utility.getManager().getPlayerPrivateMode(props, player));
+    });
+  }
 }

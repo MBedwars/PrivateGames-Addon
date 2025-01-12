@@ -3,7 +3,6 @@ package me.harsh.privategamesaddon;
 import de.marcely.bedwars.api.BedwarsAddon;
 import de.marcely.bedwars.api.message.DefaultMessageMappings;
 import de.marcely.bedwars.api.message.MessageAPI;
-import org.bukkit.plugin.Plugin;
 
 public class PrivateGamesAddon extends BedwarsAddon {
 

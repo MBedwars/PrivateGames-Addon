@@ -6,19 +6,19 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public class PrivateGameStartEvent extends Event implements ArenaEvent {
-    private static final HandlerList list = new HandlerList();
-    Arena arena;
+  private static final HandlerList list = new HandlerList();
+  Arena arena;
 
-    public PrivateGameStartEvent(Arena arena){
-        this.arena = arena;
-    }
+  public PrivateGameStartEvent(Arena arena) {
+    this.arena = arena;
+  }
 
-    @Override
-    public HandlerList getHandlers() {
-        return list;
-    }
+  @Override
+  public HandlerList getHandlers() {
+    return list;
+  }
 
-    public Arena getArena() {
-        return arena;
-    }
+  public Arena getArena() {
+    return arena;
+  }
 }
