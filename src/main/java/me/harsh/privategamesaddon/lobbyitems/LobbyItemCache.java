@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 
 public class LobbyItemCache {
 
-  private Map<Player, CacheState> cachedParties = new HashMap<>();
+  private final Map<Player, CacheState> cachedParties = new HashMap<>();
 
   public boolean isLeader(Player player, Arena arena) {
     if (!Utility.getManager().isPrivateArena(arena))

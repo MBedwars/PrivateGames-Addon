@@ -29,6 +29,6 @@ public class ForceStartItem extends LobbyItemHandler {
 
   @Override
   public boolean isVisible(Player player, Arena arena, LobbyItem lobbyItem) {
-    return arena.getPlayers().size() >= 2 && !this.wrapping.isVisible(player, arena, lobbyItem) && this.cache.isLeader(player, arena);
+    return arena.getPlayers().size() >= 2 && this.cache.isLeader(player, arena);
   }
 }
