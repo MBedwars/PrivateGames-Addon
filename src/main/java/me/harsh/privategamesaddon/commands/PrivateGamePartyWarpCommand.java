@@ -9,87 +9,85 @@ import de.marcely.bedwars.api.remote.RemoteAPI;
 import de.marcely.bedwars.api.remote.RemotePlayer;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import me.harsh.privategamesaddon.PrivateGamesPlugin;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
-import me.harsh.privategamesaddon.settings.Settings;
 import me.harsh.privategamesaddon.utils.Utility;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 
 public class PrivateGamePartyWarpCommand extends Command.Executor {
 
-    public PrivateGamePartyWarpCommand(PrivateGamesPlugin plugin) {
-        super(plugin);
+  public PrivateGamePartyWarpCommand(PrivateGamesPlugin plugin) {
+    super(plugin);
+  }
+
+  @Override
+  public void onExecute(CommandSender sender, String[] args, String fullUsage) {
+    final PrivateGameManager manager = Utility.getManager();
+    final Player player = (Player) sender;
+    final Arena arena = GameAPI.get().getArenaByPlayer(player);
+
+    if (arena == null) {
+      Message.buildByKey("Not_Ingame").send(sender);
+      return;
     }
 
-    @Override
-    public void onExecute(CommandSender sender, String[] args, String fullUsage) {
-        final PrivateGameManager manager = Utility.getManager();
-        final Player player = (Player) sender;
-        final Arena arena = GameAPI.get().getArenaByPlayer(player);
+    if (!manager.isPrivateArena(arena)) {
+      Message.buildByKey("PrivateGames_WarpButNotPrivate").send(sender);
+      return;
+    }
 
-        if (arena == null) {
-            Message.buildByKey("Not_Ingame").send(sender);
-            return;
+    PlayerDataAPI.get().getProperties(player, props -> {
+      if (!manager.getPlayerPrivateMode(props, player)) {
+        Message.buildByKey("PrivateGames_GameCreationInactive").send(sender);
+        return;
+      }
+
+      manager.getParty(player, leader -> {
+        if (!leader.isPresent()) {
+          Message.buildByKey("PrivateGames_WarpButNotParty").send(sender);
+          return;
+        }
+        if (!leader.get().isLeader()) {
+          Message.buildByKey("PrivateGames_WarpButNotPartyLeader").send(sender);
+          return;
         }
 
-        if (!manager.isPrivateArena(arena)) {
-            Message.buildByKey("PrivateGames_WarpButNotPrivate").send(sender);
-            return;
+        final Collection<Member> members = leader.get().getParty().getMembers(false);
+        boolean sentSent = false, hasPlaying = false;
+
+        for (Member member : members) {
+          final RemotePlayer remote = RemoteAPI.get().getOnlinePlayer(member.getUniqueId());
+
+          if (remote == null)
+            continue;
+          if (remote.isLocal() && GameAPI.get().getArenaByPlayer(remote.asBukkit()) == arena) {
+            hasPlaying = true;
+            continue;
+          }
+
+          Message.buildByKey("PrivateGames_Warp")
+              .placeholder("name", member.getUsername())
+              .send(sender);
+
+          sentSent = true;
+          arena.asRemote().addPlayer(remote);
         }
 
-        PlayerDataAPI.get().getProperties(player, props -> {
-            if (!manager.getPlayerPrivateMode(props, player)) {
-                Message.buildByKey("PrivateGames_GameCreationInactive").send(sender);
-                return;
-            }
+        if (!sentSent) {
+          if (hasPlaying)
+            Message.buildByKey("PrivateGames_WarpAllMembersPlaying").send(sender);
+          else
+            Message.buildByKey("PrivateGames_WarpNoMembers").send(sender);
+        }
+      });
+    });
+  }
 
-            manager.getParty(player, leader -> {
-                if (!leader.isPresent()) {
-                    Message.buildByKey("PrivateGames_WarpButNotParty").send(sender);
-                    return;
-                }
-                if (!leader.get().isLeader()) {
-                    Message.buildByKey("PrivateGames_WarpButNotPartyLeader").send(sender);
-                    return;
-                }
-
-                final Collection<Member> members = leader.get().getParty().getMembers(false);
-                boolean sentSent = false, hasPlaying = false;
-
-                for (Member member : members) {
-                    final RemotePlayer remote = RemoteAPI.get().getOnlinePlayer(member.getUniqueId());
-
-                    if (remote == null)
-                        continue;
-                    if (remote.isLocal() && GameAPI.get().getArenaByPlayer(remote.asBukkit()) == arena) {
-                        hasPlaying = true;
-                        continue;
-                    }
-
-                    Message.buildByKey("PrivateGames_Warp")
-                        .placeholder("name", member.getUsername())
-                        .send(sender);
-
-                    sentSent = true;
-                    arena.asRemote().addPlayer(remote);
-                }
-
-                if (!sentSent) {
-                    if (hasPlaying)
-                        Message.buildByKey("PrivateGames_WarpAllMembersPlaying").send(sender);
-                    else
-                        Message.buildByKey("PrivateGames_WarpNoMembers").send(sender);
-                }
-            });
-        });
-    }
-
-    @Override
-    public List<String> onTab(CommandSender sender, String[] args) {
-        return Collections.emptyList();
-    }
+  @Override
+  public List<String> onTab(CommandSender sender, String[] args) {
+    return Collections.emptyList();
+  }
 }

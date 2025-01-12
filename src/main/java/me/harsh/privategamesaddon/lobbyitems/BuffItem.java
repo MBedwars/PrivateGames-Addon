@@ -13,30 +13,30 @@ import org.bukkit.plugin.Plugin;
 
 public class BuffItem extends LobbyItemHandler {
 
-    private final LobbyItemCache cache;
+  private final LobbyItemCache cache;
 
-    public BuffItem(Plugin plugin, LobbyItemCache cache) {
-        super("private_games:leader_menu", plugin);
+  public BuffItem(Plugin plugin, LobbyItemCache cache) {
+    super("private_games:leader_menu", plugin);
 
-        this.cache = cache;
+    this.cache = cache;
+  }
+
+  @Override
+  public void handleUse(Player player, Arena arena, LobbyItem lobbyItem) {
+    final PrivateGameManager manager = Utility.getManager();
+
+    if (manager.isPrivateArena(arena)) {
+      ArenaBuff buffState = manager.getBuffState(arena);
+
+      if (buffState == null)
+        manager.setBuffState(arena, buffState = new ArenaBuff());
+
+      new PrivateGameMenu(buffState, player).open(player);
     }
+  }
 
-    @Override
-    public void handleUse(Player player, Arena arena, LobbyItem lobbyItem) {
-        final PrivateGameManager manager = Utility.getManager();
-
-        if (manager.isPrivateArena(arena)){
-            ArenaBuff buffState = manager.getBuffState(arena);
-
-            if (buffState == null)
-                manager.setBuffState(arena, buffState = new ArenaBuff());
-
-            new PrivateGameMenu(buffState, player).open(player);
-        }
-    }
-
-    @Override
-    public boolean isVisible(Player player, Arena arena, LobbyItem lobbyItem) {
-        return this.cache.isLeader(player, arena);
-    }
+  @Override
+  public boolean isVisible(Player player, Arena arena, LobbyItem lobbyItem) {
+    return this.cache.isLeader(player, arena);
+  }
 }

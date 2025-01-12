@@ -7,6 +7,6 @@ import me.harsh.privategamesaddon.managers.PrivateGameManager;
 @UtilityClass
 public class Utility {
 
-    @Getter
-    private final PrivateGameManager manager = new PrivateGameManager();
+  @Getter
+  private final PrivateGameManager manager = new PrivateGameManager();
 }
