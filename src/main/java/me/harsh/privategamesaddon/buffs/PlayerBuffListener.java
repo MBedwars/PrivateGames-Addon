@@ -14,6 +14,7 @@ import de.marcely.bedwars.api.game.spawner.Spawner;
 import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier;
 import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier.Operation;
 import de.marcely.bedwars.api.game.upgrade.Upgrade;
+import de.marcely.bedwars.api.game.upgrade.UpgradeLevel;
 import de.marcely.bedwars.api.game.upgrade.UpgradeState;
 import java.util.Map;
 import me.harsh.privategamesaddon.PrivateGamesPlugin;
@@ -97,11 +98,11 @@ public class PlayerBuffListener implements Listener {
                 3));
         }
 
-        if (buff.getSpeedModifier() != 1) {
+        if (buff.getSpeedAmplification() >= 0) {
             player.addPotionEffect(new PotionEffect(
                 PotionEffectType.SPEED,
                 Integer.MAX_VALUE,
-                buff.getSpeedModifier()));
+                buff.getSpeedAmplification()));
         }
     }
 
@@ -189,11 +190,11 @@ public class PlayerBuffListener implements Listener {
                     3));
             }
 
-            if (buff.getSpeedModifier() != 1) {
+            if (buff.getSpeedAmplification() >= 0) {
                 player.addPotionEffect(new PotionEffect(
                     PotionEffectType.SPEED,
                     Integer.MAX_VALUE,
-                    buff.getSpeedModifier()));
+                    buff.getSpeedAmplification()));
             }
         });
 
@@ -209,12 +210,16 @@ public class PlayerBuffListener implements Listener {
 
             // autom max upgrade
             if (buff.isMaxUpgrades()) {
-                for (Team team: arena.getTeamsWithPlayers()) {
-                    final UpgradeState state = arena.getUpgradeState(team);
+                for (Upgrade upgrade : GameAPI.get().getUpgrades()) {
+                    final UpgradeLevel max = upgrade.getMaxLevel();
 
-                    for (Upgrade upgrade : GameAPI.get().getUpgrades()) {
-                        if (!state.isMaxLevel(upgrade))
-                            state.doUpgrade(upgrade.getMaxLevel(), null);
+                    if (max.isTrap() || !upgrade.isApplicable(arena))
+                        continue;
+
+                    for (Team team : arena.getTeamsWithPlayers()) {
+                        final UpgradeState state = arena.getUpgradeState(team);
+
+                        state.doUpgrade(max, null);
                     }
                 }
             }

@@ -40,11 +40,11 @@ public class SpeedBuffMenu extends ChestGUI {
 
     final AddItemCondition condition = AddItemCondition.withinY(1, 1);
 
-    addItem(getItem(player, null, 1), condition);
-    addItem(getItem(player, "I", 2), condition);
-    addItem(getItem(player, "II", 3), condition);
-    addItem(getItem(player, "III", 4), condition);
-    addItem(getItem(player, "VI", 5), condition);
+    addItem(getItem(player, null, -1), condition);
+    addItem(getItem(player, "I", 0), condition);
+    addItem(getItem(player, "II", 1), condition);
+    addItem(getItem(player, "III", 2), condition);
+    addItem(getItem(player, "VI", 3), condition);
 
     formatRow(1, CenterFormat.CENTRALIZED_EVEN);
   }
@@ -56,7 +56,7 @@ public class SpeedBuffMenu extends ChestGUI {
     final ArenaBuff buffState = this.parentMenu.getBuffState();
     ItemStack is = Helper.get().parseItemStack("SUGAR");
     final ItemMeta im = is.getItemMeta();
-    final boolean active = val == buffState.getSpeedModifier();
+    final boolean active = val == buffState.getSpeedAmplification();
 
     im.setDisplayName((active ? ChatColor.GREEN : ChatColor.GOLD) + name);
     is.setItemMeta(im);
@@ -65,7 +65,7 @@ public class SpeedBuffMenu extends ChestGUI {
       is = NMSHelper.get().setGlowEffect(is, true);
 
     return new GUIItem(is, (g0, g1, g2) -> {
-      buffState.setSpeedModifier(val);
+      buffState.setSpeedAmplification(val);
 
       Message.buildByKey("PrivateGames_ModifyBuffSpeed")
           .placeholder("effect", name.toLowerCase())

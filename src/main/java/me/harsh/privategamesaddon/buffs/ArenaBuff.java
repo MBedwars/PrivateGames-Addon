@@ -10,7 +10,7 @@ public class ArenaBuff {
     private boolean oneHitKill = false;
     private boolean baseSpawnersOnly = false;
     private boolean lowGravity = false;
-    private int speedModifier = 1;
+    private int speedAmplification = -1; // amplification; 0 = lvl 1
 
     private boolean maxUpgrades = false;
     private boolean fallDamageEnabled = true;
