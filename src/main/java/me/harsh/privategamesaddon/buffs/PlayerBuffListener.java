@@ -8,7 +8,7 @@ import de.marcely.bedwars.api.event.arena.ArenaDeleteEvent;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.event.player.PlayerIngameDeathEvent;
-import de.marcely.bedwars.api.event.player.PlayerIngameRespawnEvent;
+import de.marcely.bedwars.api.event.player.PlayerIngamePostRespawnEvent;
 import de.marcely.bedwars.api.event.player.PlayerModifyBlockPermissionEvent;
 import de.marcely.bedwars.api.game.spawner.Spawner;
 import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier;
@@ -80,7 +80,7 @@ public class PlayerBuffListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerRespawn(PlayerIngameRespawnEvent event){
+    public void onPlayerPostRespawn(PlayerIngamePostRespawnEvent event){
         final Player player = event.getPlayer();
         final Arena arena = event.getArena();
         final ArenaBuff buff = Utility.getManager().getBuffState(arena);
