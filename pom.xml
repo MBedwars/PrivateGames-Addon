@@ -7,7 +7,7 @@
     <groupId>me.harsh</groupId>
     <artifactId>PrivateGamesAddon</artifactId>
     <name>PrivateGamesAddon</name>
-    <version>3.0.4</version>
+    <version>3.0.5</version>
 
     <properties>
         <main.class>me.harsh.privategamesaddon.PrivateGamesPlugin</main.class>
@@ -49,13 +49,13 @@
         <dependency>
             <groupId>de.marcely.bedwars</groupId>
             <artifactId>API</artifactId>
-            <version>5.5.3</version>
+            <version>5.5.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>1.18.38</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
