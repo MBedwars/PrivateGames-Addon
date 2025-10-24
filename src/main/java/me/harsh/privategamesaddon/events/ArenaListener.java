@@ -7,15 +7,11 @@ import de.marcely.bedwars.api.arena.QuitPlayerMemory;
 import de.marcely.bedwars.api.event.ConfigsLoadEvent;
 import de.marcely.bedwars.api.event.arena.ArenaStatusChangeEvent;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
-import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.player.PlayerDataAPI;
 import java.util.UUID;
 import java.util.function.Consumer;
-import me.harsh.privategamesaddon.api.events.PrivateGameEndEvent;
-import me.harsh.privategamesaddon.api.events.PrivateGameStartEvent;
 import me.harsh.privategamesaddon.managers.PrivateGameManager;
 import me.harsh.privategamesaddon.utils.Utility;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -44,20 +40,9 @@ public class ArenaListener implements Listener {
   }
 
   @EventHandler
-  public void onRoundStart(RoundStartEvent event){
-    final Arena arena = event.getArena();
-
-    if (Utility.getManager().isPrivateArena(arena))
-      Bukkit.getServer().getPluginManager().callEvent(new PrivateGameStartEvent(arena));
-  }
-
-  @EventHandler
   public void onArenaEnd(RoundEndEvent event){
     final Arena arena = event.getArena();
-    final PrivateGameManager manager = Utility.getManager();
-
-    if (manager.isPrivateArena(arena))
-      Bukkit.getServer().getPluginManager().callEvent(new PrivateGameEndEvent(arena, event.getWinners(), event.getWinnerTeam()));
+    final PrivateGameManager manager = Utility.getManager();;
 
     final Consumer<UUID> applyPlayer = uuid -> {
       PlayerDataAPI.get().getProperties(uuid, props -> {

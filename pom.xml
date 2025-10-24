@@ -86,6 +86,25 @@
            These are not Minecraft plugins, but only Maven plugins!
        -->
         <plugins>
+            <plugin> <!-- needed for javadoc -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>me/harsh/privategamesaddon/api/**</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <!--
                The first and the most essential plugin is the compiler, that translates your

@@ -29,7 +29,7 @@ public class BuffItem extends LobbyItemHandler {
             ArenaBuff buffState = manager.getBuffState(arena);
 
             if (buffState == null)
-                manager.setBuffState(arena, buffState = new ArenaBuff());
+                manager.setBuffState(arena, buffState = new ArenaBuff(arena));
 
             new PrivateGameMenu(buffState, player).open(player);
         }

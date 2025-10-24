@@ -19,6 +19,7 @@ import me.harsh.privategamesaddon.settings.Settings;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.Nullable;
 
 public class PrivateGameManager {
@@ -31,8 +32,12 @@ public class PrivateGameManager {
     private final Map<Arena, Party> partyMembersMangingMap = new HashMap<>();
     private final Map<Arena, ArenaBuff> arenaArenaBuffMap = new HashMap<>();
 
-    public boolean getPlayerPrivateMode(PlayerProperties props, Player player) {
-        return props.getBoolean(PROP_PRIVATE).orElse(false) && player.hasPermission("privategame.create") /* Otherwise he may get stuck */;
+    public boolean getPlayerPrivateMode(PlayerProperties props, @Nullable Player player) {
+        if (!props.getBoolean(PROP_PRIVATE).orElse(false))
+            return false;
+
+        // Otherwise he may get stuck
+        return player == null || hasCreatePermission(player);
     }
 
     public void setPrivateGameMode(PlayerProperties props, boolean mode) {
@@ -40,6 +45,10 @@ public class PrivateGameManager {
             props.set(PROP_PRIVATE, true);
         else
             props.remove(PROP_PRIVATE);
+    }
+
+    public boolean hasCreatePermission(Permissible player) {
+        return player.hasPermission("privategame.create");
     }
 
     public boolean isJoinEnforced(PlayerProperties props) {
