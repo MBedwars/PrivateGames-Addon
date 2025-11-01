@@ -16,14 +16,13 @@ import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier.Operation;
 import de.marcely.bedwars.api.game.upgrade.Upgrade;
 import de.marcely.bedwars.api.game.upgrade.UpgradeLevel;
 import de.marcely.bedwars.api.game.upgrade.UpgradeState;
-import java.util.Map;
+import java.time.Duration;
 import me.harsh.privategamesaddon.PrivateGamesPlugin;
 import me.harsh.privategamesaddon.utils.Utility;
-import me.metallicgoat.tweaksaddon.config.GenTiersConfig;
-import me.metallicgoat.tweaksaddon.gentiers.GenTierLevel;
-import me.metallicgoat.tweaksaddon.gentiers.GenTiers;
-import me.metallicgoat.tweaksaddon.gentiers.GenTiers.GenTierState;
-import me.metallicgoat.tweaksaddon.gentiers.TierAction;
+import me.metallicgoat.tweaksaddon.api.GenTiersAPI;
+import me.metallicgoat.tweaksaddon.api.gentiers.GenTierActionType;
+import me.metallicgoat.tweaksaddon.api.gentiers.GenTierLevel;
+import me.metallicgoat.tweaksaddon.api.gentiers.GenTierState;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,7 +32,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
 
 public class PlayerBuffListener implements Listener {
 
@@ -151,31 +149,30 @@ public class PlayerBuffListener implements Listener {
 
                 // tweaks: remove gen tiers
                 if (Bukkit.getPluginManager().getPlugin("MBedwarsTweaks") != null) {
-                    final Map<Integer, GenTierLevel> levels = GenTiersConfig.gen_tier_levels;
-                    final GenTierState state = GenTiers.getState(arena);
+                    final GenTierState state = GenTiersAPI.getState(arena);
 
                     if (state != null) {
                         // can we just skip to a certain level?
                         int maxLevel = 0;
 
-                        while (levels.containsKey(maxLevel+1))
+                        while (GenTiersAPI.getTier(maxLevel+1) != null)
                             maxLevel++;
 
                         GenTierLevel level = null;
 
-                        while (maxLevel >= 1 && levels.get(maxLevel).getAction() != TierAction.GEN_UPGRADE)
-                            level = levels.get(maxLevel--);
+                        while (maxLevel >= 1 && GenTiersAPI.getTier(maxLevel).getHandler().getActionType() != GenTierActionType.GEN_UPGRADE)
+                            level = GenTiersAPI.getTier(maxLevel--);
 
                         // handle calculations
                         if (level == null)
-                            GenTiers.removeArena(arena);
+                            state.cancelTiers();
                         else {
-                            double addTime = 0;
+                            Duration addTime = Duration.ZERO;
 
                             for (int l=1; l<=maxLevel+1; l++)
-                                addTime += levels.get(l).getTime();
+                                addTime = addTime.plus(GenTiersAPI.getTier(l).getTime());
 
-                            GenTiers.scheduleNextTier(arena, level, addTime);
+                            state.scheduleNextTier(level, addTime);
                         }
                     }
                 }
@@ -208,7 +205,7 @@ public class PlayerBuffListener implements Listener {
                 player.setHealth(buff.getHealth());
             });
 
-            // autom max upgrade
+            // auto max upgrade
             if (buff.isMaxUpgrades()) {
                 for (Upgrade upgrade : GameAPI.get().getUpgrades()) {
                     final UpgradeLevel max = upgrade.getMaxLevel();

@@ -65,11 +65,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.metallicgoat</groupId>
-            <artifactId>MBedwarsTweaks</artifactId>
-            <version>4.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/libs/MBedwarsTweaks.jar</systemPath>
+            <groupId>me.metallicgoat.tweaksaddon</groupId>
+            <artifactId>API</artifactId>
+            <version>4.6.0-Beta1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
