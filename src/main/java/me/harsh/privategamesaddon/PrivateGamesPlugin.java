@@ -12,6 +12,7 @@ import me.harsh.privategamesaddon.buffs.PlayerBuffListener;
 import me.harsh.privategamesaddon.commands.CommandHandler;
 import me.harsh.privategamesaddon.events.ArenaListener;
 import me.harsh.privategamesaddon.events.PlayerListener;
+import me.harsh.privategamesaddon.events.SpectatorListener;
 import me.harsh.privategamesaddon.lobbyitems.BuffItem;
 import me.harsh.privategamesaddon.lobbyitems.ForceStartItem;
 import me.harsh.privategamesaddon.lobbyitems.LobbyItemCache;
@@ -81,6 +82,7 @@ public final class PrivateGamesPlugin extends JavaPlugin {
             Bukkit.getPluginManager().registerEvents(new PlayerListener(Utility.getManager()), this);
             Bukkit.getPluginManager().registerEvents(new PlayerBuffListener(), this);
             Bukkit.getPluginManager().registerEvents(new ArenaListener(), this);
+            Bukkit.getPluginManager().registerEvents(new SpectatorListener(), this);
 
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
                 new PrivateGamePlaceholder().register();
